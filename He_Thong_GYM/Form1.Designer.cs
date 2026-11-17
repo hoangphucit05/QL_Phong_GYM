@@ -188,53 +188,309 @@ namespace He_Thong_GYM
             // 
             // btnThanhVien
             // 
-            CauHinhNutMenu(btnThanhVien, "Quản lý thành viên", "Quản lý thành viên", 1);
+            btnThanhVien.BackColor = Color.FromArgb(20, 32, 51);
+            btnThanhVien.Cursor = Cursors.Hand;
+            btnThanhVien.FlatAppearance.BorderSize = 0;
+            btnThanhVien.FlatStyle = FlatStyle.Flat;
+            btnThanhVien.Font = new Font("Segoe UI", 10F);
+            btnThanhVien.ForeColor = Color.FromArgb(226, 232, 240);
+            btnThanhVien.Margin = new Padding(3, 3, 3, 4);
+            btnThanhVien.Name = "btnThanhVien";
+            btnThanhVien.Size = new Size(216, 38);
+            btnThanhVien.TabIndex = 1;
+            btnThanhVien.Tag = "Quản lý thành viên";
+            btnThanhVien.Text = "Quản lý thành viên";
+            btnThanhVien.TextAlign = ContentAlignment.MiddleLeft;
+            btnThanhVien.UseVisualStyleBackColor = false;
+            btnThanhVien.Click += MenuButton_Click;
             // 
             // btnGoiTap
             // 
-            CauHinhNutMenu(btnGoiTap, "Quản lý gói tập", "Quản lý gói tập", 2);
+            btnGoiTap.BackColor = Color.FromArgb(20, 32, 51);
+            btnGoiTap.Cursor = Cursors.Hand;
+            btnGoiTap.FlatAppearance.BorderSize = 0;
+            btnGoiTap.FlatStyle = FlatStyle.Flat;
+            btnGoiTap.Font = new Font("Segoe UI", 10F);
+            btnGoiTap.ForeColor = Color.FromArgb(226, 232, 240);
+            btnGoiTap.Margin = new Padding(3, 3, 3, 4);
+            btnGoiTap.Name = "btnGoiTap";
+            btnGoiTap.Size = new Size(216, 38);
+            btnGoiTap.TabIndex = 2;
+            btnGoiTap.Tag = "Quản lý gói tập";
+            btnGoiTap.Text = "Quản lý gói tập";
+            btnGoiTap.TextAlign = ContentAlignment.MiddleLeft;
+            btnGoiTap.UseVisualStyleBackColor = false;
+            btnGoiTap.Click += MenuButton_Click;
             // 
             // btnDangKyGoi
             // 
-            CauHinhNutMenu(btnDangKyGoi, "Đăng ký gói tập", "Đăng ký gói tập", 3);
-            CauHinhNutMenu(btnVanHanhGoi, "Vận hành gói / Check-in", "Vận hành gói / Check-in", 4);
-            CauHinhNutMenu(btnKhuyenMai, "Khuyến mãi", "Khuyến mãi", 4);
+            btnDangKyGoi.BackColor = Color.FromArgb(20, 32, 51);
+            btnDangKyGoi.Cursor = Cursors.Hand;
+            btnDangKyGoi.FlatAppearance.BorderSize = 0;
+            btnDangKyGoi.FlatStyle = FlatStyle.Flat;
+            btnDangKyGoi.Font = new Font("Segoe UI", 10F);
+            btnDangKyGoi.ForeColor = Color.FromArgb(226, 232, 240);
+            btnDangKyGoi.Margin = new Padding(3, 3, 3, 4);
+            btnDangKyGoi.Name = "btnDangKyGoi";
+            btnDangKyGoi.Size = new Size(216, 38);
+            btnDangKyGoi.TabIndex = 3;
+            btnDangKyGoi.Tag = "Đăng ký gói tập";
+            btnDangKyGoi.Text = "Đăng ký gói tập";
+            btnDangKyGoi.TextAlign = ContentAlignment.MiddleLeft;
+            btnDangKyGoi.UseVisualStyleBackColor = false;
+            btnDangKyGoi.Click += MenuButton_Click;
+            // 
+            // btnVanHanhGoi
+            // 
+            btnVanHanhGoi.BackColor = Color.FromArgb(20, 32, 51);
+            btnVanHanhGoi.Cursor = Cursors.Hand;
+            btnVanHanhGoi.FlatAppearance.BorderSize = 0;
+            btnVanHanhGoi.FlatStyle = FlatStyle.Flat;
+            btnVanHanhGoi.Font = new Font("Segoe UI", 10F);
+            btnVanHanhGoi.ForeColor = Color.FromArgb(226, 232, 240);
+            btnVanHanhGoi.Margin = new Padding(3, 3, 3, 4);
+            btnVanHanhGoi.Name = "btnVanHanhGoi";
+            btnVanHanhGoi.Size = new Size(216, 38);
+            btnVanHanhGoi.TabIndex = 4;
+            btnVanHanhGoi.Tag = "Vận hành gói / Check-in";
+            btnVanHanhGoi.Text = "Vận hành gói / Check-in";
+            btnVanHanhGoi.TextAlign = ContentAlignment.MiddleLeft;
+            btnVanHanhGoi.UseVisualStyleBackColor = false;
+            btnVanHanhGoi.Click += MenuButton_Click;
+            // 
+            // btnKhuyenMai
+            // 
+            btnKhuyenMai.BackColor = Color.FromArgb(20, 32, 51);
+            btnKhuyenMai.Cursor = Cursors.Hand;
+            btnKhuyenMai.FlatAppearance.BorderSize = 0;
+            btnKhuyenMai.FlatStyle = FlatStyle.Flat;
+            btnKhuyenMai.Font = new Font("Segoe UI", 10F);
+            btnKhuyenMai.ForeColor = Color.FromArgb(226, 232, 240);
+            btnKhuyenMai.Margin = new Padding(3, 3, 3, 4);
+            btnKhuyenMai.Name = "btnKhuyenMai";
+            btnKhuyenMai.Size = new Size(216, 38);
+            btnKhuyenMai.TabIndex = 5;
+            btnKhuyenMai.Tag = "Khuyến mãi";
+            btnKhuyenMai.Text = "Khuyến mãi";
+            btnKhuyenMai.TextAlign = ContentAlignment.MiddleLeft;
+            btnKhuyenMai.UseVisualStyleBackColor = false;
+            btnKhuyenMai.Click += MenuButton_Click;
             // 
             // btnHuanLuyenVien
             // 
-            CauHinhNutMenu(btnHuanLuyenVien, "Huấn luyện viên / PT", "Huấn luyện viên / PT", 5);
-            CauHinhNutMenu(btnDangKyPT, "Đăng ký PT", "Đăng ký PT", 5);
+            btnHuanLuyenVien.BackColor = Color.FromArgb(20, 32, 51);
+            btnHuanLuyenVien.Cursor = Cursors.Hand;
+            btnHuanLuyenVien.FlatAppearance.BorderSize = 0;
+            btnHuanLuyenVien.FlatStyle = FlatStyle.Flat;
+            btnHuanLuyenVien.Font = new Font("Segoe UI", 10F);
+            btnHuanLuyenVien.ForeColor = Color.FromArgb(226, 232, 240);
+            btnHuanLuyenVien.Margin = new Padding(3, 3, 3, 4);
+            btnHuanLuyenVien.Name = "btnHuanLuyenVien";
+            btnHuanLuyenVien.Size = new Size(216, 38);
+            btnHuanLuyenVien.TabIndex = 6;
+            btnHuanLuyenVien.Tag = "Huấn luyện viên / PT";
+            btnHuanLuyenVien.Text = "Huấn luyện viên / PT";
+            btnHuanLuyenVien.TextAlign = ContentAlignment.MiddleLeft;
+            btnHuanLuyenVien.UseVisualStyleBackColor = false;
+            btnHuanLuyenVien.Click += MenuButton_Click;
+            // 
+            // btnDangKyPT
+            // 
+            btnDangKyPT.BackColor = Color.FromArgb(20, 32, 51);
+            btnDangKyPT.Cursor = Cursors.Hand;
+            btnDangKyPT.FlatAppearance.BorderSize = 0;
+            btnDangKyPT.FlatStyle = FlatStyle.Flat;
+            btnDangKyPT.Font = new Font("Segoe UI", 10F);
+            btnDangKyPT.ForeColor = Color.FromArgb(226, 232, 240);
+            btnDangKyPT.Margin = new Padding(3, 3, 3, 4);
+            btnDangKyPT.Name = "btnDangKyPT";
+            btnDangKyPT.Size = new Size(216, 38);
+            btnDangKyPT.TabIndex = 7;
+            btnDangKyPT.Tag = "Đăng ký PT";
+            btnDangKyPT.Text = "Đăng ký PT";
+            btnDangKyPT.TextAlign = ContentAlignment.MiddleLeft;
+            btnDangKyPT.UseVisualStyleBackColor = false;
+            btnDangKyPT.Click += MenuButton_Click;
             // 
             // btnLopTap
             // 
-            CauHinhNutMenu(btnLopTap, "Lớp tập", "Lớp tập", 7);
-            CauHinhNutMenu(btnDiemDanh, "Đăng ký và điểm danh", "Đăng ký và điểm danh", 8);
+            btnLopTap.BackColor = Color.FromArgb(20, 32, 51);
+            btnLopTap.Cursor = Cursors.Hand;
+            btnLopTap.FlatAppearance.BorderSize = 0;
+            btnLopTap.FlatStyle = FlatStyle.Flat;
+            btnLopTap.Font = new Font("Segoe UI", 10F);
+            btnLopTap.ForeColor = Color.FromArgb(226, 232, 240);
+            btnLopTap.Margin = new Padding(3, 3, 3, 4);
+            btnLopTap.Name = "btnLopTap";
+            btnLopTap.Size = new Size(216, 38);
+            btnLopTap.TabIndex = 8;
+            btnLopTap.Tag = "Lớp tập";
+            btnLopTap.Text = "Lớp tập";
+            btnLopTap.TextAlign = ContentAlignment.MiddleLeft;
+            btnLopTap.UseVisualStyleBackColor = false;
+            btnLopTap.Click += MenuButton_Click;
+            // 
+            // btnDiemDanh
+            // 
+            btnDiemDanh.BackColor = Color.FromArgb(20, 32, 51);
+            btnDiemDanh.Cursor = Cursors.Hand;
+            btnDiemDanh.FlatAppearance.BorderSize = 0;
+            btnDiemDanh.FlatStyle = FlatStyle.Flat;
+            btnDiemDanh.Font = new Font("Segoe UI", 10F);
+            btnDiemDanh.ForeColor = Color.FromArgb(226, 232, 240);
+            btnDiemDanh.Margin = new Padding(3, 3, 3, 4);
+            btnDiemDanh.Name = "btnDiemDanh";
+            btnDiemDanh.Size = new Size(216, 38);
+            btnDiemDanh.TabIndex = 9;
+            btnDiemDanh.Tag = "Đăng ký và điểm danh";
+            btnDiemDanh.Text = "Đăng ký và điểm danh";
+            btnDiemDanh.TextAlign = ContentAlignment.MiddleLeft;
+            btnDiemDanh.UseVisualStyleBackColor = false;
+            btnDiemDanh.Click += MenuButton_Click;
             // 
             // btnHoaDon
             // 
-            CauHinhNutMenu(btnHoaDon, "Hóa đơn và thanh toán", "Hóa đơn và thanh toán", 7);
+            btnHoaDon.BackColor = Color.FromArgb(20, 32, 51);
+            btnHoaDon.Cursor = Cursors.Hand;
+            btnHoaDon.FlatAppearance.BorderSize = 0;
+            btnHoaDon.FlatStyle = FlatStyle.Flat;
+            btnHoaDon.Font = new Font("Segoe UI", 10F);
+            btnHoaDon.ForeColor = Color.FromArgb(226, 232, 240);
+            btnHoaDon.Margin = new Padding(3, 3, 3, 4);
+            btnHoaDon.Name = "btnHoaDon";
+            btnHoaDon.Size = new Size(216, 38);
+            btnHoaDon.TabIndex = 10;
+            btnHoaDon.Tag = "Hóa đơn và thanh toán";
+            btnHoaDon.Text = "Hóa đơn và thanh toán";
+            btnHoaDon.TextAlign = ContentAlignment.MiddleLeft;
+            btnHoaDon.UseVisualStyleBackColor = false;
+            btnHoaDon.Click += MenuButton_Click;
             // 
             // btnSanPham
             // 
-            CauHinhNutMenu(btnSanPham, "Sản phẩm và bán hàng", "Sản phẩm và bán hàng", 8);
+            btnSanPham.BackColor = Color.FromArgb(20, 32, 51);
+            btnSanPham.Cursor = Cursors.Hand;
+            btnSanPham.FlatAppearance.BorderSize = 0;
+            btnSanPham.FlatStyle = FlatStyle.Flat;
+            btnSanPham.Font = new Font("Segoe UI", 10F);
+            btnSanPham.ForeColor = Color.FromArgb(226, 232, 240);
+            btnSanPham.Margin = new Padding(3, 3, 3, 4);
+            btnSanPham.Name = "btnSanPham";
+            btnSanPham.Size = new Size(216, 38);
+            btnSanPham.TabIndex = 11;
+            btnSanPham.Tag = "Sản phẩm và bán hàng";
+            btnSanPham.Text = "Sản phẩm và bán hàng";
+            btnSanPham.TextAlign = ContentAlignment.MiddleLeft;
+            btnSanPham.UseVisualStyleBackColor = false;
+            btnSanPham.Click += MenuButton_Click;
             // 
             // btnThietBi
             // 
-            CauHinhNutMenu(btnThietBi, "Thiết bị", "Thiết bị", 10);
-            CauHinhNutMenu(btnBaoTri, "Bảo trì thiết bị", "Bảo trì thiết bị", 11);
-            CauHinhNutMenu(btnPhongTap, "Phòng tập", "Phòng tập", 12);
+            btnThietBi.BackColor = Color.FromArgb(20, 32, 51);
+            btnThietBi.Cursor = Cursors.Hand;
+            btnThietBi.FlatAppearance.BorderSize = 0;
+            btnThietBi.FlatStyle = FlatStyle.Flat;
+            btnThietBi.Font = new Font("Segoe UI", 10F);
+            btnThietBi.ForeColor = Color.FromArgb(226, 232, 240);
+            btnThietBi.Margin = new Padding(3, 3, 3, 4);
+            btnThietBi.Name = "btnThietBi";
+            btnThietBi.Size = new Size(216, 38);
+            btnThietBi.TabIndex = 12;
+            btnThietBi.Tag = "Thiết bị";
+            btnThietBi.Text = "Thiết bị";
+            btnThietBi.TextAlign = ContentAlignment.MiddleLeft;
+            btnThietBi.UseVisualStyleBackColor = false;
+            btnThietBi.Click += MenuButton_Click;
+            // 
+            // btnBaoTri
+            // 
+            btnBaoTri.BackColor = Color.FromArgb(20, 32, 51);
+            btnBaoTri.Cursor = Cursors.Hand;
+            btnBaoTri.FlatAppearance.BorderSize = 0;
+            btnBaoTri.FlatStyle = FlatStyle.Flat;
+            btnBaoTri.Font = new Font("Segoe UI", 10F);
+            btnBaoTri.ForeColor = Color.FromArgb(226, 232, 240);
+            btnBaoTri.Margin = new Padding(3, 3, 3, 4);
+            btnBaoTri.Name = "btnBaoTri";
+            btnBaoTri.Size = new Size(216, 38);
+            btnBaoTri.TabIndex = 13;
+            btnBaoTri.Tag = "Bảo trì thiết bị";
+            btnBaoTri.Text = "Bảo trì thiết bị";
+            btnBaoTri.TextAlign = ContentAlignment.MiddleLeft;
+            btnBaoTri.UseVisualStyleBackColor = false;
+            btnBaoTri.Click += MenuButton_Click;
+            // 
+            // btnPhongTap
+            // 
+            btnPhongTap.BackColor = Color.FromArgb(20, 32, 51);
+            btnPhongTap.Cursor = Cursors.Hand;
+            btnPhongTap.FlatAppearance.BorderSize = 0;
+            btnPhongTap.FlatStyle = FlatStyle.Flat;
+            btnPhongTap.Font = new Font("Segoe UI", 10F);
+            btnPhongTap.ForeColor = Color.FromArgb(226, 232, 240);
+            btnPhongTap.Margin = new Padding(3, 3, 3, 4);
+            btnPhongTap.Name = "btnPhongTap";
+            btnPhongTap.Size = new Size(216, 38);
+            btnPhongTap.TabIndex = 14;
+            btnPhongTap.Tag = "Phòng tập";
+            btnPhongTap.Text = "Phòng tập";
+            btnPhongTap.TextAlign = ContentAlignment.MiddleLeft;
+            btnPhongTap.UseVisualStyleBackColor = false;
+            btnPhongTap.Click += MenuButton_Click;
             // 
             // btnNhanVien
             // 
-            CauHinhNutMenu(btnNhanVien, "Nhân viên và tài khoản", "Nhân viên và tài khoản", 10);
+            btnNhanVien.BackColor = Color.FromArgb(20, 32, 51);
+            btnNhanVien.Cursor = Cursors.Hand;
+            btnNhanVien.FlatAppearance.BorderSize = 0;
+            btnNhanVien.FlatStyle = FlatStyle.Flat;
+            btnNhanVien.Font = new Font("Segoe UI", 10F);
+            btnNhanVien.ForeColor = Color.FromArgb(226, 232, 240);
+            btnNhanVien.Margin = new Padding(3, 3, 3, 4);
+            btnNhanVien.Name = "btnNhanVien";
+            btnNhanVien.Size = new Size(216, 38);
+            btnNhanVien.TabIndex = 15;
+            btnNhanVien.Tag = "Nhân viên và tài khoản";
+            btnNhanVien.Text = "Nhân viên và tài khoản";
+            btnNhanVien.TextAlign = ContentAlignment.MiddleLeft;
+            btnNhanVien.UseVisualStyleBackColor = false;
+            btnNhanVien.Click += MenuButton_Click;
             // 
             // btnTaiKhoan
             // 
-            CauHinhNutMenu(btnTaiKhoan, "Tài khoản và phân quyền", "Tài khoản và phân quyền", 11);
+            btnTaiKhoan.BackColor = Color.FromArgb(20, 32, 51);
+            btnTaiKhoan.Cursor = Cursors.Hand;
+            btnTaiKhoan.FlatAppearance.BorderSize = 0;
+            btnTaiKhoan.FlatStyle = FlatStyle.Flat;
+            btnTaiKhoan.Font = new Font("Segoe UI", 10F);
+            btnTaiKhoan.ForeColor = Color.FromArgb(226, 232, 240);
+            btnTaiKhoan.Margin = new Padding(3, 3, 3, 4);
+            btnTaiKhoan.Name = "btnTaiKhoan";
+            btnTaiKhoan.Size = new Size(216, 38);
+            btnTaiKhoan.TabIndex = 16;
+            btnTaiKhoan.Tag = "Tài khoản và phân quyền";
+            btnTaiKhoan.Text = "Tài khoản và phân quyền";
+            btnTaiKhoan.TextAlign = ContentAlignment.MiddleLeft;
+            btnTaiKhoan.UseVisualStyleBackColor = false;
+            btnTaiKhoan.Click += MenuButton_Click;
             // 
             // btnThongKe
             // 
-            CauHinhNutMenu(btnThongKe, "Báo cáo thống kê", "Báo cáo thống kê", 12);
+            btnThongKe.BackColor = Color.FromArgb(20, 32, 51);
+            btnThongKe.Cursor = Cursors.Hand;
+            btnThongKe.FlatAppearance.BorderSize = 0;
+            btnThongKe.FlatStyle = FlatStyle.Flat;
+            btnThongKe.Font = new Font("Segoe UI", 10F);
+            btnThongKe.ForeColor = Color.FromArgb(226, 232, 240);
+            btnThongKe.Margin = new Padding(3, 3, 3, 4);
+            btnThongKe.Name = "btnThongKe";
+            btnThongKe.Size = new Size(216, 38);
+            btnThongKe.TabIndex = 17;
+            btnThongKe.Tag = "Báo cáo thống kê";
+            btnThongKe.Text = "Báo cáo thống kê";
+            btnThongKe.TextAlign = ContentAlignment.MiddleLeft;
+            btnThongKe.UseVisualStyleBackColor = false;
+            btnThongKe.Click += MenuButton_Click;
             // 
             // btnDangXuat
             // 
@@ -593,25 +849,6 @@ namespace He_Thong_GYM
             groupBoxLopTap.ResumeLayout(false);
             groupBoxLopTap.PerformLayout();
             ResumeLayout(false);
-        }
-
-        private void CauHinhNutMenu(Button button, string text, string tag, int tabIndex)
-        {
-            button.BackColor = Color.FromArgb(20, 32, 51);
-            button.Cursor = Cursors.Hand;
-            button.FlatAppearance.BorderSize = 0;
-            button.FlatStyle = FlatStyle.Flat;
-            button.Font = new Font("Segoe UI", 10F);
-            button.ForeColor = Color.FromArgb(226, 232, 240);
-            button.Margin = new Padding(3, 3, 3, 4);
-            button.Name = $"btn{tabIndex}";
-            button.Size = new Size(216, 38);
-            button.TabIndex = tabIndex;
-            button.Tag = tag;
-            button.Text = text;
-            button.TextAlign = ContentAlignment.MiddleLeft;
-            button.UseVisualStyleBackColor = false;
-            button.Click += MenuButton_Click;
         }
 
         #endregion

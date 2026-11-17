@@ -1,7 +1,17 @@
 namespace He_Thong_GYM.Forms;
+
 partial class FrmHLV
 {
- private System.ComponentModel.IContainer components=null!;protected override void Dispose(bool disposing){if(disposing&&components is not null)components.Dispose();base.Dispose(disposing);}
+    private System.ComponentModel.IContainer components = null!;
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing && components is not null) components.Dispose();
+        base.Dispose(disposing);
+    }
+
+    #region Windows Form Designer generated code
+
     private void InitializeComponent()
     {
         DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
@@ -54,7 +64,7 @@ partial class FrmHLV
         panelTieuDe.Location = new Point(0, 0);
         panelTieuDe.Name = "panelTieuDe";
         panelTieuDe.Size = new Size(1200, 82);
-        panelTieuDe.TabIndex = 5;
+        panelTieuDe.TabIndex = 0;
         // 
         // lblMoTa
         // 
@@ -87,7 +97,7 @@ partial class FrmHLV
         groupThongTin.Name = "groupThongTin";
         groupThongTin.Padding = new Padding(16);
         groupThongTin.Size = new Size(1152, 120);
-        groupThongTin.TabIndex = 4;
+        groupThongTin.TabIndex = 1;
         groupThongTin.TabStop = false;
         groupThongTin.Text = "Hồ sơ huấn luyện viên";
         // 
@@ -118,68 +128,92 @@ partial class FrmHLV
         // 
         // lblNhanVien
         // 
+        lblNhanVien.AutoSize = true;
+        lblNhanVien.Dock = DockStyle.Fill;
+        lblNhanVien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblNhanVien.Location = new Point(3, 0);
         lblNhanVien.Name = "lblNhanVien";
-        lblNhanVien.Size = new Size(100, 23);
+        lblNhanVien.Size = new Size(114, 35);
         lblNhanVien.TabIndex = 0;
+        lblNhanVien.Text = "Nhân viên:";
+        lblNhanVien.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // cboNhanVien
         // 
         cboNhanVien.Dock = DockStyle.Fill;
         cboNhanVien.DropDownStyle = ComboBoxStyle.DropDownList;
         cboNhanVien.Location = new Point(123, 3);
+        cboNhanVien.Margin = new Padding(3, 6, 12, 6);
         cboNhanVien.Name = "cboNhanVien";
-        cboNhanVien.Size = new Size(434, 23);
+        cboNhanVien.Size = new Size(425, 23);
         cboNhanVien.TabIndex = 1;
         // 
         // lblChuyenMon
         // 
+        lblChuyenMon.AutoSize = true;
+        lblChuyenMon.Dock = DockStyle.Fill;
+        lblChuyenMon.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblChuyenMon.Location = new Point(563, 0);
         lblChuyenMon.Name = "lblChuyenMon";
-        lblChuyenMon.Size = new Size(100, 23);
+        lblChuyenMon.Size = new Size(114, 35);
         lblChuyenMon.TabIndex = 2;
+        lblChuyenMon.Text = "Chuyên môn:";
+        lblChuyenMon.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // txtChuyenMon
         // 
         txtChuyenMon.Dock = DockStyle.Fill;
-        txtChuyenMon.Location = new Point(683, 6);
+        txtChuyenMon.Location = new Point(683, 3);
         txtChuyenMon.Margin = new Padding(3, 6, 12, 6);
         txtChuyenMon.Name = "txtChuyenMon";
-        txtChuyenMon.Size = new Size(425, 23);
+        txtChuyenMon.Size = new Size(434, 23);
         txtChuyenMon.TabIndex = 3;
         // 
         // lblKinhNghiem
         // 
+        lblKinhNghiem.AutoSize = true;
+        lblKinhNghiem.Dock = DockStyle.Fill;
+        lblKinhNghiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblKinhNghiem.Location = new Point(3, 35);
         lblKinhNghiem.Name = "lblKinhNghiem";
-        lblKinhNghiem.Size = new Size(100, 23);
+        lblKinhNghiem.Size = new Size(114, 35);
         lblKinhNghiem.TabIndex = 4;
+        lblKinhNghiem.Text = "Kinh nghiệm (năm):";
+        lblKinhNghiem.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // nudKinhNghiem
         // 
         nudKinhNghiem.Dock = DockStyle.Fill;
         nudKinhNghiem.Location = new Point(123, 38);
+        nudKinhNghiem.Margin = new Padding(3, 6, 12, 6);
         nudKinhNghiem.Maximum = new decimal(new int[] { 80, 0, 0, 0 });
         nudKinhNghiem.Name = "nudKinhNghiem";
-        nudKinhNghiem.Size = new Size(434, 23);
+        nudKinhNghiem.Size = new Size(425, 23);
         nudKinhNghiem.TabIndex = 5;
         // 
         // lblPhiThue
         // 
+        lblPhiThue.AutoSize = true;
+        lblPhiThue.Dock = DockStyle.Fill;
+        lblPhiThue.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblPhiThue.Location = new Point(563, 35);
         lblPhiThue.Name = "lblPhiThue";
-        lblPhiThue.Size = new Size(100, 23);
+        lblPhiThue.Size = new Size(114, 35);
         lblPhiThue.TabIndex = 6;
+        lblPhiThue.Text = "Phí thuê / buổi:";
+        lblPhiThue.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // nudPhiThue
         // 
-        nudPhiThue.DecimalPlaces = 2;
+        nudPhiThue.DecimalPlaces = 0;
         nudPhiThue.Dock = DockStyle.Fill;
         nudPhiThue.Location = new Point(683, 38);
+        nudPhiThue.Margin = new Padding(3, 6, 12, 6);
         nudPhiThue.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
         nudPhiThue.Name = "nudPhiThue";
         nudPhiThue.Size = new Size(434, 23);
         nudPhiThue.TabIndex = 7;
+        nudPhiThue.ThousandsSeparator = true;
         // 
         // flowThaoTac
         // 
@@ -189,22 +223,40 @@ partial class FrmHLV
         flowThaoTac.Location = new Point(24, 230);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(1152, 42);
-        flowThaoTac.TabIndex = 3;
+        flowThaoTac.TabIndex = 2;
         // 
         // btnThem
         // 
-        btnThem.Location = new Point(3, 3);
+        btnThem.BackColor = Color.FromArgb(37, 99, 235);
+        btnThem.Cursor = Cursors.Hand;
+        btnThem.FlatAppearance.BorderSize = 0;
+        btnThem.FlatStyle = FlatStyle.Flat;
+        btnThem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnThem.ForeColor = Color.White;
+        btnThem.Location = new Point(0, 0);
+        btnThem.Margin = new Padding(0, 0, 8, 0);
         btnThem.Name = "btnThem";
-        btnThem.Size = new Size(75, 23);
+        btnThem.Size = new Size(128, 36);
         btnThem.TabIndex = 0;
+        btnThem.Text = "Thêm mới";
+        btnThem.UseVisualStyleBackColor = false;
         btnThem.Click += btnThem_Click;
         // 
         // btnLuu
         // 
-        btnLuu.Location = new Point(84, 3);
+        btnLuu.BackColor = Color.FromArgb(5, 150, 105);
+        btnLuu.Cursor = Cursors.Hand;
+        btnLuu.FlatAppearance.BorderSize = 0;
+        btnLuu.FlatStyle = FlatStyle.Flat;
+        btnLuu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLuu.ForeColor = Color.White;
+        btnLuu.Location = new Point(136, 0);
+        btnLuu.Margin = new Padding(0, 0, 8, 0);
         btnLuu.Name = "btnLuu";
-        btnLuu.Size = new Size(75, 23);
+        btnLuu.Size = new Size(128, 36);
         btnLuu.TabIndex = 1;
+        btnLuu.Text = "Lưu thông tin";
+        btnLuu.UseVisualStyleBackColor = false;
         btnLuu.Click += btnLuu_Click;
         // 
         // panelTimKiem
@@ -217,12 +269,13 @@ partial class FrmHLV
         panelTimKiem.Location = new Point(24, 283);
         panelTimKiem.Name = "panelTimKiem";
         panelTimKiem.Size = new Size(1152, 58);
-        panelTimKiem.TabIndex = 2;
+        panelTimKiem.TabIndex = 3;
         // 
         // btnTimKiem
         // 
         btnTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnTimKiem.BackColor = Color.FromArgb(30, 64, 175);
+        btnTimKiem.FlatAppearance.BorderSize = 0;
         btnTimKiem.FlatStyle = FlatStyle.Flat;
         btnTimKiem.ForeColor = Color.White;
         btnTimKiem.Location = new Point(1020, 13);
@@ -261,6 +314,7 @@ partial class FrmHLV
         dgvHLV.BackgroundColor = Color.White;
         dgvHLV.BorderStyle = BorderStyle.None;
         dgvHLV.ColumnHeadersHeight = 38;
+        dgvHLV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgvHLV.Columns.AddRange(new DataGridViewColumn[] { colMaHLV, colHoTen, colChuyenMon, colKinhNghiem, colPhiThue, colTrangThai });
         dgvHLV.Location = new Point(24, 351);
         dgvHLV.Name = "dgvHLV";
@@ -269,38 +323,56 @@ partial class FrmHLV
         dgvHLV.RowTemplate.Height = 32;
         dgvHLV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvHLV.Size = new Size(1152, 348);
-        dgvHLV.TabIndex = 1;
+        dgvHLV.TabIndex = 4;
         dgvHLV.SelectionChanged += dgvHLV_SelectionChanged;
         // 
         // colMaHLV
         // 
+        colMaHLV.DataPropertyName = "MaHLV";
+        colMaHLV.FillWeight = 50F;
+        colMaHLV.HeaderText = "Mã HLV";
         colMaHLV.Name = "colMaHLV";
         colMaHLV.ReadOnly = true;
         // 
         // colHoTen
         // 
+        colHoTen.DataPropertyName = "HoTen";
+        colHoTen.FillWeight = 140F;
+        colHoTen.HeaderText = "Họ tên HLV";
         colHoTen.Name = "colHoTen";
         colHoTen.ReadOnly = true;
         // 
         // colChuyenMon
         // 
+        colChuyenMon.DataPropertyName = "ChuyenMon";
+        colChuyenMon.FillWeight = 140F;
+        colChuyenMon.HeaderText = "Chuyên môn";
         colChuyenMon.Name = "colChuyenMon";
         colChuyenMon.ReadOnly = true;
         // 
         // colKinhNghiem
         // 
+        colKinhNghiem.DataPropertyName = "KinhNghiem";
+        colKinhNghiem.FillWeight = 80F;
+        colKinhNghiem.HeaderText = "Kinh nghiệm (năm)";
         colKinhNghiem.Name = "colKinhNghiem";
         colKinhNghiem.ReadOnly = true;
         // 
         // colPhiThue
         // 
+        colPhiThue.DataPropertyName = "PhiThue";
         dataGridViewCellStyle1.Format = "N0";
         colPhiThue.DefaultCellStyle = dataGridViewCellStyle1;
+        colPhiThue.FillWeight = 90F;
+        colPhiThue.HeaderText = "Phí thuê (VNĐ)";
         colPhiThue.Name = "colPhiThue";
         colPhiThue.ReadOnly = true;
         // 
         // colTrangThai
         // 
+        colTrangThai.DataPropertyName = "TrangThaiNhanVien";
+        colTrangThai.FillWeight = 80F;
+        colTrangThai.HeaderText = "Trạng thái";
         colTrangThai.Name = "colTrangThai";
         colTrangThai.ReadOnly = true;
         // 
@@ -312,7 +384,7 @@ partial class FrmHLV
         panelTrangThai.Location = new Point(24, 709);
         panelTrangThai.Name = "panelTrangThai";
         panelTrangThai.Size = new Size(1152, 30);
-        panelTrangThai.TabIndex = 0;
+        panelTrangThai.TabIndex = 5;
         // 
         // lblTrangThai
         // 
@@ -328,7 +400,6 @@ partial class FrmHLV
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
-        AutoScroll = true;
         BackColor = Color.FromArgb(241, 245, 249);
         ClientSize = new Size(1200, 760);
         Controls.Add(panelTrangThai);
@@ -338,6 +409,7 @@ partial class FrmHLV
         Controls.Add(groupThongTin);
         Controls.Add(panelTieuDe);
         Font = new Font("Segoe UI", 9F);
+        AutoScroll = true;
         MinimumSize = new Size(850, 480);
         Name = "FrmHLV";
         Text = "Quản lý huấn luyện viên";
@@ -357,6 +429,36 @@ partial class FrmHLV
         panelTrangThai.PerformLayout();
         ResumeLayout(false);
     }
-    private static void CauHinhNhan(Label l,string t){l.AutoSize=true;l.Dock=DockStyle.Fill;l.Font=new Font("Segoe UI",9F,FontStyle.Bold);l.Text=t;l.TextAlign=ContentAlignment.MiddleLeft;}private static void CauHinhNut(Button b,string t,Color c){b.BackColor=c;b.FlatStyle=FlatStyle.Flat;b.FlatAppearance.BorderSize=0;b.ForeColor=Color.White;b.Font=new Font("Segoe UI",9F,FontStyle.Bold);b.Margin=new Padding(0,0,8,0);b.Size=new Size(128,36);b.Text=t;}private static void CauHinhCot(DataGridViewTextBoxColumn c,string p,string h,float w){c.DataPropertyName=p;c.HeaderText=h;c.Name="col"+p;c.FillWeight=w;c.ReadOnly=true;}
- private Panel panelTieuDe,panelTimKiem,panelTrangThai;private Label lblTieuDe,lblMoTa,lblNhanVien,lblChuyenMon,lblKinhNghiem,lblPhiThue,lblTimKiem,lblTrangThai;private GroupBox groupThongTin;private TableLayoutPanel tableThongTin;private ComboBox cboNhanVien;private TextBox txtChuyenMon,txtTimKiem;private NumericUpDown nudKinhNghiem,nudPhiThue;private FlowLayoutPanel flowThaoTac;private Button btnThem,btnLuu,btnTimKiem;private DataGridView dgvHLV;private DataGridViewTextBoxColumn colMaHLV,colHoTen,colChuyenMon,colKinhNghiem,colPhiThue,colTrangThai;
+
+    #endregion
+
+    private Panel panelTieuDe;
+    private Panel panelTimKiem;
+    private Panel panelTrangThai;
+    private Label lblTieuDe;
+    private Label lblMoTa;
+    private Label lblNhanVien;
+    private Label lblChuyenMon;
+    private Label lblKinhNghiem;
+    private Label lblPhiThue;
+    private Label lblTimKiem;
+    private Label lblTrangThai;
+    private GroupBox groupThongTin;
+    private TableLayoutPanel tableThongTin;
+    private ComboBox cboNhanVien;
+    private TextBox txtChuyenMon;
+    private TextBox txtTimKiem;
+    private NumericUpDown nudKinhNghiem;
+    private NumericUpDown nudPhiThue;
+    private FlowLayoutPanel flowThaoTac;
+    private Button btnThem;
+    private Button btnLuu;
+    private Button btnTimKiem;
+    private DataGridView dgvHLV;
+    private DataGridViewTextBoxColumn colMaHLV;
+    private DataGridViewTextBoxColumn colHoTen;
+    private DataGridViewTextBoxColumn colChuyenMon;
+    private DataGridViewTextBoxColumn colKinhNghiem;
+    private DataGridViewTextBoxColumn colPhiThue;
+    private DataGridViewTextBoxColumn colTrangThai;
 }

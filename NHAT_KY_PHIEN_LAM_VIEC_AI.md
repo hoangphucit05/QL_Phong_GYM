@@ -373,4 +373,18 @@ Tài liệu này lưu vết các phiên AI đã thực hiện trong dự án đ�
   - **Lỗi hiển thị Tiếng Việt / UTF-8: 0 / 21 form**.
 - Chạy `dotnet build He_Thong_GYM.slnx --no-restore`: thành công 100%, **0 warning, 0 error**.
 
+### Khắc phục lỗi Visual Studio Designer CodeDOM parser
+
+- **Vấn đề**: Visual Studio Designer báo lỗi `The designer cannot process the code at line X: for(...) / helper methods` do bộ phân tích CodeDOM của WinForms Designer không hỗ trợ vòng lặp `for`, biểu thức lambda (`=>`), hoặc gọi helper method tùy biến bên trong `InitializeComponent()`.
+- **Giải pháp**:
+  - Chuẩn hóa toàn bộ 21 file `.Designer.cs` theo chuẩn CodeDOM của Visual Studio WinForms Designer.
+  - Gỡ bỏ hoàn toàn các vòng lặp `for`/`foreach`, thay bằng khai báo tuần tự từng `RowStyle`/`ColumnStyle`.
+  - Thay thế toàn bộ biểu thức lambda trong `.Designer.cs` (như `btnHuy.Click += (s, e) => Close();`) bằng named event handler trong file code-behind `.cs`.
+  - Inline toàn bộ các hàm trợ giúp gán thuộc tính (`CauHinhNhan`, `CauHinhNut`, `CauHinhCot`, `TaoThe`) thành các phép gán thuộc tính trực tiếp cho từng Control.
+  - Bảo toàn 100% tên biến, DataPropertyName của các cột DataGridView, sự kiện Click/SelectionChanged/ValueChanged và logic nghiệp vụ.
+- **Kết quả xác minh**:
+  - Quét CodeDOM Designer: **0 lỗi** trên tất cả các Form.
+  - Build solution: **0 warning, 0 error**.
+  - Kiểm tra UI Inspector: **0 overlap, 0 out-of-bounds, 0 text-truncation, 0 encoding issues**.
+
 ---
