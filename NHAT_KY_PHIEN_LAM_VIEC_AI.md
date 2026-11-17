@@ -410,6 +410,11 @@ Tài liệu này lưu vết các phiên AI đã thực hiện trong dự án đ�
    - Bố cục lại khối chữ thương hiệu: `lblThuongHieu` ("GYM PRO", 15.5pt Bold trắng tại $X = 72, Y = 22$) và `lblPhuDe` ("Hệ thống quản lý phòng gym", 8pt Slate-400 tại $X = 74, Y = 51$).
    - Đảm bảo 100% chuẩn Visual Studio Designer CodeDOM.
 
+3. **Nâng cấp Login Branding (Màn hình Đăng nhập `FrmLogin`)**:
+   - Kết hợp ảnh nền phòng GYM hiện đại (`bg_login_branding.png` được phủ lớp gradient tối cao cấp `#0F172A` $\rightarrow$ `#090E1A`) cho toàn bộ panel trái (`panelThuongHieu`).
+   - Đặt biểu tượng `Huy hiệu GYM PRO neon xanh lam` nổi bật ở vị trí trung tâm (`picLogo`, 100x100 px tại $X = 102, Y = 45$).
+   - Căn chỉnh chữ `GYM PRO` (Bold 24pt trắng) và phụ đề `Quản lý vận hành thông minh` (màu xanh dương nhạt `#BAE6FD`), nền trong suốt tự nhiên, tạo chiều sâu thị giác sang trọng.
+
 ### Kết quả kiểm thử
 - Build solution: **0 warning, 0 error**.
 - UI Inspector: **21/21 form vượt qua kiểm tra giao diện tự động** (0 overlap, 0 out-of-bounds, 0 text-truncation).
