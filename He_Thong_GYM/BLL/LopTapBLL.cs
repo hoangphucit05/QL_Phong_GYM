@@ -1,0 +1,3 @@
+﻿using He_Thong_GYM.DAL;using He_Thong_GYM.Models;
+namespace He_Thong_GYM.BLL;
+public sealed class LopTapBLL{private readonly LopTapDAL _d=new();public Task<List<LopTap>> LayDanhSachAsync()=>_d.LayDanhSachAsync();public Task<List<(int,string)>> LayLoaiAsync()=>_d.LayLoaiAsync();public Task<List<HocVienLop>> LayHocVienAsync(int l,DateTime n)=>_d.LayHocVienAsync(l,n);public Task DangKyLopAsync(int t,int l)=>_d.DangKyLopAsync(t,l);public Task DiemDanhAsync(int d,DateTime n,string tt)=>_d.DiemDanhAsync(d,n,tt);public Task ThemAsync(LopTap l){if(string.IsNullOrWhiteSpace(l.TenLop)||l.SucChua<=0||l.GioKetThuc<=l.GioBatDau)throw new ArgumentException("Thông tin lớp tập không hợp lệ.");return _d.ThemAsync(l);}}

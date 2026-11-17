@@ -1,0 +1,342 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\BTL PTTKYC\\He_Thong_GYM\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|d:\\btl pttkyc\\he_thong_gym\\he_thong_gym\\forms\\frmdangkygoi.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmdangkygoi.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmdangkygoi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmdangkygoi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmbaotri.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmbaotri.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmbanhang.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmdangkypt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmdangkypt.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmgoitap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmgoitap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmdiemdanh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmdiemdanh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmhlv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmhlv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmhoadon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmhoadon.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmkhuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmkhuyenmai.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmloptap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmloptap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmsanpham.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmsanpham.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmphongtap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmphongtap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmthongke.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmthongke.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmthietbi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmthietbi.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmthanhvien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{B2B6EEBE-04AC-7F0A-D103-75BD9CC8655A}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmthanhvien.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmdiemdanh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmdiemdanh.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmbaotri.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmbaotri.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|D:\\BTL PTTKYC\\He_Thong_GYM\\he_thong_gym\\forms\\frmhlv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{BCD1EF2B-712A-4DB2-9EF2-F59F0FF52320}|He_Thong_GYM\\He_Thong_GYM.csproj|solutionrelative:he_thong_gym\\forms\\frmhlv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FrmDangKyGoi.Designer.cs",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyGoi.Designer.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmDangKyGoi.Designer.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyGoi.Designer.cs",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmDangKyGoi.Designer.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAUwFYAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:07:45.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "FrmGoiTap.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmGoiTap.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmGoiTap.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmGoiTap.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmGoiTap.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:14.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "FrmDangKyPT.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyPT.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmDangKyPT.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyPT.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmDangKyPT.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:12.349Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmDangKyGoi.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyGoi.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmDangKyGoi.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDangKyGoi.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmDangKyGoi.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:10.423Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "FrmBaoTri.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBaoTri.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmBaoTri.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBaoTri.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmBaoTri.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:08.513Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "FrmBanHang.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBanHang.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmBanHang.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBanHang.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmBanHang.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:36:45.975Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "FrmDiemDanh.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDiemDanh.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmDiemDanh.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDiemDanh.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmDiemDanh.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:13.128Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "FrmHLV.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHLV.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmHLV.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHLV.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmHLV.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:36:42.606Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "FrmHoaDon.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHoaDon.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmHoaDon.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHoaDon.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmHoaDon.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:02:55.985Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "FrmKhuyenMai.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmKhuyenMai.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmKhuyenMai.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmKhuyenMai.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmKhuyenMai.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:05.449Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "FrmLopTap.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmLopTap.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmLopTap.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmLopTap.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmLopTap.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:03:11.718Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "FrmLogin.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmLogin.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmLogin.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmLogin.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmLogin.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:03:01.546Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "FrmSanPham.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmSanPham.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmSanPham.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmSanPham.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmSanPham.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:03:10.422Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "FrmPhongTap.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmPhongTap.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmPhongTap.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmPhongTap.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmPhongTap.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T09:03:08.538Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "FrmThongKe.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThongKe.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmThongKe.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThongKe.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmThongKe.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:46:03.523Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "FrmThanhVien.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThanhVien.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmThanhVien.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThanhVien.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmThanhVien.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:21.586Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "FrmThietBi.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThietBi.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmThietBi.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmThietBi.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmThietBi.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:45:24.357Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "FrmDiemDanh.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDiemDanh.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmDiemDanh.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmDiemDanh.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmDiemDanh.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:12:16.15Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "FrmBaoTri.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBaoTri.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmBaoTri.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmBaoTri.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmBaoTri.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:29:16.977Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "FrmHLV.cs [Design]",
+              "DocumentMoniker": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHLV.cs",
+              "RelativeDocumentMoniker": "He_Thong_GYM\\Forms\\FrmHLV.cs",
+              "ToolTip": "D:\\BTL PTTKYC\\He_Thong_GYM\\He_Thong_GYM\\Forms\\FrmHLV.cs [Design]",
+              "RelativeToolTip": "He_Thong_GYM\\Forms\\FrmHLV.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-11-16T06:12:27.953Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

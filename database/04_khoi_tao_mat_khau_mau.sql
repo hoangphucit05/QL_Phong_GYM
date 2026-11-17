@@ -1,0 +1,17 @@
+﻿/*
+  CHI DUNG CHO MOI TRUONG PHAT TRIEN / KHOI TAO LAN DAU.
+  Chay sau 01_upgrade_ql_phonggym_v3.sql.
+  Tai khoan co hash NULL se duoc chuyen sang PBKDF2-HMAC-SHA512 (210,000 vong),
+  mat khau mau hien tai la 123456. Dang nhap va doi ngay sang mat khau rieng >= 8 ky tu.
+*/
+USE QL_PhongGym;
+GO
+UPDATE dbo.TaiKhoan
+SET MatKhauHash = 0x5E167A74676D86DD31A79850DCC007C73628A5C6EF16B30B629EEFB7F4431107DD305F6FB26B9DB4489420AF851BB72C647B5C8FC2D554F4E093058034A06FB7,
+    MatKhauSalt = 0x6D88C9B74F31BCF3DE96C250B922654348B0285275744FC7A7BA1FBE102FED80,
+    MatKhau = ''
+WHERE MatKhauHash IS NULL OR MatKhauSalt IS NULL;
+GO
+IF EXISTS (SELECT 1 FROM dbo.TaiKhoan WHERE MatKhauHash IS NULL OR MatKhauSalt IS NULL)
+    THROW 51010, N'Không thể hoàn tất khởi tạo mật khẩu hash.', 1;
+GO
