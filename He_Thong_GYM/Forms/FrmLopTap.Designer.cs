@@ -16,8 +16,8 @@ partial class FrmLopTap
     private void InitializeComponent()
     {
         panelTieuDe = new Panel();
-        lblTieuDe = new Label();
         lblMoTa = new Label();
+        lblTieuDe = new Label();
         groupThongTin = new GroupBox();
         tableThongTin = new TableLayoutPanel();
         lblTenLop = new Label();
@@ -57,6 +57,16 @@ partial class FrmLopTap
         panelTieuDe.Size = new Size(1100, 80);
         panelTieuDe.TabIndex = 0;
         // 
+        // lblMoTa
+        // 
+        lblMoTa.AutoSize = true;
+        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
+        lblMoTa.Location = new Point(26, 48);
+        lblMoTa.Name = "lblMoTa";
+        lblMoTa.Size = new Size(347, 15);
+        lblMoTa.TabIndex = 1;
+        lblMoTa.Text = "Mở các lớp học Yoga, Boxing, Dance, phân công HLV và xếp lịch.";
+        // 
         // lblTieuDe
         // 
         lblTieuDe.AutoSize = true;
@@ -64,19 +74,9 @@ partial class FrmLopTap
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
         lblTieuDe.Location = new Point(24, 14);
         lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(220, 30);
+        lblTieuDe.Size = new Size(203, 30);
         lblTieuDe.TabIndex = 0;
         lblTieuDe.Text = "QUẢN LÝ LỚP TẬP";
-        // 
-        // lblMoTa
-        // 
-        lblMoTa.AutoSize = true;
-        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
-        lblMoTa.Location = new Point(26, 48);
-        lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(340, 15);
-        lblMoTa.TabIndex = 1;
-        lblMoTa.Text = "Mở các lớp học Yoga, Boxing, Dance, phân công HLV và xếp lịch.";
         // 
         // groupThongTin
         // 

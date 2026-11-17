@@ -16,8 +16,8 @@ partial class FrmBanHang
     private void InitializeComponent()
     {
         panelTieuDe = new Panel();
-        lblTieuDe = new Label();
         lblMoTa = new Label();
+        lblTieuDe = new Label();
         panelNoiDung = new Panel();
         tableNhap = new TableLayoutPanel();
         lblThanhVien = new Label();
@@ -50,6 +50,16 @@ partial class FrmBanHang
         panelTieuDe.Size = new Size(560, 75);
         panelTieuDe.TabIndex = 0;
         // 
+        // lblMoTa
+        // 
+        lblMoTa.AutoSize = true;
+        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
+        lblMoTa.Location = new Point(22, 44);
+        lblMoTa.Name = "lblMoTa";
+        lblMoTa.Size = new Size(256, 15);
+        lblMoTa.TabIndex = 1;
+        lblMoTa.Text = "Lập hóa đơn xuất bán sản phẩm và trừ tồn kho.";
+        // 
         // lblTieuDe
         // 
         lblTieuDe.AutoSize = true;
@@ -57,19 +67,9 @@ partial class FrmBanHang
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
         lblTieuDe.Location = new Point(20, 12);
         lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(165, 28);
+        lblTieuDe.Size = new Size(168, 28);
         lblTieuDe.TabIndex = 0;
         lblTieuDe.Text = "BÁN SẢN PHẨM";
-        // 
-        // lblMoTa
-        // 
-        lblMoTa.AutoSize = true;
-        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
-        lblMoTa.Location = new Point(22, 44);
-        lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(270, 15);
-        lblMoTa.TabIndex = 1;
-        lblMoTa.Text = "Lập hóa đơn xuất bán sản phẩm và trừ tồn kho.";
         // 
         // panelNoiDung
         // 
@@ -211,23 +211,6 @@ partial class FrmBanHang
         panelNut.Size = new Size(560, 60);
         panelNut.TabIndex = 2;
         // 
-        // btnHuy
-        // 
-        btnHuy.BackColor = Color.FromArgb(226, 232, 240);
-        btnHuy.Cursor = Cursors.Hand;
-        btnHuy.FlatAppearance.BorderSize = 0;
-        btnHuy.FlatStyle = FlatStyle.Flat;
-        btnHuy.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        btnHuy.ForeColor = Color.FromArgb(71, 85, 105);
-        btnHuy.Location = new Point(292, 10);
-        btnHuy.Margin = new Padding(0, 0, 10, 0);
-        btnHuy.Name = "btnHuy";
-        btnHuy.Size = new Size(110, 36);
-        btnHuy.TabIndex = 1;
-        btnHuy.Text = "Đóng";
-        btnHuy.UseVisualStyleBackColor = false;
-        btnHuy.Click += btnHuy_Click;
-        // 
         // btnBan
         // 
         btnBan.BackColor = Color.FromArgb(5, 150, 105);
@@ -236,7 +219,7 @@ partial class FrmBanHang
         btnBan.FlatStyle = FlatStyle.Flat;
         btnBan.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnBan.ForeColor = Color.White;
-        btnBan.Location = new Point(412, 10);
+        btnBan.Location = new Point(396, 10);
         btnBan.Margin = new Padding(0);
         btnBan.Name = "btnBan";
         btnBan.Size = new Size(120, 36);
@@ -244,6 +227,23 @@ partial class FrmBanHang
         btnBan.Text = "Tạo hóa đơn";
         btnBan.UseVisualStyleBackColor = false;
         btnBan.Click += btnBan_Click;
+        // 
+        // btnHuy
+        // 
+        btnHuy.BackColor = Color.FromArgb(226, 232, 240);
+        btnHuy.Cursor = Cursors.Hand;
+        btnHuy.FlatAppearance.BorderSize = 0;
+        btnHuy.FlatStyle = FlatStyle.Flat;
+        btnHuy.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnHuy.ForeColor = Color.FromArgb(71, 85, 105);
+        btnHuy.Location = new Point(276, 10);
+        btnHuy.Margin = new Padding(0, 0, 10, 0);
+        btnHuy.Name = "btnHuy";
+        btnHuy.Size = new Size(110, 36);
+        btnHuy.TabIndex = 1;
+        btnHuy.Text = "Đóng";
+        btnHuy.UseVisualStyleBackColor = false;
+        btnHuy.Click += btnHuy_Click;
         // 
         // FrmBanHang
         // 

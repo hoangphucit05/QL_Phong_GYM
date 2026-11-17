@@ -147,7 +147,7 @@ partial class FrmGoiTap
         // txtTenGoi
         // 
         txtTenGoi.Dock = DockStyle.Fill;
-        txtTenGoi.Location = new Point(103, 3);
+        txtTenGoi.Location = new Point(103, 6);
         txtTenGoi.Margin = new Padding(3, 6, 12, 6);
         txtTenGoi.Name = "txtTenGoi";
         txtTenGoi.Size = new Size(445, 23);
@@ -168,12 +168,12 @@ partial class FrmGoiTap
         // nudThoiHan
         // 
         nudThoiHan.Dock = DockStyle.Fill;
-        nudThoiHan.Location = new Point(663, 3);
+        nudThoiHan.Location = new Point(663, 6);
         nudThoiHan.Margin = new Padding(3, 6, 12, 6);
         nudThoiHan.Maximum = new decimal(new int[] { 3650, 0, 0, 0 });
         nudThoiHan.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudThoiHan.Name = "nudThoiHan";
-        nudThoiHan.Size = new Size(454, 23);
+        nudThoiHan.Size = new Size(445, 23);
         nudThoiHan.TabIndex = 3;
         nudThoiHan.Value = new decimal(new int[] { 30, 0, 0, 0 });
         // 
@@ -191,9 +191,8 @@ partial class FrmGoiTap
         // 
         // nudGia
         // 
-        nudGia.DecimalPlaces = 0;
         nudGia.Dock = DockStyle.Fill;
-        nudGia.Location = new Point(103, 36);
+        nudGia.Location = new Point(103, 39);
         nudGia.Margin = new Padding(3, 6, 12, 6);
         nudGia.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
         nudGia.Name = "nudGia";
@@ -218,10 +217,10 @@ partial class FrmGoiTap
         cboTrangThai.Dock = DockStyle.Fill;
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.Items.AddRange(new object[] { "Đang áp dụng", "Ngừng áp dụng" });
-        cboTrangThai.Location = new Point(663, 36);
+        cboTrangThai.Location = new Point(663, 39);
         cboTrangThai.Margin = new Padding(3, 6, 12, 6);
         cboTrangThai.Name = "cboTrangThai";
-        cboTrangThai.Size = new Size(454, 23);
+        cboTrangThai.Size = new Size(445, 23);
         cboTrangThai.TabIndex = 7;
         // 
         // lblMoTaForm
@@ -240,10 +239,10 @@ partial class FrmGoiTap
         // 
         tableThongTin.SetColumnSpan(txtMoTa, 3);
         txtMoTa.Dock = DockStyle.Fill;
-        txtMoTa.Location = new Point(103, 69);
+        txtMoTa.Location = new Point(103, 72);
         txtMoTa.Margin = new Padding(3, 6, 12, 6);
         txtMoTa.Name = "txtMoTa";
-        txtMoTa.Size = new Size(1004, 23);
+        txtMoTa.Size = new Size(1005, 23);
         txtMoTa.TabIndex = 9;
         // 
         // flowThaoTac
@@ -449,6 +448,7 @@ partial class FrmGoiTap
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
+        AutoScroll = true;
         BackColor = Color.FromArgb(241, 245, 249);
         ClientSize = new Size(1200, 760);
         Controls.Add(panelTrangThai);
@@ -458,7 +458,6 @@ partial class FrmGoiTap
         Controls.Add(groupThongTin);
         Controls.Add(panelTieuDe);
         Font = new Font("Segoe UI", 9F);
-        AutoScroll = true;
         MinimumSize = new Size(850, 480);
         Name = "FrmGoiTap";
         Text = "Quản lý gói tập";

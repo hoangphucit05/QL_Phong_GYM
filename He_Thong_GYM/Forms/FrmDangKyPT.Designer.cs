@@ -58,7 +58,7 @@ partial class FrmDangKyPT
         title.ForeColor = Color.FromArgb(15, 23, 42);
         title.Location = new Point(24, 22);
         title.Name = "title";
-        title.Size = new Size(410, 30);
+        title.Size = new Size(362, 30);
         title.TabIndex = 0;
         title.Text = "ĐĂNG KÝ HUẤN LUYỆN VIÊN (PT)";
         // 
@@ -84,17 +84,6 @@ partial class FrmDangKyPT
         table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
         table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        table.RowCount = 4;
-        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
-        table.Dock = DockStyle.Fill;
-        table.Font = new Font("Segoe UI", 9F);
-        table.Location = new Point(16, 34);
-        table.Name = "table";
-        table.Size = new Size(1120, 160);
-        table.TabIndex = 0;
         table.Controls.Add(l1, 0, 0);
         table.Controls.Add(cboThanhVien, 1, 0);
         table.Controls.Add(l2, 2, 0);
@@ -109,7 +98,17 @@ partial class FrmDangKyPT
         table.Controls.Add(dtpKetThuc, 3, 2);
         table.Controls.Add(l7, 0, 3);
         table.Controls.Add(lblTongTien, 1, 3);
-        table.SetColumnSpan(lblTongTien, 3);
+        table.Dock = DockStyle.Fill;
+        table.Font = new Font("Segoe UI", 9F);
+        table.Location = new Point(16, 34);
+        table.Name = "table";
+        table.RowCount = 4;
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+        table.Size = new Size(1120, 160);
+        table.TabIndex = 0;
         // 
         // l1
         // 
@@ -152,6 +151,7 @@ partial class FrmDangKyPT
         cboHLV.Name = "cboHLV";
         cboHLV.Size = new Size(425, 23);
         cboHLV.TabIndex = 3;
+        cboHLV.SelectedIndexChanged += GiaThayDoi;
         // 
         // l3
         // 
@@ -173,6 +173,7 @@ partial class FrmDangKyPT
         cboKhuyenMai.Name = "cboKhuyenMai";
         cboKhuyenMai.Size = new Size(425, 23);
         cboKhuyenMai.TabIndex = 5;
+        cboKhuyenMai.SelectedIndexChanged += GiaThayDoi;
         // 
         // l4
         // 
@@ -196,6 +197,7 @@ partial class FrmDangKyPT
         nudSoBuoi.Size = new Size(425, 23);
         nudSoBuoi.TabIndex = 7;
         nudSoBuoi.Value = new decimal(new int[] { 1, 0, 0, 0 });
+        nudSoBuoi.ValueChanged += GiaThayDoi;
         // 
         // l5
         // 
@@ -217,6 +219,7 @@ partial class FrmDangKyPT
         dtpBatDau.Name = "dtpBatDau";
         dtpBatDau.Size = new Size(425, 23);
         dtpBatDau.TabIndex = 9;
+        dtpBatDau.ValueChanged += GiaThayDoi;
         // 
         // l6
         // 
@@ -253,6 +256,7 @@ partial class FrmDangKyPT
         // 
         // lblTongTien
         // 
+        table.SetColumnSpan(lblTongTien, 3);
         lblTongTien.Dock = DockStyle.Fill;
         lblTongTien.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
         lblTongTien.ForeColor = Color.FromArgb(5, 150, 105);
@@ -283,7 +287,6 @@ partial class FrmDangKyPT
         dgvLichSu.AllowUserToAddRows = false;
         dgvLichSu.AllowUserToDeleteRows = false;
         dgvLichSu.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        dgvLichSu.AutoGenerateColumns = true;
         dgvLichSu.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvLichSu.BackgroundColor = Color.White;
         dgvLichSu.BorderStyle = BorderStyle.None;
@@ -302,22 +305,18 @@ partial class FrmDangKyPT
         // 
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
+        AutoScroll = true;
         BackColor = Color.FromArgb(241, 245, 249);
         ClientSize = new Size(1200, 760);
         Controls.Add(dgvLichSu);
         Controls.Add(btnDangKy);
         Controls.Add(group);
         Controls.Add(panel);
-        AutoScroll = true;
         Font = new Font("Segoe UI", 9F);
         MinimumSize = new Size(850, 480);
         Name = "FrmDangKyPT";
         Text = "Đăng ký PT";
         Load += FrmDangKyPT_Load;
-        cboHLV.SelectedIndexChanged += GiaThayDoi;
-        cboKhuyenMai.SelectedIndexChanged += GiaThayDoi;
-        nudSoBuoi.ValueChanged += GiaThayDoi;
-        dtpBatDau.ValueChanged += GiaThayDoi;
         panel.ResumeLayout(false);
         panel.PerformLayout();
         group.ResumeLayout(false);

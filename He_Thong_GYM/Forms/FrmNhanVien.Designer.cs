@@ -18,8 +18,8 @@ partial class FrmNhanVien
     private void InitializeComponent()
     {
         panelTieuDe = new Panel();
-        lblTieuDe = new Label();
         lblMoTa = new Label();
+        lblTieuDe = new Label();
         groupThongTin = new GroupBox();
         tableThongTin = new TableLayoutPanel();
         lblHoTen = new Label();
@@ -45,16 +45,10 @@ partial class FrmNhanVien
         btnLuu = new Button();
         btnNghiViec = new Button();
         panelTimKiem = new Panel();
-        lblTimKiem = new Label();
-        txtTimKiem = new TextBox();
         btnTimKiem = new Button();
+        txtTimKiem = new TextBox();
+        lblTimKiem = new Label();
         dgvNhanVien = new DataGridView();
-        colMaNV = new DataGridViewTextBoxColumn();
-        colHoTen = new DataGridViewTextBoxColumn();
-        colSDT = new DataGridViewTextBoxColumn();
-        colChucVu = new DataGridViewTextBoxColumn();
-        colLuong = new DataGridViewTextBoxColumn();
-        colTrangThai = new DataGridViewTextBoxColumn();
         panelTrangThai = new Panel();
         lblTrangThaiTimKiem = new Label();
         panelTieuDe.SuspendLayout();
@@ -79,6 +73,16 @@ partial class FrmNhanVien
         panelTieuDe.Size = new Size(1200, 80);
         panelTieuDe.TabIndex = 0;
         // 
+        // lblMoTa
+        // 
+        lblMoTa.AutoSize = true;
+        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
+        lblMoTa.Location = new Point(26, 48);
+        lblMoTa.Name = "lblMoTa";
+        lblMoTa.Size = new Size(339, 15);
+        lblMoTa.TabIndex = 1;
+        lblMoTa.Text = "Quản lý hồ sơ nhân viên, chức vụ, lương và trạng thái làm việc.";
+        // 
         // lblTieuDe
         // 
         lblTieuDe.AutoSize = true;
@@ -86,19 +90,9 @@ partial class FrmNhanVien
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
         lblTieuDe.Location = new Point(24, 14);
         lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(250, 30);
+        lblTieuDe.Size = new Size(236, 30);
         lblTieuDe.TabIndex = 0;
         lblTieuDe.Text = "QUẢN LÝ NHÂN VIÊN";
-        // 
-        // lblMoTa
-        // 
-        lblMoTa.AutoSize = true;
-        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
-        lblMoTa.Location = new Point(26, 48);
-        lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(345, 15);
-        lblMoTa.TabIndex = 1;
-        lblMoTa.Text = "Quản lý hồ sơ nhân viên, chức vụ, lương và trạng thái làm việc.";
         // 
         // groupThongTin
         // 
@@ -193,7 +187,7 @@ partial class FrmNhanVien
         dtpNgaySinh.Location = new Point(673, 3);
         dtpNgaySinh.Margin = new Padding(3, 3, 12, 3);
         dtpNgaySinh.Name = "dtpNgaySinh";
-        dtpNgaySinh.Size = new Size(434, 23);
+        dtpNgaySinh.Size = new Size(435, 23);
         dtpNgaySinh.TabIndex = 3;
         // 
         // lblGioiTinh
@@ -238,7 +232,7 @@ partial class FrmNhanVien
         txtSDT.Location = new Point(673, 33);
         txtSDT.Margin = new Padding(3, 3, 12, 3);
         txtSDT.Name = "txtSDT";
-        txtSDT.Size = new Size(434, 23);
+        txtSDT.Size = new Size(435, 23);
         txtSDT.TabIndex = 7;
         // 
         // lblEmail
@@ -280,7 +274,7 @@ partial class FrmNhanVien
         txtDiaChi.Location = new Point(673, 63);
         txtDiaChi.Margin = new Padding(3, 3, 12, 3);
         txtDiaChi.Name = "txtDiaChi";
-        txtDiaChi.Size = new Size(434, 23);
+        txtDiaChi.Size = new Size(435, 23);
         txtDiaChi.TabIndex = 11;
         // 
         // lblChucVu
@@ -318,13 +312,12 @@ partial class FrmNhanVien
         // 
         // nudLuong
         // 
-        nudLuong.DecimalPlaces = 0;
         nudLuong.Dock = DockStyle.Fill;
         nudLuong.Location = new Point(673, 93);
         nudLuong.Margin = new Padding(3, 3, 12, 3);
         nudLuong.Maximum = new decimal(new int[] { 1000000000, 0, 0, 0 });
         nudLuong.Name = "nudLuong";
-        nudLuong.Size = new Size(434, 23);
+        nudLuong.Size = new Size(435, 23);
         nudLuong.TabIndex = 15;
         nudLuong.ThousandsSeparator = true;
         // 
@@ -427,25 +420,6 @@ partial class FrmNhanVien
         panelTimKiem.Size = new Size(1152, 58);
         panelTimKiem.TabIndex = 3;
         // 
-        // lblTimKiem
-        // 
-        lblTimKiem.AutoSize = true;
-        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblTimKiem.Location = new Point(18, 20);
-        lblTimKiem.Name = "lblTimKiem";
-        lblTimKiem.Size = new Size(112, 15);
-        lblTimKiem.TabIndex = 0;
-        lblTimKiem.Text = "Tìm theo tên / SĐT:";
-        // 
-        // txtTimKiem
-        // 
-        txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        txtTimKiem.Location = new Point(140, 16);
-        txtTimKiem.Name = "txtTimKiem";
-        txtTimKiem.PlaceholderText = "Nhập từ khóa tìm kiếm nhân viên...";
-        txtTimKiem.Size = new Size(866, 23);
-        txtTimKiem.TabIndex = 1;
-        // 
         // btnTimKiem
         // 
         btnTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -463,17 +437,34 @@ partial class FrmNhanVien
         btnTimKiem.UseVisualStyleBackColor = false;
         btnTimKiem.Click += btnTimKiem_Click;
         // 
+        // txtTimKiem
+        // 
+        txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        txtTimKiem.Location = new Point(140, 16);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Nhập từ khóa tìm kiếm nhân viên...";
+        txtTimKiem.Size = new Size(866, 23);
+        txtTimKiem.TabIndex = 1;
+        // 
+        // lblTimKiem
+        // 
+        lblTimKiem.AutoSize = true;
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.Location = new Point(18, 20);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(116, 15);
+        lblTimKiem.TabIndex = 0;
+        lblTimKiem.Text = "Tìm theo tên / SĐT:";
+        // 
         // dgvNhanVien
         // 
         dgvNhanVien.AllowUserToAddRows = false;
         dgvNhanVien.AllowUserToDeleteRows = false;
         dgvNhanVien.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        dgvNhanVien.AutoGenerateColumns = false;
         dgvNhanVien.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         dgvNhanVien.BackgroundColor = Color.White;
         dgvNhanVien.BorderStyle = BorderStyle.None;
         dgvNhanVien.ColumnHeadersHeight = 36;
-        dgvNhanVien.Columns.AddRange(new DataGridViewColumn[] { colMaNV, colHoTen, colSDT, colChucVu, colLuong, colTrangThai });
         dgvNhanVien.Location = new Point(24, 418);
         dgvNhanVien.MultiSelect = false;
         dgvNhanVien.Name = "dgvNhanVien";
@@ -484,55 +475,6 @@ partial class FrmNhanVien
         dgvNhanVien.Size = new Size(1152, 280);
         dgvNhanVien.TabIndex = 4;
         dgvNhanVien.SelectionChanged += dgvNhanVien_SelectionChanged;
-        // 
-        // colMaNV
-        // 
-        colMaNV.DataPropertyName = "MaNV";
-        colMaNV.FillWeight = 50F;
-        colMaNV.HeaderText = "Mã";
-        colMaNV.Name = "colMaNV";
-        colMaNV.ReadOnly = true;
-        // 
-        // colHoTen
-        // 
-        colHoTen.DataPropertyName = "HoTen";
-        colHoTen.FillWeight = 145F;
-        colHoTen.HeaderText = "Họ và tên";
-        colHoTen.Name = "colHoTen";
-        colHoTen.ReadOnly = true;
-        // 
-        // colSDT
-        // 
-        colSDT.DataPropertyName = "SDT";
-        colSDT.FillWeight = 100F;
-        colSDT.HeaderText = "Số điện thoại";
-        colSDT.Name = "colSDT";
-        colSDT.ReadOnly = true;
-        // 
-        // colChucVu
-        // 
-        colChucVu.DataPropertyName = "ChucVu";
-        colChucVu.FillWeight = 120F;
-        colChucVu.HeaderText = "Chức vụ";
-        colChucVu.Name = "colChucVu";
-        colChucVu.ReadOnly = true;
-        // 
-        // colLuong
-        // 
-        colLuong.DataPropertyName = "Luong";
-        colLuong.DefaultCellStyle.Format = "N0";
-        colLuong.FillWeight = 100F;
-        colLuong.HeaderText = "Lương (VNĐ)";
-        colLuong.Name = "colLuong";
-        colLuong.ReadOnly = true;
-        // 
-        // colTrangThai
-        // 
-        colTrangThai.DataPropertyName = "TrangThai";
-        colTrangThai.FillWeight = 90F;
-        colTrangThai.HeaderText = "Trạng thái";
-        colTrangThai.Name = "colTrangThai";
-        colTrangThai.ReadOnly = true;
         // 
         // panelTrangThai
         // 
@@ -552,7 +494,7 @@ partial class FrmNhanVien
         lblTrangThaiTimKiem.ForeColor = Color.FromArgb(100, 116, 139);
         lblTrangThaiTimKiem.Location = new Point(10, 8);
         lblTrangThaiTimKiem.Name = "lblTrangThaiTimKiem";
-        lblTrangThaiTimKiem.Size = new Size(149, 15);
+        lblTrangThaiTimKiem.Size = new Size(151, 15);
         lblTrangThaiTimKiem.TabIndex = 0;
         lblTrangThaiTimKiem.Text = "Hiển thị toàn bộ nhân viên.";
         // 
