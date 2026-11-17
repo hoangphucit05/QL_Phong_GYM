@@ -34,7 +34,8 @@ partial class FrmLogin
         // 
         // panelThuongHieu
         // 
-        panelThuongHieu.BackColor = Color.FromArgb(30, 64, 175);
+        panelThuongHieu.BackColor = Color.FromArgb(15, 23, 42);
+        panelThuongHieu.BackgroundImageLayout = ImageLayout.Stretch;
         panelThuongHieu.Controls.Add(picLogo);
         panelThuongHieu.Controls.Add(lblPhuDe);
         panelThuongHieu.Controls.Add(lblThuongHieu);
@@ -47,9 +48,9 @@ partial class FrmLogin
         // picLogo
         // 
         picLogo.BackColor = Color.Transparent;
-        picLogo.Location = new Point(107, 55);
+        picLogo.Location = new Point(102, 45);
         picLogo.Name = "picLogo";
-        picLogo.Size = new Size(90, 90);
+        picLogo.Size = new Size(100, 100);
         picLogo.SizeMode = PictureBoxSizeMode.Zoom;
         picLogo.TabIndex = 2;
         picLogo.TabStop = false;
@@ -57,8 +58,9 @@ partial class FrmLogin
         // 
         // lblPhuDe
         // 
+        lblPhuDe.BackColor = Color.Transparent;
         lblPhuDe.Font = new Font("Segoe UI", 9.5F);
-        lblPhuDe.ForeColor = Color.FromArgb(219, 234, 254);
+        lblPhuDe.ForeColor = Color.FromArgb(186, 230, 253);
         lblPhuDe.Location = new Point(0, 212);
         lblPhuDe.Name = "lblPhuDe";
         lblPhuDe.Size = new Size(305, 25);
@@ -68,6 +70,7 @@ partial class FrmLogin
         // 
         // lblThuongHieu
         // 
+        lblThuongHieu.BackColor = Color.Transparent;
         lblThuongHieu.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
         lblThuongHieu.ForeColor = Color.White;
         lblThuongHieu.Location = new Point(0, 160);

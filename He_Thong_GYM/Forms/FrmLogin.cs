@@ -10,43 +10,70 @@ public partial class FrmLogin : Form
     public FrmLogin()
     {
         InitializeComponent();
-        TaiLogo();
+        TaiBranding();
     }
 
-    private void TaiLogo()
+    private void TaiBranding()
     {
+        // 1. Tải ảnh nền phòng gym (kèm lớp phủ tối) cho panel bên trái
         try
         {
-            var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "logo_gym.png");
-            if (!File.Exists(logoPath))
-            {
-                logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", "logo_gym.png");
-            }
-            if (!File.Exists(logoPath))
-            {
-                logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "logo_gym.png");
-            }
+            string[] cacDuongDanNen = [
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "bg_login_branding.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "bg_login_branding.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "banner_GYM.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", "banner_GYM.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "images", "banner_GYM.png")
+            ];
 
-            if (File.Exists(logoPath))
+            foreach (var path in cacDuongDanNen)
             {
-                using var stream = new FileStream(logoPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-                using var temp = Image.FromStream(stream);
-                picLogo.Image = new Bitmap(temp);
-                return;
+                if (File.Exists(path))
+                {
+                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using var temp = Image.FromStream(stream);
+                    panelThuongHieu.BackgroundImage = new Bitmap(temp);
+                    break;
+                }
             }
         }
         catch
         {
-            // Bỏ qua lỗi đọc file, chuyển sang vẽ biểu tượng vector
+        }
+
+        // 2. Tải huy hiệu neon xanh lam ở trung tâm
+        try
+        {
+            string[] cacDuongDanLogo = [
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Huy hiệu GYM PRO neon xanh lam.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "logo_neon.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", "Huy hiệu GYM PRO neon xanh lam.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "images", "Huy hiệu GYM PRO neon xanh lam.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "logo_neon.png"),
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "logo_gym.png")
+            ];
+
+            foreach (var path in cacDuongDanLogo)
+            {
+                if (File.Exists(path))
+                {
+                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    using var temp = Image.FromStream(stream);
+                    picLogo.Image = new Bitmap(temp);
+                    return;
+                }
+            }
+        }
+        catch
+        {
         }
 
         try
         {
-            picLogo.Image = TaoLogoGymMoi(90, 90);
+            picLogo.Image = TaoLogoGymMoi(100, 100);
         }
         catch
         {
-            // Dự phòng an toàn tuyệt đối
         }
     }
 
