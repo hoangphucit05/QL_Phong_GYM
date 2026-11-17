@@ -388,3 +388,28 @@ Tài liệu này lưu vết các phiên AI đã thực hiện trong dự án đ�
   - Kiểm tra UI Inspector: **0 overlap, 0 out-of-bounds, 0 text-truncation, 0 encoding issues**.
 
 ---
+
+## Phiên 005 — Hoàn thiện Báo cáo thống kê trực quan & Tích hợp Logo nhận diện thương hiệu
+
+- **Thời điểm**: 17/11/2026
+- **Mục tiêu**:
+  - Nâng cấp giao diện Báo cáo thống kê toàn diện, trực quan, hỗ trợ bộ lọc và biểu đồ GDI+.
+  - Khắc phục triệt để lỗi SQL Runtime `Invalid column name 'GiaBan'`.
+  - Tích hợp biểu tượng thương hiệu (Huy hiệu GYM PRO neon xanh lam) vào góc trên Sidebar Menu chính (`Form1`).
+
+### Công việc đã thực hiện
+
+1. **Khắc phục lỗi SQL Thống kê**:
+   - Đồng bộ tên cột trong `dbo.SanPham` thành `DonGia` (thay vì `GiaBan`).
+   - Cập nhật điều kiện lọc ngày của `DangKyGoi` và `DangKyPT` theo `NgayBatDau` (thay vì `NgayDangKy`).
+   - Kết hợp bảng `ChiTietHoaDon` (nghiệp vụ v3) và `ChiTietPhieuBanHang` (schema gốc v2) để thống kê chính xác lượng tiêu thụ và doanh số sản phẩm.
+
+2. **Tích hợp Logo nhận diện thương hiệu trên Sidebar Menu chính (`Form1`)**:
+   - Tích hợp hình ảnh `Huy hiệu GYM PRO neon xanh lam.png` vào khối thương hiệu `panelThuongHieu` ở góc trên bên trái menu điều hướng.
+   - Thêm `picLogo` (54x54 px, `PictureBoxSizeMode.Zoom`) đặt tại $(X = 12, Y = 23)$.
+   - Bố cục lại khối chữ thương hiệu: `lblThuongHieu` ("GYM PRO", 15.5pt Bold trắng tại $X = 72, Y = 22$) và `lblPhuDe` ("Hệ thống quản lý phòng gym", 8pt Slate-400 tại $X = 74, Y = 51$).
+   - Đảm bảo 100% chuẩn Visual Studio Designer CodeDOM.
+
+### Kết quả kiểm thử
+- Build solution: **0 warning, 0 error**.
+- UI Inspector: **21/21 form vượt qua kiểm tra giao diện tự động** (0 overlap, 0 out-of-bounds, 0 text-truncation).

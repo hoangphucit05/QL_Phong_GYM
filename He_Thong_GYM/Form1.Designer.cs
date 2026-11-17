@@ -30,6 +30,7 @@ namespace He_Thong_GYM
         {
             panelMenu = new Panel();
             panelThuongHieu = new Panel();
+            picLogo = new PictureBox();
             lblThuongHieu = new Label();
             lblPhuDe = new Label();
             flowMenu = new FlowLayoutPanel();
@@ -79,6 +80,7 @@ namespace He_Thong_GYM
             labelLopTap = new Label();
             panelMenu.SuspendLayout();
             panelThuongHieu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
             flowMenu.SuspendLayout();
             panelTieuDe.SuspendLayout();
             panelNguoiDung.SuspendLayout();
@@ -105,36 +107,46 @@ namespace He_Thong_GYM
             // 
             // panelThuongHieu
             // 
+            panelThuongHieu.Controls.Add(picLogo);
             panelThuongHieu.Controls.Add(lblThuongHieu);
             panelThuongHieu.Controls.Add(lblPhuDe);
             panelThuongHieu.Dock = DockStyle.Top;
             panelThuongHieu.Location = new Point(0, 0);
             panelThuongHieu.Name = "panelThuongHieu";
-            panelThuongHieu.Padding = new Padding(22, 18, 12, 12);
             panelThuongHieu.Size = new Size(252, 100);
             panelThuongHieu.TabIndex = 0;
             // 
+            // picLogo
+            // 
+            picLogo.BackColor = Color.Transparent;
+            picLogo.Location = new Point(12, 23);
+            picLogo.Name = "picLogo";
+            picLogo.Size = new Size(54, 54);
+            picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+            picLogo.TabIndex = 2;
+            picLogo.TabStop = false;
+            // 
             // lblThuongHieu
             // 
-            lblThuongHieu.AutoSize = true;
-            lblThuongHieu.Font = new Font("Segoe UI", 19F, FontStyle.Bold);
+            lblThuongHieu.Font = new Font("Segoe UI", 15.5F, FontStyle.Bold);
             lblThuongHieu.ForeColor = Color.White;
-            lblThuongHieu.Location = new Point(20, 14);
+            lblThuongHieu.Location = new Point(72, 22);
             lblThuongHieu.Name = "lblThuongHieu";
-            lblThuongHieu.Size = new Size(163, 36);
+            lblThuongHieu.Size = new Size(172, 28);
             lblThuongHieu.TabIndex = 0;
             lblThuongHieu.Text = "GYM PRO";
+            lblThuongHieu.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // lblPhuDe
             // 
-            lblPhuDe.AutoSize = true;
-            lblPhuDe.Font = new Font("Segoe UI", 9F);
-            lblPhuDe.ForeColor = Color.FromArgb(157, 177, 201);
-            lblPhuDe.Location = new Point(23, 60);
+            lblPhuDe.Font = new Font("Segoe UI", 8F);
+            lblPhuDe.ForeColor = Color.FromArgb(148, 163, 184);
+            lblPhuDe.Location = new Point(74, 51);
             lblPhuDe.Name = "lblPhuDe";
-            lblPhuDe.Size = new Size(159, 15);
+            lblPhuDe.Size = new Size(170, 26);
             lblPhuDe.TabIndex = 1;
             lblPhuDe.Text = "Hệ thống quản lý phòng gym";
+            lblPhuDe.TextAlign = ContentAlignment.TopLeft;
             // 
             // flowMenu
             // 
@@ -829,7 +841,7 @@ namespace He_Thong_GYM
             Load += Form1_Load;
             panelMenu.ResumeLayout(false);
             panelThuongHieu.ResumeLayout(false);
-            panelThuongHieu.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
             flowMenu.ResumeLayout(false);
             panelTieuDe.ResumeLayout(false);
             panelTieuDe.PerformLayout();
@@ -855,6 +867,7 @@ namespace He_Thong_GYM
 
         private Panel panelMenu;
         private Panel panelThuongHieu;
+        private PictureBox picLogo;
         private Label lblThuongHieu;
         private Label lblPhuDe;
         private FlowLayoutPanel flowMenu;

@@ -565,12 +565,6 @@ partial class FrmNhanVien
     private TextBox txtTimKiem;
     private Button btnTimKiem;
     private DataGridView dgvNhanVien;
-    private DataGridViewTextBoxColumn colMaNV;
-    private DataGridViewTextBoxColumn colHoTen;
-    private DataGridViewTextBoxColumn colSDT;
-    private DataGridViewTextBoxColumn colChucVu;
-    private DataGridViewTextBoxColumn colLuong;
-    private DataGridViewTextBoxColumn colTrangThai;
     private Panel panelTrangThai;
     private Label lblTrangThaiTimKiem;
 }

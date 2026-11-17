@@ -20,6 +20,37 @@ namespace He_Thong_GYM
         {
             _nguoiDung = nguoiDung;
             InitializeComponent();
+            TaiLogo();
+        }
+
+        private void TaiLogo()
+        {
+            try
+            {
+                string[] cacDuongDan = [
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Huy hiệu GYM PRO neon xanh lam.png"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "logo_sidebar.png"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", "Huy hiệu GYM PRO neon xanh lam.png"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "images", "Huy hiệu GYM PRO neon xanh lam.png"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "logo_sidebar.png"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "logo_gym.png")
+                ];
+
+                foreach (var path in cacDuongDan)
+                {
+                    if (File.Exists(path))
+                    {
+                        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+                        using var temp = Image.FromStream(stream);
+                        picLogo.Image = new Bitmap(temp);
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                // Bỏ qua nếu có ngoại lệ để không làm gián đoạn ứng dụng
+            }
         }
 
         private async void Form1_Load(object? sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿namespace He_Thong_GYM.Forms;
+namespace He_Thong_GYM.Forms;
 
 partial class FrmLogin
 {
@@ -15,6 +15,7 @@ partial class FrmLogin
     private void InitializeComponent()
     {
         panelThuongHieu = new Panel();
+        picLogo = new PictureBox();
         lblPhuDe = new Label();
         lblThuongHieu = new Label();
         panelDangNhap = new Panel();
@@ -27,10 +28,14 @@ partial class FrmLogin
         lblTenDangNhap = new Label();
         lblTieuDe = new Label();
         panelThuongHieu.SuspendLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogo).BeginInit();
         panelDangNhap.SuspendLayout();
         SuspendLayout();
+        // 
         // panelThuongHieu
+        // 
         panelThuongHieu.BackColor = Color.FromArgb(30, 64, 175);
+        panelThuongHieu.Controls.Add(picLogo);
         panelThuongHieu.Controls.Add(lblPhuDe);
         panelThuongHieu.Controls.Add(lblThuongHieu);
         panelThuongHieu.Dock = DockStyle.Left;
@@ -38,24 +43,42 @@ partial class FrmLogin
         panelThuongHieu.Name = "panelThuongHieu";
         panelThuongHieu.Size = new Size(305, 390);
         panelThuongHieu.TabIndex = 0;
-        // lblThuongHieu
-        lblThuongHieu.AutoSize = true;
-        lblThuongHieu.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
-        lblThuongHieu.ForeColor = Color.White;
-        lblThuongHieu.Location = new Point(53, 133);
-        lblThuongHieu.Name = "lblThuongHieu";
-        lblThuongHieu.Size = new Size(210, 46);
-        lblThuongHieu.TabIndex = 0;
-        lblThuongHieu.Text = "GYM PRO";
+        // 
+        // picLogo
+        // 
+        picLogo.BackColor = Color.Transparent;
+        picLogo.Location = new Point(107, 55);
+        picLogo.Name = "picLogo";
+        picLogo.Size = new Size(90, 90);
+        picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+        picLogo.TabIndex = 2;
+        picLogo.TabStop = false;
+        picLogo.Click += picLogo_Click;
+        // 
         // lblPhuDe
-        lblPhuDe.AutoSize = true;
+        // 
+        lblPhuDe.Font = new Font("Segoe UI", 9.5F);
         lblPhuDe.ForeColor = Color.FromArgb(219, 234, 254);
-        lblPhuDe.Location = new Point(58, 191);
+        lblPhuDe.Location = new Point(0, 212);
         lblPhuDe.Name = "lblPhuDe";
-        lblPhuDe.Size = new Size(177, 15);
+        lblPhuDe.Size = new Size(305, 25);
         lblPhuDe.TabIndex = 1;
         lblPhuDe.Text = "Quản lý vận hành thông minh";
+        lblPhuDe.TextAlign = ContentAlignment.MiddleCenter;
+        // 
+        // lblThuongHieu
+        // 
+        lblThuongHieu.Font = new Font("Segoe UI", 24F, FontStyle.Bold);
+        lblThuongHieu.ForeColor = Color.White;
+        lblThuongHieu.Location = new Point(0, 160);
+        lblThuongHieu.Name = "lblThuongHieu";
+        lblThuongHieu.Size = new Size(305, 45);
+        lblThuongHieu.TabIndex = 0;
+        lblThuongHieu.Text = "GYM PRO";
+        lblThuongHieu.TextAlign = ContentAlignment.MiddleCenter;
+        // 
         // panelDangNhap
+        // 
         panelDangNhap.BackColor = Color.White;
         panelDangNhap.Controls.Add(chkHienMatKhau);
         panelDangNhap.Controls.Add(lblThongBao);
@@ -71,55 +94,29 @@ partial class FrmLogin
         panelDangNhap.Padding = new Padding(48);
         panelDangNhap.Size = new Size(445, 390);
         panelDangNhap.TabIndex = 1;
-        // lblTieuDe
-        lblTieuDe.AutoSize = true;
-        lblTieuDe.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
-        lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
-        lblTieuDe.Location = new Point(48, 54);
-        lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(160, 32);
-        lblTieuDe.TabIndex = 0;
-        lblTieuDe.Text = "Đăng nhập";
-        // lblTenDangNhap
-        lblTenDangNhap.AutoSize = true;
-        lblTenDangNhap.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblTenDangNhap.Location = new Point(51, 116);
-        lblTenDangNhap.Name = "lblTenDangNhap";
-        lblTenDangNhap.Size = new Size(98, 15);
-        lblTenDangNhap.TabIndex = 1;
-        lblTenDangNhap.Text = "Tên đăng nhập";
-        // txtTenDangNhap
-        txtTenDangNhap.Location = new Point(51, 139);
-        txtTenDangNhap.Name = "txtTenDangNhap";
-        txtTenDangNhap.PlaceholderText = "Nhập tên đăng nhập";
-        txtTenDangNhap.Size = new Size(340, 23);
-        txtTenDangNhap.TabIndex = 0;
-        // lblMatKhau
-        lblMatKhau.AutoSize = true;
-        lblMatKhau.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblMatKhau.Location = new Point(51, 184);
-        lblMatKhau.Name = "lblMatKhau";
-        lblMatKhau.Size = new Size(63, 15);
-        lblMatKhau.TabIndex = 3;
-        lblMatKhau.Text = "Mật khẩu";
-        // txtMatKhau
-        txtMatKhau.Location = new Point(51, 207);
-        txtMatKhau.Name = "txtMatKhau";
-        txtMatKhau.PlaceholderText = "Nhập mật khẩu";
-        txtMatKhau.Size = new Size(340, 23);
-        txtMatKhau.TabIndex = 1;
-        txtMatKhau.UseSystemPasswordChar = true;
+        // 
         // chkHienMatKhau
+        // 
         chkHienMatKhau.AutoSize = true;
         chkHienMatKhau.ForeColor = Color.FromArgb(71, 85, 105);
         chkHienMatKhau.Location = new Point(51, 243);
         chkHienMatKhau.Name = "chkHienMatKhau";
-        chkHienMatKhau.Size = new Size(112, 19);
+        chkHienMatKhau.Size = new Size(104, 19);
         chkHienMatKhau.TabIndex = 2;
         chkHienMatKhau.Text = "Hiện mật khẩu";
         chkHienMatKhau.UseVisualStyleBackColor = true;
         chkHienMatKhau.CheckedChanged += chkHienMatKhau_CheckedChanged;
+        // 
+        // lblThongBao
+        // 
+        lblThongBao.ForeColor = Color.FromArgb(185, 28, 28);
+        lblThongBao.Location = new Point(51, 337);
+        lblThongBao.Name = "lblThongBao";
+        lblThongBao.Size = new Size(340, 36);
+        lblThongBao.TabIndex = 7;
+        // 
         // btnDangNhap
+        // 
         btnDangNhap.BackColor = Color.FromArgb(37, 99, 235);
         btnDangNhap.Cursor = Cursors.Hand;
         btnDangNhap.FlatAppearance.BorderSize = 0;
@@ -133,13 +130,57 @@ partial class FrmLogin
         btnDangNhap.Text = "ĐĂNG NHẬP";
         btnDangNhap.UseVisualStyleBackColor = false;
         btnDangNhap.Click += btnDangNhap_Click;
-        // lblThongBao
-        lblThongBao.ForeColor = Color.FromArgb(185, 28, 28);
-        lblThongBao.Location = new Point(51, 337);
-        lblThongBao.Name = "lblThongBao";
-        lblThongBao.Size = new Size(340, 36);
-        lblThongBao.TabIndex = 7;
+        // 
+        // txtMatKhau
+        // 
+        txtMatKhau.Location = new Point(51, 207);
+        txtMatKhau.Name = "txtMatKhau";
+        txtMatKhau.PlaceholderText = "Nhập mật khẩu";
+        txtMatKhau.Size = new Size(340, 23);
+        txtMatKhau.TabIndex = 1;
+        txtMatKhau.UseSystemPasswordChar = true;
+        // 
+        // lblMatKhau
+        // 
+        lblMatKhau.AutoSize = true;
+        lblMatKhau.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblMatKhau.Location = new Point(51, 184);
+        lblMatKhau.Name = "lblMatKhau";
+        lblMatKhau.Size = new Size(59, 15);
+        lblMatKhau.TabIndex = 3;
+        lblMatKhau.Text = "Mật khẩu";
+        // 
+        // txtTenDangNhap
+        // 
+        txtTenDangNhap.Location = new Point(51, 139);
+        txtTenDangNhap.Name = "txtTenDangNhap";
+        txtTenDangNhap.PlaceholderText = "Nhập tên đăng nhập";
+        txtTenDangNhap.Size = new Size(340, 23);
+        txtTenDangNhap.TabIndex = 0;
+        // 
+        // lblTenDangNhap
+        // 
+        lblTenDangNhap.AutoSize = true;
+        lblTenDangNhap.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTenDangNhap.Location = new Point(51, 116);
+        lblTenDangNhap.Name = "lblTenDangNhap";
+        lblTenDangNhap.Size = new Size(88, 15);
+        lblTenDangNhap.TabIndex = 1;
+        lblTenDangNhap.Text = "Tên đăng nhập";
+        // 
+        // lblTieuDe
+        // 
+        lblTieuDe.AutoSize = true;
+        lblTieuDe.Font = new Font("Segoe UI", 18F, FontStyle.Bold);
+        lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
+        lblTieuDe.Location = new Point(48, 54);
+        lblTieuDe.Name = "lblTieuDe";
+        lblTieuDe.Size = new Size(139, 32);
+        lblTieuDe.TabIndex = 0;
+        lblTieuDe.Text = "Đăng nhập";
+        // 
         // FrmLogin
+        // 
         AcceptButton = btnDangNhap;
         AutoScaleDimensions = new SizeF(7F, 15F);
         AutoScaleMode = AutoScaleMode.Font;
@@ -154,7 +195,7 @@ partial class FrmLogin
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Gym Pro - Đăng nhập";
         panelThuongHieu.ResumeLayout(false);
-        panelThuongHieu.PerformLayout();
+        ((System.ComponentModel.ISupportInitialize)picLogo).EndInit();
         panelDangNhap.ResumeLayout(false);
         panelDangNhap.PerformLayout();
         ResumeLayout(false);
@@ -162,6 +203,7 @@ partial class FrmLogin
     #endregion
 
     private Panel panelThuongHieu;
+    private PictureBox picLogo;
     private Label lblPhuDe;
     private Label lblThuongHieu;
     private Panel panelDangNhap;
