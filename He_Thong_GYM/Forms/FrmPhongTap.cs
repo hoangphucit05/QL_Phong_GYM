@@ -74,6 +74,11 @@ public partial class FrmPhongTap : Form
             }
         }
 
+        if (nudSucChua.Value > 0)
+        {
+            ketQua = ketQua.Where(p => p.SucChua >= (int)nudSucChua.Value);
+        }
+
         var list = ketQua.ToList();
         dgv.DataSource = null;
         dgv.DataSource = list;
@@ -130,6 +135,7 @@ public partial class FrmPhongTap : Form
     private async void btnLamMoi_Click(object? sender, EventArgs e)
     {
         txtTen.Clear();
+        nudSucChua.Value = 0;
         if (cboLoai.Items.Count > 0) cboLoai.SelectedIndex = 0;
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
         await TaiDanhSachAsync();

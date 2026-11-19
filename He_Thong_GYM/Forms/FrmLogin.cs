@@ -142,9 +142,4 @@ public partial class FrmLogin : Form
     }
 
     private void chkHienMatKhau_CheckedChanged(object? sender, EventArgs e) => txtMatKhau.UseSystemPasswordChar = !chkHienMatKhau.Checked;
-
-    private void picLogo_Click(object sender, EventArgs e)
-    {
-
-    }
 }

@@ -210,7 +210,7 @@ partial class FrmPhongTap
         lblSucChua.Name = "lblSucChua";
         lblSucChua.Size = new Size(104, 29);
         lblSucChua.TabIndex = 4;
-        lblSucChua.Text = "Sức chứa tối đa:";
+        lblSucChua.Text = "Sức chứa từ:";
         lblSucChua.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // nudSucChua

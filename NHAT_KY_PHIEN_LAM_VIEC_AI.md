@@ -418,3 +418,151 @@ Tài liệu này lưu vết các phiên AI đã thực hiện trong dự án đ�
 ### Kết quả kiểm thử
 - Build solution: **0 warning, 0 error**.
 - UI Inspector: **21/21 form vượt qua kiểm tra giao diện tự động** (0 overlap, 0 out-of-bounds, 0 text-truncation).
+
+
+---
+
+## Phiên 006 — Sửa lỗi chọn phòng ở Form Thiết bị & Hoàn thiện Bộ lọc tra cứu đa năng cho các Form
+
+- **Thời điểm**: 19/11/2026
+- **Mục tiêu**:
+  - Khắc phục triệt để lỗi khi chọn phòng tập tại form Quản lý thiết bị (`FrmThietBi`).
+  - Thiết kế và bổ sung các bộ lọc tìm kiếm tức thời (theo từ khóa, danh mục, trạng thái, phòng tập) cho các form chức năng cần thiết.
+
+### Công việc đã thực hiện
+
+1. **Khắc phục lỗi và hoàn thiện bộ lọc Form Quản lý thiết bị (`FrmThietBi`)**:
+   - **Nguyên nhân lỗi cũ**: Dropdown `cboPhong` chưa từng được nạp dữ liệu từ database, không có danh sách lựa chọn và chưa gắn sự kiện lọc, dẫn đến danh sách không phản hồi hoặc gặp lỗi xử lý khi tương tác chọn phòng.
+   - **Giải pháp**:
+     - Nạp danh mục phòng tập thực tế từ cơ sở dữ liệu (`_bll.LayPhongAsync()`) vào `cboPhong` với các tùy chọn đầy đủ: `-- Tất cả phòng --`, danh sách phòng cụ thể, và `(Chưa phân phòng)`.
+     - Tự động nạp danh sách loại thiết bị duy nhất từ dữ liệu thực tế vào `cboLoai` (`-- Tất cả loại --`, Máy chạy bộ, Xe đạp tập, Tạ đơn,...).
+     - Nạp trạng thái thiết bị chuẩn: `-- Tất cả tình trạng --`, Hoạt động, Bảo trì, Hư hỏng, Thanh lý.
+     - Bổ sung ô tìm kiếm nhanh `txtTen` theo tên thiết bị hoặc mã thiết bị theo thời gian thực (`TextChanged`).
+     - Bổ sung nút bấm `btnLamMoi` ("Làm mới / Bỏ lọc") và nhãn `lblThongKe` ("Đang hiển thị: X / Y thiết bị").
+     - Định dạng dữ liệu lưới DataGridView chuyên nghiệp, căn lề và format ngày tháng `dd/MM/yyyy`.
+
+2. **Thêm bộ lọc lịch sử Đăng ký gói tập (`FrmDangKyGoi`)**:
+   - Bổ sung thanh công cụ tìm kiếm và lọc phía trên bảng lịch sử đăng ký gói (`panelLocLichSu`):
+     - Ô tìm kiếm `txtTimKiemLichSu`: Tra cứu theo tên hội viên, tên gói tập hoặc mã đăng ký.
+     - Dropdown `cboLocTrangThai`: Lọc nhanh theo `-- Tất cả --`, Còn hạn, Hết hạn, Chờ thanh toán.
+     - Nút `btnLamMoiLichSu` và nhãn thống kê số lượt đăng ký tìm thấy.
+     - Định dạng tiền tệ VNĐ (`N0`) và ngày bắt đầu/kết thúc (`dd/MM/yyyy`).
+
+3. **Thêm bộ lọc lịch sử Đăng ký huấn luyện viên / PT (`FrmDangKyPT`)**:
+   - Bổ sung thanh công cụ tìm kiếm và lọc phía trên bảng lịch sử đăng ký PT:
+     - Ô tìm kiếm `txtTimKiemLichSu`: Tìm theo tên hội viên, tên HLV hoặc mã đăng ký.
+     - Dropdown `cboLocTrangThai`: Lọc theo trạng thái Còn hạn, Hết hạn, Chờ thanh toán.
+     - Tự động tính toán và hiển thị tổng tiền sau giảm giá theo buổi và tỷ lệ khuyến mãi.
+
+4. **Thêm bộ lọc Quản lý sản phẩm & tồn kho (`FrmSanPham`)**:
+   - Bổ sung ô tìm kiếm tên/mã sản phẩm `txtTimKiem` và dropdown trạng thái `cboTrangThai` (Đang bán, Hết hàng, Ngừng kinh doanh).
+   - Tự động lọc danh sách trực tiếp trên giao diện và hiển thị số lượng tồn/đơn giá VNĐ chuẩn hóa.
+
+5. **Thêm bộ lọc Quản lý hóa đơn & thanh toán (`FrmHoaDon`)**:
+   - Bổ sung ô tìm kiếm `txtTimKiem` theo mã hóa đơn, tên hội viên/khách hàng.
+   - Dropdown lọc trạng thái: `-- Tất cả --`, Chờ thanh toán, Đã thanh toán, Một phần, Hủy.
+   - Hiển thị và format số tiền: Tổng tiền, Đã trả, Còn nợ theo chuẩn VNĐ (`N0`).
+
+6. **Thêm bộ lọc Quản lý bảo trì thiết bị (`FrmBaoTri`)**:
+   - Bổ sung ô tìm kiếm theo tên thiết bị, nhân viên phụ trách, nội dung sửa chữa/thay thế linh kiện.
+   - Dropdown lọc trạng thái phiếu bảo trì: Hoàn thành, Đang xử lý, Chờ linh kiện.
+
+7. **Thêm bộ lọc Quản lý lớp tập (`FrmLopTap`)**:
+   - Bổ sung ô tìm kiếm tên lớp, thể loại, huấn luyện viên giảng dạy.
+   - Dropdown lọc trạng thái lớp: Đang mở, Đã đóng.
+
+8. **Thêm bộ lọc Quản lý phòng tập (`FrmPhongTap`)**:
+   - Bổ sung ô tìm kiếm tên phòng, dropdown lọc theo loại phòng (Gym thường, Yoga, Boxing, Cardio, VIP) và trạng thái phòng tập (Hoạt động, Đang bảo trì, Tạm đóng).
+
+### Kết quả kiểm thử
+- **Biên dịch**: `dotnet build` đạt **0 Warning, 0 Error**.
+- **Kiểm tra giao diện tự động (`--check-ui`)**: **21/21 form vượt qua 100%** (0 overlap, 0 out-of-bounds, 0 text-truncation, 0 encoding issues).
+- **Tuân thủ chuẩn CodeDOM Designer**: Tất cả các file `.Designer.cs` đều tương thích 100% với Visual Studio Form Designer.
+
+
+---
+
+## Phiên 007 — Rà soát toàn diện mã nguồn & Tối ưu hóa các Control, Hàm vô nghĩa
+
+- **Thời điểm**: 19/11/2026
+- **Mục tiêu**:
+  - Quét toàn bộ 21 Form, các tầng BLL, DAL, Models và Helpers để phát hiện các control giao diện, sự kiện hoặc hàm rỗng/vô nghĩa (dead code / dummy controls).
+  - Tối ưu hóa, dọn dẹp và kết nối hoàn thiện logic nghiệp vụ cho các vị trí được phát hiện.
+
+### Các vấn đề được phát hiện và xử lý triệt để
+
+1. **Dọn dẹp hàm rỗng và sự kiện thừa trong `FrmLogin`**:
+   - **Phát hiện**: Hàm `private void picLogo_Click(object sender, EventArgs e) { }` rỗng hoàn toàn, được sinh tự động do nhấp đúp vào PictureBox logo trong Visual Studio Designer.
+   - **Xử lý**: Loại bỏ phương thức rỗng trong `FrmLogin.cs` và gỡ bỏ việc đăng ký sự kiện `picLogo.Click += picLogo_Click;` trong `FrmLogin.Designer.cs`.
+
+2. **Kích hoạt tính năng lọc thực tế cho `nudSucChua` trong `FrmPhongTap`**:
+   - **Phát hiện**: Control `nudSucChua` (NumericUpDown) có mặt trên giao diện và được gán sự kiện `ValueChanged += BoLocThayDoi;`, nhưng bên trong hàm `ApDungLoc()` lại hoàn toàn bỏ qua giá trị này, khiến việc người dùng tăng giảm sức chứa không có bất kỳ tác dụng nào. Ngoài ra nút "Làm mới" cũng không reset `nudSucChua`.
+   - **Xử lý**: 
+     - Bổ sung điều kiện lọc `p.SucChua >= (int)nudSucChua.Value` khi `nudSucChua.Value > 0` trong `ApDungLoc()`.
+     - Đổi nhãn hiển thị thành `lblSucChua.Text = "Sức chứa từ:"` để người dùng hiểu rõ ý nghĩa lọc theo sức chứa tối thiểu.
+     - Bổ sung `nudSucChua.Value = 0;` trong hàm xử lý nút `btnLamMoi_Click`.
+
+3. **Tái thiết kế và kích hoạt chức năng lọc cho `FrmKhuyenMai`**:
+   - **Phát hiện**:
+     - `FrmKhuyenMai` có các ô `txtTen`, `nudGiam`, `dtpTu`, `dtpDen` nhưng không có nút Lưu/Thêm, không có sự kiện tìm kiếm/lọc, khiến việc người dùng nhập liệu vào các ô này trở nên vô nghĩa.
+     - `KhuyenMaiDAL.cs` trước đây chỉ truy vấn 3 cột `MaKM, TenKM, PhanTramGiam`, bỏ qua các cột `NgayBatDau`, `NgayKetThuc`, `TrangThai` sẵn có trong SQL Server.
+   - **Xử lý**:
+     - Nâng cấp model `KhuyenMai.cs` bổ sung `NgayBatDau`, `NgayKetThuc`, `TrangThai`.
+     - Cập nhật `KhuyenMaiDAL.cs` truy vấn đầy đủ tất cả các trường dữ liệu từ bảng `dbo.KhuyenMai`.
+     - Tái thiết kế giao diện `FrmKhuyenMai.Designer.cs` thành bộ lọc chuẩn hóa: Ô tìm kiếm `txtTen` (tên/mã KM), `nudGiam` (mức giảm tối thiểu %), dropdown `cboTrangThai` (-- Tất cả trạng thái --, Hoạt động, Hết hạn), nút `btnLamMoi` ("Làm mới / Bỏ lọc") và nhãn `lblThongKe`.
+     - Triển khai logic lọc dữ liệu tức thì `ApDungLoc()` và định dạng lưới DataGridView với đầy đủ các cột: Mã KM, Tên khuyến mãi, % Giảm giá (`N0`), Ngày bắt đầu (`dd/MM/yyyy`), Ngày kết thúc (`dd/MM/yyyy`), Trạng thái.
+
+### Kết quả kiểm tra & Đo lường
+- **Quét toàn diện mã nguồn**:
+  - Hàm rỗng / Chưa implement / TODO: **0**
+  - Control giao diện vô nghĩa / không được sử dụng: **0**
+  - Phương thức private không được gọi: **0**
+- **Biên dịch**: `dotnet build` đạt **0 Warning, 0 Error**.
+- **Kiểm tra giao diện tự động (`--check-ui`)**: **21/21 form vượt qua 100%** (0 overlap, 0 out-of-bounds, 0 text-truncation, 0 encoding issues).
+- **Chuẩn CodeDOM Designer**: Đảm bảo 100% tương thích Visual Studio Form Designer.
+
+
+---
+
+## Phiên 008 — Cập nhật Mã khuyến mãi dạng chữ (Voucher Code) thực tế thay vì số thứ tự
+
+- **Thời điểm**: 19/11/2026
+- **Mục tiêu**:
+  - Thay thế mã khuyến mãi dạng số thứ tự đơn điệu (`1, 2, 3...`) bằng mã khuyến mãi dạng chữ (Voucher / Coupon Code) thực tế phù hợp với các hệ thống quản lý phòng gym hiện đại (như `CHAOHE10`, `SINHVIEN15`, `NEWGYM5`, `BLACKFRIDAY30`, `TET2026`,...).
+  - Đảm bảo hiển thị trực quan trên danh sách khuyến mãi, ô tìm kiếm và dropdown đăng ký gói tập/PT.
+  - Tương thích ngược 100% với cơ sở dữ liệu hiện có (vừa hỗ trợ cột `MaCode` trong SQL, vừa có cơ chế tự động chuyển đổi thông minh nếu DB chưa migrate).
+
+### Công việc đã thực hiện
+
+1. **Nâng cấp Model `KhuyenMai.cs`**:
+   - Bổ sung trường `MaCode` (mã voucher thực tế dạng chữ).
+   - Thêm thuộc tính `HienThi`: Định dạng thân thiện cho ComboBox dạng `[MACODE] Tên khuyến mãi (-XX%)` (Ví dụ: `[CHAOHE10] Chào hè (-10%)`).
+   - Xây dựng phương thức trợ giúp `TaoMaCodeThucTe(tenKM, phanTramGiam, maKM)`: Tự động ánh xạ thông minh các chương trình sang mã voucher thực tế (loại bỏ dấu tiếng Việt, trích xuất từ khóa và tỷ lệ giảm giá).
+
+2. **Cập nhật tầng DAL (`KhuyenMaiDAL.cs` & `DangKyDAL.cs`)**:
+   - Sử dụng cơ chế kiểm tra linh hoạt `CoCot(r, "MaCode")`:
+     - Nếu cơ sở dữ liệu đã có cột `MaCode`: Đọc trực tiếp từ cơ sở dữ liệu.
+     - Nếu cơ sở dữ liệu dùng schema cũ chưa có `MaCode`: Tự động sinh mã voucher tương ứng thông qua thuật toán ánh xạ, tuyệt đối không gây lỗi truy vấn SQL runtime.
+
+3. **Cập nhật giao diện Quản lý Khuyến mãi (`FrmKhuyenMai`)**:
+   - Cột **Mã khuyến mãi** hiển thị nổi bật mã code dạng chữ in hoa xanh dương đậm (`CHAOHE10`, `SINHVIEN15`, `BLACKFRIDAY30`...) thay vì các số ID `1, 2, 3`.
+   - Ẩn cột ID nội bộ `MaKM` để giao diện mang tính thương mại thực tế.
+   - Thanh tìm kiếm `txtTen` hỗ trợ tìm kiếm trực tiếp theo cả mã code (ví dụ gõ `CHAOHE` hoặc `BLACK`) lẫn tên chương trình.
+
+4. **Nâng cấp ComboBox Đăng ký gói tập & PT (`FrmDangKyGoi` & `FrmDangKyPT`)**:
+   - Chuyển `DisplayMember` của `cboKhuyenMai` sang thuộc tính `HienThi`:
+     - `Không áp dụng`
+     - `[CHAOHE10] Chào hè (-10%)`
+     - `[SINHVIEN15] Sinh viên năng động (-15%)`
+     - `[BLACKFRIDAY30] Black Friday (-30%)`
+     - `[NEWGYM5] Khách hàng mới (-5%)`...
+   - Người dùng và nhân viên bán hàng dễ dàng nhận diện và đối soát mã giảm giá thực tế khi tư vấn cho hội viên.
+
+5. **Cập nhật Cơ sở dữ liệu & Script Migration**:
+   - Cập nhật `database/htql_gym_v2.sql`: Bổ sung cột `MaCode NVARCHAR(30) NULL` vào bảng `KhuyenMai` và seed data 15 mã voucher thực tế.
+   - Tạo mới file migration `database/08_cap_nhat_ma_code_khuyen_mai.sql` giúp người dùng cập nhật nhanh cơ sở dữ liệu hiện có chỉ bằng 1 lần thực thi SQL.
+
+### Kết quả kiểm thử
+- **Biên dịch**: `dotnet build` đạt **0 Warning, 0 Error**.
+- **Kiểm tra giao diện tự động (`--check-ui`)**: **21/21 form vượt qua 100%** (0 overlap, 0 out-of-bounds, 0 text-truncation, 0 encoding issues).
+- **Chuẩn CodeDOM Designer**: Tương thích 100% với Visual Studio Form Designer.

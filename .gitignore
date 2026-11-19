@@ -8,6 +8,7 @@
 ## Build outputs
 [Bb]in/
 [Oo]bj/
+He_Thong_GYM/artifacts/codex-*/
 
 ## Temporary / Lock files
 *.locked
