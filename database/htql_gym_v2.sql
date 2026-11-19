@@ -1,4 +1,4 @@
-﻿CREATE DATABASE QL_PhongGym;
+CREATE DATABASE QL_PhongGym;
 GO
 USE QL_PhongGym;
 GO
@@ -71,6 +71,7 @@ CREATE TABLE GoiTap (
 -- 6. KHUYẾN MÃI
 CREATE TABLE KhuyenMai (
     MaKM INT IDENTITY(1,1) PRIMARY KEY,
+    MaCode NVARCHAR(30) NULL,
     TenKM NVARCHAR(100) NOT NULL,
     PhanTramGiam DECIMAL(5,2) NOT NULL CHECK (PhanTramGiam BETWEEN 0 AND 100),
     NgayBatDau DATE NOT NULL,
@@ -481,22 +482,22 @@ INSERT INTO GoiTap (TenGoi, ThoiHanNgay, Gia, MoTa) VALUES
 (N'Family 3 tháng', 90, 2200000, N'Dành cho gia đình');
 
 -- 6. KhuyenMai
-INSERT INTO KhuyenMai (TenKM, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES
-(N'Chào hè', 10, '2026-05-01', '2026-06-30', N'Hoạt động'),
-(N'Sinh viên năng động', 15, '2026-01-01', '2026-12-31', N'Hoạt động'),
-(N'Khách hàng mới', 5, '2026-03-01', '2026-08-31', N'Hoạt động'),
-(N'Black Friday', 30, '2026-11-20', '2026-11-30', N'Hoạt động'),
-(N'Tết khỏe mạnh', 20, '2026-01-01', '2026-02-28', N'Hết hạn'),
-(N'Combo gia đình', 12, '2026-04-01', '2026-09-30', N'Hoạt động'),
-(N'Giảm giá PT', 10, '2026-05-01', '2026-10-31', N'Hoạt động'),
-(N'Yoga tháng 5', 8, '2026-05-01', '2026-05-31', N'Hoạt động'),
-(N'Cardio Day', 7, '2026-06-01', '2026-06-30', N'Hoạt động'),
-(N'Ưu đãi VIP', 18, '2026-05-01', '2026-12-31', N'Hoạt động'),
-(N'Noel Fit', 25, '2026-12-01', '2026-12-31', N'Hoạt động'),
-(N'Tri ân khách hàng', 15, '2026-07-01', '2026-07-31', N'Hoạt động'),
-(N'Tập thử miễn phí', 100, '2026-05-01', '2026-05-20', N'Hết hạn'),
-(N'Mùa tựu trường', 10, '2026-08-01', '2026-09-15', N'Hoạt động'),
-(N'Sức khỏe vàng', 9, '2026-05-10', '2026-08-10', N'Hoạt động');
+INSERT INTO KhuyenMai (MaCode, TenKM, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES
+(N'CHAOHE10', N'Chào hè', 10, '2026-05-01', '2026-06-30', N'Hoạt động'),
+(N'SINHVIEN15', N'Sinh viên năng động', 15, '2026-01-01', '2026-12-31', N'Hoạt động'),
+(N'NEWGYM5', N'Khách hàng mới', 5, '2026-03-01', '2026-08-31', N'Hoạt động'),
+(N'BLACKFRIDAY30', N'Black Friday', 30, '2026-11-20', '2026-11-30', N'Hoạt động'),
+(N'TET2026', N'Tết khỏe mạnh', 20, '2026-01-01', '2026-02-28', N'Hết hạn'),
+(N'FAMILY12', N'Combo gia đình', 12, '2026-04-01', '2026-09-30', N'Hoạt động'),
+(N'PROPT10', N'Giảm giá PT', 10, '2026-05-01', '2026-10-31', N'Hoạt động'),
+(N'YOGAMAY8', N'Yoga tháng 5', 8, '2026-05-01', '2026-05-31', N'Hoạt động'),
+(N'CARDIO7', N'Cardio Day', 7, '2026-06-01', '2026-06-30', N'Hoạt động'),
+(N'VIPPRO18', N'Ưu đãi VIP', 18, '2026-05-01', '2026-12-31', N'Hoạt động'),
+(N'NOEL25', N'Noel Fit', 25, '2026-12-01', '2026-12-31', N'Hoạt động'),
+(N'TRIAN15', N'Tri ân khách hàng', 15, '2026-07-01', '2026-07-31', N'Hoạt động'),
+(N'FREETRIAL', N'Tập thử miễn phí', 100, '2026-05-01', '2026-05-20', N'Hết hạn'),
+(N'BACK2GYM10', N'Mùa tựu trường', 10, '2026-08-01', '2026-09-15', N'Hoạt động'),
+(N'GOLDHEALTH9', N'Sức khỏe vàng', 9, '2026-05-10', '2026-08-10', N'Hoạt động');
 
 -- 7. DangKyGoi
 INSERT INTO DangKyGoi (MaTV, MaGoi, MaKM, NgayBatDau, NgayKetThuc, GiaSauGiam, TrangThai) VALUES

@@ -7,6 +7,7 @@ public partial class FrmDiemDanh : Form
 {
     private readonly LopTapBLL _bll = new();
     private readonly DangKyBLL _dk = new();
+    private BuoiHoc? _buoiHocDangChon;
 
     public FrmDiemDanh()
     {
@@ -15,6 +16,7 @@ public partial class FrmDiemDanh : Form
         dtpNgay.ValueChanged += dtpNgay_ValueChanged;
         btnDangKy.Click += btnDangKy_Click;
         btnDiemDanh.Click += btnDiemDanh_Click;
+        btnTaoBuoi.Click += btnTaoBuoi_Click;
     }
 
     private async void FrmDiemDanh_Load(object? sender, EventArgs e)
@@ -40,10 +42,26 @@ public partial class FrmDiemDanh : Form
 
     private async Task TaiHocVienAsync()
     {
-        if (cboLop.SelectedItem is LopTap l)
+        _buoiHocDangChon = null;
+        if (cboLop.SelectedItem is not LopTap lop)
         {
-            dgvHocVien.DataSource = await _bll.LayHocVienAsync(l.MaLop, dtpNgay.Value);
+            dgvHocVien.DataSource = null;
+            lblTrangThaiBuoi.Text = "Hãy chọn lớp và ngày học.";
+            return;
         }
+
+        var buoiHoc = await _bll.LayBuoiHocAsync(lop.MaLop, dtpNgay.Value);
+        if (buoiHoc is null)
+        {
+            dgvHocVien.DataSource = null;
+            lblTrangThaiBuoi.Text = "Chưa có buổi học cho lớp này trong ngày đã chọn. Hãy tạo buổi học trước khi điểm danh.";
+            return;
+        }
+
+        _buoiHocDangChon = buoiHoc;
+        dgvHocVien.DataSource = await _bll.LayHocVienAsync(lop.MaLop, buoiHoc.MaLichHoc);
+        DinhDangLuoiHocVien();
+        lblTrangThaiBuoi.Text = $"Buổi #{buoiHoc.MaLichHoc}: {buoiHoc.ThoiGianBatDau:dd/MM/yyyy HH:mm} - {buoiHoc.ThoiGianKetThuc:HH:mm}";
     }
 
     private async void cboLop_SelectedIndexChanged(object? sender, EventArgs e) => await TaiHocVienAsync();
@@ -77,8 +95,12 @@ public partial class FrmDiemDanh : Form
             {
                 throw new InvalidOperationException("Hãy chọn một học viên trong danh sách để điểm danh.");
             }
+            if (_buoiHocDangChon is null)
+            {
+                throw new InvalidOperationException("Hãy tạo hoặc chọn buổi học hợp lệ trước khi điểm danh.");
+            }
 
-            await _bll.DiemDanhAsync(h.MaDKL, dtpNgay.Value, cboTrangThai.Text);
+            await _bll.DiemDanhAsync(h.MaDKL, _buoiHocDangChon.MaLichHoc, cboTrangThai.Text);
             await TaiHocVienAsync();
             MessageBox.Show($"Đã lưu điểm danh cho học viên: {cboTrangThai.Text}", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -86,5 +108,46 @@ public partial class FrmDiemDanh : Form
         {
             MessageBox.Show(ex.Message, "Không thể điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+    }
+
+    private async void btnTaoBuoi_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            if (cboLop.SelectedItem is not LopTap lop)
+                throw new InvalidOperationException("Hãy chọn lớp tập trước khi tạo buổi học.");
+
+            btnTaoBuoi.Enabled = false;
+            var maLichHoc = await _bll.TaoBuoiHocAsync(lop, dtpNgay.Value);
+            await TaiHocVienAsync();
+            MessageBox.Show($"Đã tạo buổi học #{maLichHoc} cho lớp {lop.TenLop}.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Không thể tạo buổi học", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+        finally
+        {
+            btnTaoBuoi.Enabled = true;
+        }
+    }
+
+    private void DinhDangLuoiHocVien()
+    {
+        if (dgvHocVien.Columns.Count == 0) return;
+
+        DinhDangCot(nameof(HocVienLop.MaDKL), "Mã ĐK", 70);
+        DinhDangCot(nameof(HocVienLop.MaTV), "Mã TV", 70);
+        DinhDangCot(nameof(HocVienLop.HoTen), "Thành viên", 180);
+        DinhDangCot(nameof(HocVienLop.SDT), "Số điện thoại", 120);
+        DinhDangCot(nameof(HocVienLop.TrangThaiDiemDanh), "Điểm danh", 130);
+    }
+
+    private void DinhDangCot(string tenCot, string tieuDe, int chieuRong)
+    {
+        if (!dgvHocVien.Columns.Contains(tenCot)) return;
+
+        dgvHocVien.Columns[tenCot]!.HeaderText = tieuDe;
+        dgvHocVien.Columns[tenCot]!.Width = chieuRong;
     }
 }

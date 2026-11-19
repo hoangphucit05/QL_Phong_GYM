@@ -349,6 +349,8 @@ BEGIN TRY
  IF NOT EXISTS(SELECT 1 FROM dbo.ThanhVien WHERE MaTV=@MaTV AND TrangThai=N'Hoạt động' AND DaXoa=0) THROW 50028,N'Thành viên không hoạt động.',1;
  DECLARE @SucChua INT,@DangKy INT; SELECT @SucChua=SucChua FROM dbo.LopTap WITH(UPDLOCK,HOLDLOCK) WHERE MaLop=@MaLop AND TrangThai=N'Đang mở';
  IF @SucChua IS NULL THROW 50013,N'Lớp không mở hoặc không tồn tại.',1;
+ IF EXISTS(SELECT 1 FROM dbo.DangKyLop WITH(UPDLOCK,HOLDLOCK) WHERE MaTV=@MaTV AND MaLop=@MaLop AND TrangThai=N'Đang tham gia') THROW 50029,N'Thành viên đã đăng ký lớp này.',1;
+ IF EXISTS(SELECT 1 FROM dbo.DanhSachCho WITH(UPDLOCK,HOLDLOCK) WHERE MaTV=@MaTV AND MaLop=@MaLop AND TrangThai=N'Đang chờ') THROW 50030,N'Thành viên đang ở danh sách chờ của lớp này.',1;
  SELECT @DangKy=COUNT(*) FROM dbo.DangKyLop WHERE MaLop=@MaLop AND TrangThai=N'Đang tham gia';
  IF @DangKy>=@SucChua BEGIN IF @VaoDanhSachCho=1 BEGIN INSERT dbo.DanhSachCho(MaLop,MaTV) VALUES(@MaLop,@MaTV); SET @MaDKL=NULL; COMMIT; RETURN; END; THROW 50014,N'Lớp đã đủ sức chứa.',1; END;
  INSERT dbo.DangKyLop(MaTV,MaLop) VALUES(@MaTV,@MaLop); SET @MaDKL=SCOPE_IDENTITY(); COMMIT;

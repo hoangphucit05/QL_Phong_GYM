@@ -30,6 +30,8 @@ partial class FrmDiemDanh
         lblTrangThai = new Label();
         cboTrangThai = new ComboBox();
         btnDiemDanh = new Button();
+        btnTaoBuoi = new Button();
+        lblTrangThaiBuoi = new Label();
         dgvHocVien = new DataGridView();
         panelTieuDe.SuspendLayout();
         groupThaoTac.SuspendLayout();
@@ -80,7 +82,7 @@ partial class FrmDiemDanh
         groupThaoTac.Location = new Point(24, 96);
         groupThaoTac.Name = "groupThaoTac";
         groupThaoTac.Padding = new Padding(16, 12, 16, 12);
-        groupThaoTac.Size = new Size(952, 115);
+        groupThaoTac.Size = new Size(952, 145);
         groupThaoTac.TabIndex = 1;
         groupThaoTac.TabStop = false;
         groupThaoTac.Text = "Thao tác lớp tập";
@@ -232,7 +234,33 @@ partial class FrmDiemDanh
         btnDiemDanh.TabIndex = 9;
         btnDiemDanh.Text = "Lưu điểm danh";
         btnDiemDanh.UseVisualStyleBackColor = false;
-        // 
+        //
+        // btnTaoBuoi
+        //
+        btnTaoBuoi.BackColor = Color.FromArgb(100, 116, 139);
+        btnTaoBuoi.Cursor = Cursors.Hand;
+        btnTaoBuoi.FlatAppearance.BorderSize = 0;
+        btnTaoBuoi.FlatStyle = FlatStyle.Flat;
+        btnTaoBuoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnTaoBuoi.ForeColor = Color.White;
+        btnTaoBuoi.Location = new Point(24, 249);
+        btnTaoBuoi.Name = "btnTaoBuoi";
+        btnTaoBuoi.Size = new Size(145, 28);
+        btnTaoBuoi.TabIndex = 10;
+        btnTaoBuoi.Text = "Tạo buổi học";
+        btnTaoBuoi.UseVisualStyleBackColor = false;
+        //
+        // lblTrangThaiBuoi
+        //
+        lblTrangThaiBuoi.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        lblTrangThaiBuoi.ForeColor = Color.FromArgb(71, 85, 105);
+        lblTrangThaiBuoi.Location = new Point(184, 250);
+        lblTrangThaiBuoi.Name = "lblTrangThaiBuoi";
+        lblTrangThaiBuoi.Size = new Size(792, 26);
+        lblTrangThaiBuoi.TabIndex = 11;
+        lblTrangThaiBuoi.Text = "Chọn lớp và ngày học để xem buổi học.";
+        lblTrangThaiBuoi.TextAlign = ContentAlignment.MiddleLeft;
+        //
         // dgvHocVien
         // 
         dgvHocVien.AllowUserToAddRows = false;
@@ -242,14 +270,14 @@ partial class FrmDiemDanh
         dgvHocVien.BackgroundColor = Color.White;
         dgvHocVien.BorderStyle = BorderStyle.None;
         dgvHocVien.ColumnHeadersHeight = 36;
-        dgvHocVien.Location = new Point(24, 225);
+        dgvHocVien.Location = new Point(24, 288);
         dgvHocVien.MultiSelect = false;
         dgvHocVien.Name = "dgvHocVien";
         dgvHocVien.ReadOnly = true;
         dgvHocVien.RowHeadersVisible = false;
         dgvHocVien.RowTemplate.Height = 32;
         dgvHocVien.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvHocVien.Size = new Size(952, 440);
+        dgvHocVien.Size = new Size(952, 377);
         dgvHocVien.TabIndex = 2;
         // 
         // FrmDiemDanh
@@ -259,6 +287,8 @@ partial class FrmDiemDanh
         AutoScroll = true;
         BackColor = Color.FromArgb(241, 245, 249);
         ClientSize = new Size(1000, 690);
+        Controls.Add(lblTrangThaiBuoi);
+        Controls.Add(btnTaoBuoi);
         Controls.Add(dgvHocVien);
         Controls.Add(groupThaoTac);
         Controls.Add(panelTieuDe);
@@ -292,4 +322,6 @@ partial class FrmDiemDanh
     private ComboBox cboTrangThai;
     private Button btnDiemDanh;
     private DataGridView dgvHocVien;
+    private Button btnTaoBuoi;
+    private Label lblTrangThaiBuoi;
 }

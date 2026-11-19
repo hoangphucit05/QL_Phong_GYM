@@ -54,7 +54,6 @@ partial class FrmLogin
         picLogo.SizeMode = PictureBoxSizeMode.Zoom;
         picLogo.TabIndex = 2;
         picLogo.TabStop = false;
-        picLogo.Click += picLogo_Click;
         // 
         // lblPhuDe
         // 

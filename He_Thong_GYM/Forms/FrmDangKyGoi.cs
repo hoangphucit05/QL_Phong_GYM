@@ -29,7 +29,7 @@ public partial class FrmDangKyGoi : Form
             cboGoiTap.ValueMember = nameof(GoiTap.MaGoi);
 
             cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
-            cboKhuyenMai.DisplayMember = nameof(KhuyenMai.TenKM);
+            cboKhuyenMai.DisplayMember = nameof(KhuyenMai.HienThi);
             cboKhuyenMai.ValueMember = nameof(KhuyenMai.MaKM);
 
             cboLocTrangThai.SelectedIndex = 0;

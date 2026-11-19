@@ -24,12 +24,11 @@ partial class FrmKhuyenMai
         txtTen = new TextBox();
         lblGiam = new Label();
         nudGiam = new NumericUpDown();
-        lblTu = new Label();
-        dtpTu = new DateTimePicker();
-        lblDen = new Label();
-        dtpDen = new DateTimePicker();
+        lblTrangThai = new Label();
+        cboTrangThai = new ComboBox();
         flowThaoTac = new FlowLayoutPanel();
         btnLamMoi = new Button();
+        lblThongKe = new Label();
         dgvKhuyenMai = new DataGridView();
         panelTieuDe.SuspendLayout();
         groupThongTin.SuspendLayout();
@@ -85,23 +84,21 @@ partial class FrmKhuyenMai
         groupThongTin.Size = new Size(952, 105);
         groupThongTin.TabIndex = 1;
         groupThongTin.TabStop = false;
-        groupThongTin.Text = "Thông tin khuyến mãi";
+        groupThongTin.Text = "Bộ lọc chương trình khuyến mãi";
         // 
         // tableThongTin
         // 
         tableThongTin.ColumnCount = 4;
         tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
         tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-        tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+        tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
         tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         tableThongTin.Controls.Add(lblTen, 0, 0);
         tableThongTin.Controls.Add(txtTen, 1, 0);
         tableThongTin.Controls.Add(lblGiam, 2, 0);
         tableThongTin.Controls.Add(nudGiam, 3, 0);
-        tableThongTin.Controls.Add(lblTu, 0, 1);
-        tableThongTin.Controls.Add(dtpTu, 1, 1);
-        tableThongTin.Controls.Add(lblDen, 2, 1);
-        tableThongTin.Controls.Add(dtpDen, 3, 1);
+        tableThongTin.Controls.Add(lblTrangThai, 0, 1);
+        tableThongTin.Controls.Add(cboTrangThai, 1, 1);
         tableThongTin.Dock = DockStyle.Fill;
         tableThongTin.Font = new Font("Segoe UI", 9F);
         tableThongTin.Location = new Point(16, 30);
@@ -129,76 +126,62 @@ partial class FrmKhuyenMai
         txtTen.Dock = DockStyle.Fill;
         txtTen.Location = new Point(133, 3);
         txtTen.Name = "txtTen";
-        txtTen.PlaceholderText = "Nhập tên chương trình...";
-        txtTen.Size = new Size(329, 23);
+        txtTen.PlaceholderText = "Nhập mã khuyến mãi hoặc tên chương trình...";
+        txtTen.Size = new Size(324, 23);
         txtTen.TabIndex = 1;
+        txtTen.TextChanged += BoLocThayDoi;
         // 
         // lblGiam
         // 
         lblGiam.AutoSize = true;
         lblGiam.Dock = DockStyle.Fill;
         lblGiam.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblGiam.Location = new Point(468, 0);
+        lblGiam.Location = new Point(463, 0);
         lblGiam.Name = "lblGiam";
-        lblGiam.Size = new Size(114, 31);
+        lblGiam.Size = new Size(124, 31);
         lblGiam.TabIndex = 2;
-        lblGiam.Text = "Giảm giá (%):";
+        lblGiam.Text = "Giảm tối thiểu (%):";
         lblGiam.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // nudGiam
         // 
         nudGiam.Dock = DockStyle.Fill;
-        nudGiam.Location = new Point(588, 3);
+        nudGiam.Location = new Point(593, 3);
+        nudGiam.Maximum = new decimal(new int[] { 100, 0, 0, 0 });
         nudGiam.Name = "nudGiam";
-        nudGiam.Size = new Size(329, 23);
+        nudGiam.Size = new Size(324, 23);
         nudGiam.TabIndex = 3;
+        nudGiam.ValueChanged += BoLocThayDoi;
         // 
-        // lblTu
+        // lblTrangThai
         // 
-        lblTu.AutoSize = true;
-        lblTu.Dock = DockStyle.Fill;
-        lblTu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblTu.Location = new Point(3, 31);
-        lblTu.Name = "lblTu";
-        lblTu.Size = new Size(124, 32);
-        lblTu.TabIndex = 4;
-        lblTu.Text = "Từ ngày:";
-        lblTu.TextAlign = ContentAlignment.MiddleLeft;
+        lblTrangThai.AutoSize = true;
+        lblTrangThai.Dock = DockStyle.Fill;
+        lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTrangThai.Location = new Point(3, 31);
+        lblTrangThai.Name = "lblTrangThai";
+        lblTrangThai.Size = new Size(124, 32);
+        lblTrangThai.TabIndex = 4;
+        lblTrangThai.Text = "Trạng thái:";
+        lblTrangThai.TextAlign = ContentAlignment.MiddleLeft;
         // 
-        // dtpTu
+        // cboTrangThai
         // 
-        dtpTu.Dock = DockStyle.Fill;
-        dtpTu.Format = DateTimePickerFormat.Short;
-        dtpTu.Location = new Point(133, 34);
-        dtpTu.Name = "dtpTu";
-        dtpTu.Size = new Size(329, 23);
-        dtpTu.TabIndex = 5;
-        // 
-        // lblDen
-        // 
-        lblDen.AutoSize = true;
-        lblDen.Dock = DockStyle.Fill;
-        lblDen.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblDen.Location = new Point(468, 31);
-        lblDen.Name = "lblDen";
-        lblDen.Size = new Size(114, 32);
-        lblDen.TabIndex = 6;
-        lblDen.Text = "Đến ngày:";
-        lblDen.TextAlign = ContentAlignment.MiddleLeft;
-        // 
-        // dtpDen
-        // 
-        dtpDen.Dock = DockStyle.Fill;
-        dtpDen.Format = DateTimePickerFormat.Short;
-        dtpDen.Location = new Point(588, 34);
-        dtpDen.Name = "dtpDen";
-        dtpDen.Size = new Size(329, 23);
-        dtpDen.TabIndex = 7;
+        cboTrangThai.Dock = DockStyle.Fill;
+        cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboTrangThai.FormattingEnabled = true;
+        cboTrangThai.Items.AddRange(new object[] { "-- Tất cả trạng thái --", "Hoạt động", "Hết hạn" });
+        cboTrangThai.Location = new Point(133, 34);
+        cboTrangThai.Name = "cboTrangThai";
+        cboTrangThai.Size = new Size(324, 23);
+        cboTrangThai.TabIndex = 5;
+        cboTrangThai.SelectedIndexChanged += BoLocThayDoi;
         // 
         // flowThaoTac
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnLamMoi);
+        flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 212);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(952, 42);
@@ -213,12 +196,25 @@ partial class FrmKhuyenMai
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
         btnLamMoi.Location = new Point(0, 0);
-        btnLamMoi.Margin = new Padding(0, 0, 8, 0);
+        btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
-        btnLamMoi.Size = new Size(120, 36);
+        btnLamMoi.Size = new Size(130, 36);
         btnLamMoi.TabIndex = 0;
-        btnLamMoi.Text = "Làm mới";
+        btnLamMoi.Text = "Làm mới / Bỏ lọc";
         btnLamMoi.UseVisualStyleBackColor = false;
+        btnLamMoi.Click += btnLamMoi_Click;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(71, 85, 105);
+        lblThongKe.Location = new Point(146, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Padding = new Padding(0, 8, 0, 0);
+        lblThongKe.Size = new Size(350, 36);
+        lblThongKe.TabIndex = 1;
+        lblThongKe.Text = "Đang tải dữ liệu...";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgvKhuyenMai
         // 
@@ -275,11 +271,10 @@ partial class FrmKhuyenMai
     private TextBox txtTen;
     private Label lblGiam;
     private NumericUpDown nudGiam;
-    private Label lblTu;
-    private DateTimePicker dtpTu;
-    private Label lblDen;
-    private DateTimePicker dtpDen;
+    private Label lblTrangThai;
+    private ComboBox cboTrangThai;
     private FlowLayoutPanel flowThaoTac;
     private Button btnLamMoi;
+    private Label lblThongKe;
     private DataGridView dgvKhuyenMai;
 }

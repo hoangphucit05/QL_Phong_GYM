@@ -29,7 +29,7 @@ public partial class FrmDangKyPT : Form
             cboHLV.ValueMember = nameof(HuanLuyenVien.MaHLV);
 
             cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
-            cboKhuyenMai.DisplayMember = nameof(KhuyenMai.TenKM);
+            cboKhuyenMai.DisplayMember = nameof(KhuyenMai.HienThi);
             cboKhuyenMai.ValueMember = nameof(KhuyenMai.MaKM);
 
             cboLocTrangThai.SelectedIndex = 0;
