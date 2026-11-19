@@ -21,6 +21,11 @@ partial class FrmHoaDon
         flowThaoTac = new FlowLayoutPanel();
         btnThanhToan = new Button();
         btnLamMoi = new Button();
+        lblTimKiem = new Label();
+        txtTimKiem = new TextBox();
+        lblTrangThai = new Label();
+        cboTrangThai = new ComboBox();
+        lblThongKe = new Label();
         dgvHoaDon = new DataGridView();
         panelTieuDe.SuspendLayout();
         flowThaoTac.SuspendLayout();
@@ -65,6 +70,11 @@ partial class FrmHoaDon
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnThanhToan);
         flowThaoTac.Controls.Add(btnLamMoi);
+        flowThaoTac.Controls.Add(lblTimKiem);
+        flowThaoTac.Controls.Add(txtTimKiem);
+        flowThaoTac.Controls.Add(lblTrangThai);
+        flowThaoTac.Controls.Add(cboTrangThai);
+        flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 96);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(1002, 42);
@@ -96,13 +106,68 @@ partial class FrmHoaDon
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
         btnLamMoi.Location = new Point(168, 0);
-        btnLamMoi.Margin = new Padding(0, 0, 8, 0);
+        btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
-        btnLamMoi.Size = new Size(120, 36);
+        btnLamMoi.Size = new Size(100, 36);
         btnLamMoi.TabIndex = 1;
         btnLamMoi.Text = "Làm mới";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
+        // 
+        // lblTimKiem
+        // 
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTimKiem.Location = new Point(287, 0);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(70, 36);
+        lblTimKiem.TabIndex = 2;
+        lblTimKiem.Text = "Tìm kiếm:";
+        lblTimKiem.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // txtTimKiem
+        // 
+        txtTimKiem.Location = new Point(363, 6);
+        txtTimKiem.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Mã HĐ, tên hội viên...";
+        txtTimKiem.Size = new Size(170, 23);
+        txtTimKiem.TabIndex = 3;
+        txtTimKiem.TextChanged += BoLocThayDoi;
+        // 
+        // lblTrangThai
+        // 
+        lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTrangThai.Location = new Point(551, 0);
+        lblTrangThai.Name = "lblTrangThai";
+        lblTrangThai.Size = new Size(72, 36);
+        lblTrangThai.TabIndex = 4;
+        lblTrangThai.Text = "Trạng thái:";
+        lblTrangThai.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // cboTrangThai
+        // 
+        cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboTrangThai.FormattingEnabled = true;
+        cboTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Chờ thanh toán", "Đã thanh toán", "Một phần", "Hủy" });
+        cboTrangThai.Location = new Point(629, 6);
+        cboTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboTrangThai.Name = "cboTrangThai";
+        cboTrangThai.Size = new Size(130, 23);
+        cboTrangThai.TabIndex = 5;
+        cboTrangThai.SelectedIndexChanged += BoLocThayDoi;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(100, 116, 139);
+        lblThongKe.Location = new Point(774, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Size = new Size(200, 36);
+        lblThongKe.TabIndex = 6;
+        lblThongKe.Text = "Hiển thị: 0 hóa đơn";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgvHoaDon
         // 
@@ -141,6 +206,7 @@ partial class FrmHoaDon
         panelTieuDe.ResumeLayout(false);
         panelTieuDe.PerformLayout();
         flowThaoTac.ResumeLayout(false);
+        flowThaoTac.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvHoaDon).EndInit();
         ResumeLayout(false);
     }
@@ -151,5 +217,10 @@ partial class FrmHoaDon
     private FlowLayoutPanel flowThaoTac;
     private Button btnThanhToan;
     private Button btnLamMoi;
+    private Label lblTimKiem;
+    private TextBox txtTimKiem;
+    private Label lblTrangThai;
+    private ComboBox cboTrangThai;
+    private Label lblThongKe;
     private DataGridView dgvHoaDon;
 }

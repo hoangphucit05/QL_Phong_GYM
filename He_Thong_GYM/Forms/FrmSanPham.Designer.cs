@@ -21,6 +21,11 @@ partial class FrmSanPham
         flowThaoTac = new FlowLayoutPanel();
         btnBanHang = new Button();
         btnLamMoi = new Button();
+        lblTimKiem = new Label();
+        txtTimKiem = new TextBox();
+        lblTrangThai = new Label();
+        cboTrangThai = new ComboBox();
+        lblThongKe = new Label();
         dgvSanPham = new DataGridView();
         panelTieuDe.SuspendLayout();
         flowThaoTac.SuspendLayout();
@@ -65,6 +70,11 @@ partial class FrmSanPham
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnBanHang);
         flowThaoTac.Controls.Add(btnLamMoi);
+        flowThaoTac.Controls.Add(lblTimKiem);
+        flowThaoTac.Controls.Add(txtTimKiem);
+        flowThaoTac.Controls.Add(lblTrangThai);
+        flowThaoTac.Controls.Add(cboTrangThai);
+        flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 96);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(1002, 42);
@@ -81,7 +91,7 @@ partial class FrmSanPham
         btnBanHang.Location = new Point(0, 0);
         btnBanHang.Margin = new Padding(0, 0, 8, 0);
         btnBanHang.Name = "btnBanHang";
-        btnBanHang.Size = new Size(150, 36);
+        btnBanHang.Size = new Size(140, 36);
         btnBanHang.TabIndex = 0;
         btnBanHang.Text = "Bán sản phẩm";
         btnBanHang.UseVisualStyleBackColor = false;
@@ -95,14 +105,69 @@ partial class FrmSanPham
         btnLamMoi.FlatStyle = FlatStyle.Flat;
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
-        btnLamMoi.Location = new Point(158, 0);
-        btnLamMoi.Margin = new Padding(0, 0, 8, 0);
+        btnLamMoi.Location = new Point(148, 0);
+        btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
-        btnLamMoi.Size = new Size(120, 36);
+        btnLamMoi.Size = new Size(100, 36);
         btnLamMoi.TabIndex = 1;
         btnLamMoi.Text = "Làm mới";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
+        // 
+        // lblTimKiem
+        // 
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTimKiem.Location = new Point(267, 0);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(70, 36);
+        lblTimKiem.TabIndex = 2;
+        lblTimKiem.Text = "Tìm kiếm:";
+        lblTimKiem.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // txtTimKiem
+        // 
+        txtTimKiem.Location = new Point(343, 6);
+        txtTimKiem.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Tên, mã sản phẩm...";
+        txtTimKiem.Size = new Size(180, 23);
+        txtTimKiem.TabIndex = 3;
+        txtTimKiem.TextChanged += BoLocThayDoi;
+        // 
+        // lblTrangThai
+        // 
+        lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTrangThai.Location = new Point(541, 0);
+        lblTrangThai.Name = "lblTrangThai";
+        lblTrangThai.Size = new Size(72, 36);
+        lblTrangThai.TabIndex = 4;
+        lblTrangThai.Text = "Trạng thái:";
+        lblTrangThai.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // cboTrangThai
+        // 
+        cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboTrangThai.FormattingEnabled = true;
+        cboTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Đang bán", "Hết hàng", "Ngừng kinh doanh" });
+        cboTrangThai.Location = new Point(619, 6);
+        cboTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboTrangThai.Name = "cboTrangThai";
+        cboTrangThai.Size = new Size(140, 23);
+        cboTrangThai.TabIndex = 5;
+        cboTrangThai.SelectedIndexChanged += BoLocThayDoi;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(100, 116, 139);
+        lblThongKe.Location = new Point(774, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Size = new Size(200, 36);
+        lblThongKe.TabIndex = 6;
+        lblThongKe.Text = "Hiển thị: 0 sản phẩm";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgvSanPham
         // 
@@ -141,6 +206,7 @@ partial class FrmSanPham
         panelTieuDe.ResumeLayout(false);
         panelTieuDe.PerformLayout();
         flowThaoTac.ResumeLayout(false);
+        flowThaoTac.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvSanPham).EndInit();
         ResumeLayout(false);
     }
@@ -151,5 +217,10 @@ partial class FrmSanPham
     private FlowLayoutPanel flowThaoTac;
     private Button btnBanHang;
     private Button btnLamMoi;
+    private Label lblTimKiem;
+    private TextBox txtTimKiem;
+    private Label lblTrangThai;
+    private ComboBox cboTrangThai;
+    private Label lblThongKe;
     private DataGridView dgvSanPham;
 }

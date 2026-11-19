@@ -1,8 +1,178 @@
-﻿using He_Thong_GYM.BLL;using He_Thong_GYM.Helpers;using He_Thong_GYM.Models;
+using He_Thong_GYM.BLL;
+using He_Thong_GYM.Helpers;
+using He_Thong_GYM.Models;
+
 namespace He_Thong_GYM.Forms;
-public partial class FrmDangKyGoi:Form
-{private readonly DangKyBLL _bll=new();public FrmDangKyGoi(){InitializeComponent();}
- private async void FrmDangKyGoi_Load(object? s,EventArgs e){try{cboThanhVien.DataSource=await _bll.LayThanhVienAsync();cboThanhVien.DisplayMember=nameof(ThanhVien.HoTen);cboThanhVien.ValueMember=nameof(ThanhVien.MaTV);cboGoiTap.DataSource=await _bll.LayGoiTapAsync();cboGoiTap.DisplayMember=nameof(GoiTap.TenGoi);cboGoiTap.ValueMember=nameof(GoiTap.MaGoi);cboKhuyenMai.DataSource=await _bll.LayKhuyenMaiAsync();cboKhuyenMai.DisplayMember=nameof(KhuyenMai.TenKM);cboKhuyenMai.ValueMember=nameof(KhuyenMai.MaKM);TinhGia();dgvLichSu.DataSource=await _bll.LayLichSuGoiAsync();}catch(Exception ex){MessageBox.Show(ex.Message,"Lỗi dữ liệu",MessageBoxButtons.OK,MessageBoxIcon.Error);}}
- private void TinhGia(){if(cboGoiTap.SelectedItem is not GoiTap g)return;var km=cboKhuyenMai.SelectedItem as KhuyenMai;dtpNgayKetThuc.Value=dtpNgayBatDau.Value.AddDays(g.ThoiHanNgay-1);lblGia.Text=$"{g.Gia*(1-(km?.PhanTramGiam??0)/100):N0} đ";}
- private async void btnDangKy_Click(object? s,EventArgs e){try{if(SessionManager.NguoiDungHienTai is null)throw new InvalidOperationException("Chưa có phiên đăng nhập.");if(cboThanhVien.SelectedItem is not ThanhVien tv||cboGoiTap.SelectedItem is not GoiTap g)throw new InvalidOperationException("Hãy chọn thành viên và gói tập.");var km=cboKhuyenMai.SelectedItem as KhuyenMai;var kq=await _bll.DangKyGoiAsync(tv.MaTV,g.MaGoi,km?.MaKM,dtpNgayBatDau.Value,SessionManager.NguoiDungHienTai.MaNV);dgvLichSu.DataSource=await _bll.LayLichSuGoiAsync();MessageBox.Show($"Đã đăng ký gói. Hóa đơn #{kq.Item2} đang chờ thanh toán.","Thành công",MessageBoxButtons.OK,MessageBoxIcon.Information);}catch(Exception ex){MessageBox.Show(ex.Message,"Không thể đăng ký",MessageBoxButtons.OK,MessageBoxIcon.Warning);}}
- private void GiaThayDoi(object? s,EventArgs e)=>TinhGia();}
+
+public partial class FrmDangKyGoi : Form
+{
+    private readonly DangKyBLL _bll = new();
+    private List<LichSuDangKy> _lichSuGoc = new();
+    private bool _dangKhoiTao = true;
+
+    public FrmDangKyGoi()
+    {
+        InitializeComponent();
+    }
+
+    private async void FrmDangKyGoi_Load(object? s, EventArgs e)
+    {
+        try
+        {
+            _dangKhoiTao = true;
+            cboThanhVien.DataSource = await _bll.LayThanhVienAsync();
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HoTen);
+            cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+
+            cboGoiTap.DataSource = await _bll.LayGoiTapAsync();
+            cboGoiTap.DisplayMember = nameof(GoiTap.TenGoi);
+            cboGoiTap.ValueMember = nameof(GoiTap.MaGoi);
+
+            cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
+            cboKhuyenMai.DisplayMember = nameof(KhuyenMai.TenKM);
+            cboKhuyenMai.ValueMember = nameof(KhuyenMai.MaKM);
+
+            cboLocTrangThai.SelectedIndex = 0;
+            TinhGia();
+
+            await TaiLichSuAsync();
+            _dangKhoiTao = false;
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private async Task TaiLichSuAsync()
+    {
+        try
+        {
+            _lichSuGoc = await _bll.LayLichSuGoiAsync();
+            ApDungLocLichSu();
+        }
+        catch (Exception ex)
+        {
+            lblThongKeLichSu.Text = "Lỗi tải lịch sử";
+            MessageBox.Show(ex.Message, "Lỗi tải lịch sử", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void LocLichSuThayDoi(object? sender, EventArgs e)
+    {
+        if (_dangKhoiTao) return;
+        ApDungLocLichSu();
+    }
+
+    private void ApDungLocLichSu()
+    {
+        var ketQua = _lichSuGoc.AsEnumerable();
+
+        var tuKhoa = txtTimKiemLichSu.Text.Trim();
+        if (!string.IsNullOrEmpty(tuKhoa))
+        {
+            ketQua = ketQua.Where(x =>
+                (!string.IsNullOrEmpty(x.ThanhVien) && x.ThanhVien.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(x.DichVu) && x.DichVu.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                x.MaDangKy.ToString().Contains(tuKhoa));
+        }
+
+        if (cboLocTrangThai.SelectedIndex > 0)
+        {
+            var trangThaiChon = cboLocTrangThai.SelectedItem?.ToString();
+            if (!string.IsNullOrEmpty(trangThaiChon))
+            {
+                ketQua = ketQua.Where(x => string.Equals(x.TrangThai, trangThaiChon, StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        var list = ketQua.ToList();
+        dgvLichSu.DataSource = null;
+        dgvLichSu.DataSource = list;
+        DinhDangLuoiLichSu();
+
+        lblThongKeLichSu.Text = $"Hiển thị: {list.Count} / {_lichSuGoc.Count} lượt";
+    }
+
+    private void DinhDangLuoiLichSu()
+    {
+        if (dgvLichSu.Columns.Count == 0) return;
+
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.MaDangKy)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKy)]!.HeaderText = "Mã ĐK";
+            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKy)]!.Width = 80;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.ThanhVien)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.ThanhVien)]!.HeaderText = "Thành viên";
+            dgvLichSu.Columns[nameof(LichSuDangKy.ThanhVien)]!.FillWeight = 150;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.DichVu)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.DichVu)]!.HeaderText = "Gói tập";
+            dgvLichSu.Columns[nameof(LichSuDangKy.DichVu)]!.FillWeight = 140;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.NgayBatDau)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayBatDau)]!.HeaderText = "Ngày bắt đầu";
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayBatDau)]!.DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayBatDau)]!.Width = 110;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.NgayKetThuc)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayKetThuc)]!.HeaderText = "Ngày kết thúc";
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayKetThuc)]!.DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgvLichSu.Columns[nameof(LichSuDangKy.NgayKetThuc)]!.Width = 110;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.TongTien)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.TongTien)]!.HeaderText = "Tổng tiền (VNĐ)";
+            dgvLichSu.Columns[nameof(LichSuDangKy.TongTien)]!.DefaultCellStyle.Format = "N0";
+            dgvLichSu.Columns[nameof(LichSuDangKy.TongTien)]!.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvLichSu.Columns[nameof(LichSuDangKy.TongTien)]!.Width = 130;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.TrangThai)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.TrangThai)]!.HeaderText = "Trạng thái";
+            dgvLichSu.Columns[nameof(LichSuDangKy.TrangThai)]!.Width = 120;
+        }
+    }
+
+    private async void btnLamMoiLichSu_Click(object? sender, EventArgs e)
+    {
+        txtTimKiemLichSu.Clear();
+        if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
+        await TaiLichSuAsync();
+    }
+
+    private void TinhGia()
+    {
+        if (cboGoiTap.SelectedItem is not GoiTap g) return;
+        var km = cboKhuyenMai.SelectedItem as KhuyenMai;
+        dtpNgayKetThuc.Value = dtpNgayBatDau.Value.AddDays(g.ThoiHanNgay - 1);
+        lblGia.Text = $"{g.Gia * (1 - (km?.PhanTramGiam ?? 0) / 100):N0} đ";
+    }
+
+    private async void btnDangKy_Click(object? s, EventArgs e)
+    {
+        try
+        {
+            if (SessionManager.NguoiDungHienTai is null) throw new InvalidOperationException("Chưa có phiên đăng nhập.");
+            if (cboThanhVien.SelectedItem is not ThanhVien tv || cboGoiTap.SelectedItem is not GoiTap g)
+                throw new InvalidOperationException("Hãy chọn thành viên và gói tập.");
+
+            var km = cboKhuyenMai.SelectedItem as KhuyenMai;
+            var kq = await _bll.DangKyGoiAsync(tv.MaTV, g.MaGoi, km?.MaKM, dtpNgayBatDau.Value, SessionManager.NguoiDungHienTai.MaNV);
+
+            await TaiLichSuAsync();
+            MessageBox.Show($"Đã đăng ký gói. Hóa đơn #{kq.Item2} đang chờ thanh toán.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message, "Không thể đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void GiaThayDoi(object? s, EventArgs e) => TinhGia();
+}

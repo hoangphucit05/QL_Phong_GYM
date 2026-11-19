@@ -29,10 +29,18 @@ partial class FrmDangKyGoi
         l6 = new Label();
         lblGia = new Label();
         btnDangKy = new Button();
+        panelLocLichSu = new FlowLayoutPanel();
+        lblTimKiemLichSu = new Label();
+        txtTimKiemLichSu = new TextBox();
+        lblLocTrangThai = new Label();
+        cboLocTrangThai = new ComboBox();
+        btnLamMoiLichSu = new Button();
+        lblThongKeLichSu = new Label();
         dgvLichSu = new DataGridView();
         panel.SuspendLayout();
         group.SuspendLayout();
         table.SuspendLayout();
+        panelLocLichSu.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLichSu).BeginInit();
         SuspendLayout();
         // 
@@ -241,13 +249,99 @@ partial class FrmDangKyGoi
         btnDangKy.FlatStyle = FlatStyle.Flat;
         btnDangKy.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         btnDangKy.ForeColor = Color.White;
-        btnDangKy.Location = new Point(24, 284);
+        btnDangKy.Location = new Point(24, 282);
         btnDangKy.Name = "btnDangKy";
-        btnDangKy.Size = new Size(160, 38);
+        btnDangKy.Size = new Size(160, 36);
         btnDangKy.TabIndex = 1;
         btnDangKy.Text = "Đăng ký gói";
         btnDangKy.UseVisualStyleBackColor = false;
         btnDangKy.Click += btnDangKy_Click;
+        // 
+        // panelLocLichSu
+        // 
+        panelLocLichSu.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        panelLocLichSu.Controls.Add(lblTimKiemLichSu);
+        panelLocLichSu.Controls.Add(txtTimKiemLichSu);
+        panelLocLichSu.Controls.Add(lblLocTrangThai);
+        panelLocLichSu.Controls.Add(cboLocTrangThai);
+        panelLocLichSu.Controls.Add(btnLamMoiLichSu);
+        panelLocLichSu.Controls.Add(lblThongKeLichSu);
+        panelLocLichSu.Location = new Point(200, 282);
+        panelLocLichSu.Name = "panelLocLichSu";
+        panelLocLichSu.Size = new Size(976, 38);
+        panelLocLichSu.TabIndex = 4;
+        // 
+        // lblTimKiemLichSu
+        // 
+        lblTimKiemLichSu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiemLichSu.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTimKiemLichSu.Location = new Point(3, 0);
+        lblTimKiemLichSu.Name = "lblTimKiemLichSu";
+        lblTimKiemLichSu.Size = new Size(70, 36);
+        lblTimKiemLichSu.TabIndex = 0;
+        lblTimKiemLichSu.Text = "Tìm kiếm:";
+        lblTimKiemLichSu.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // txtTimKiemLichSu
+        // 
+        txtTimKiemLichSu.Location = new Point(79, 6);
+        txtTimKiemLichSu.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiemLichSu.Name = "txtTimKiemLichSu";
+        txtTimKiemLichSu.PlaceholderText = "Tên hội viên, gói tập...";
+        txtTimKiemLichSu.Size = new Size(220, 23);
+        txtTimKiemLichSu.TabIndex = 1;
+        txtTimKiemLichSu.TextChanged += LocLichSuThayDoi;
+        // 
+        // lblLocTrangThai
+        // 
+        lblLocTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblLocTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
+        lblLocTrangThai.Location = new Point(314, 0);
+        lblLocTrangThai.Name = "lblLocTrangThai";
+        lblLocTrangThai.Size = new Size(72, 36);
+        lblLocTrangThai.TabIndex = 2;
+        lblLocTrangThai.Text = "Trạng thái:";
+        lblLocTrangThai.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // cboLocTrangThai
+        // 
+        cboLocTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboLocTrangThai.FormattingEnabled = true;
+        cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Còn hạn", "Hết hạn", "Chờ thanh toán" });
+        cboLocTrangThai.Location = new Point(392, 6);
+        cboLocTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboLocTrangThai.Name = "cboLocTrangThai";
+        cboLocTrangThai.Size = new Size(150, 23);
+        cboLocTrangThai.TabIndex = 3;
+        cboLocTrangThai.SelectedIndexChanged += LocLichSuThayDoi;
+        // 
+        // btnLamMoiLichSu
+        // 
+        btnLamMoiLichSu.BackColor = Color.FromArgb(71, 85, 105);
+        btnLamMoiLichSu.Cursor = Cursors.Hand;
+        btnLamMoiLichSu.FlatAppearance.BorderSize = 0;
+        btnLamMoiLichSu.FlatStyle = FlatStyle.Flat;
+        btnLamMoiLichSu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLamMoiLichSu.ForeColor = Color.White;
+        btnLamMoiLichSu.Location = new Point(557, 4);
+        btnLamMoiLichSu.Margin = new Padding(3, 4, 12, 3);
+        btnLamMoiLichSu.Name = "btnLamMoiLichSu";
+        btnLamMoiLichSu.Size = new Size(100, 28);
+        btnLamMoiLichSu.TabIndex = 4;
+        btnLamMoiLichSu.Text = "Làm mới";
+        btnLamMoiLichSu.UseVisualStyleBackColor = false;
+        btnLamMoiLichSu.Click += btnLamMoiLichSu_Click;
+        // 
+        // lblThongKeLichSu
+        // 
+        lblThongKeLichSu.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKeLichSu.ForeColor = Color.FromArgb(100, 116, 139);
+        lblThongKeLichSu.Location = new Point(672, 0);
+        lblThongKeLichSu.Name = "lblThongKeLichSu";
+        lblThongKeLichSu.Size = new Size(200, 36);
+        lblThongKeLichSu.TabIndex = 5;
+        lblThongKeLichSu.Text = "Hiển thị: 0 lượt";
+        lblThongKeLichSu.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgvLichSu
         // 
@@ -258,13 +352,13 @@ partial class FrmDangKyGoi
         dgvLichSu.BackgroundColor = Color.White;
         dgvLichSu.BorderStyle = BorderStyle.None;
         dgvLichSu.ColumnHeadersHeight = 38;
-        dgvLichSu.Location = new Point(24, 336);
+        dgvLichSu.Location = new Point(24, 330);
         dgvLichSu.Name = "dgvLichSu";
         dgvLichSu.ReadOnly = true;
         dgvLichSu.RowHeadersVisible = false;
         dgvLichSu.RowTemplate.Height = 32;
         dgvLichSu.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvLichSu.Size = new Size(1152, 363);
+        dgvLichSu.Size = new Size(1152, 375);
         dgvLichSu.TabIndex = 0;
         // 
         // FrmDangKyGoi
@@ -275,6 +369,7 @@ partial class FrmDangKyGoi
         BackColor = Color.FromArgb(241, 245, 249);
         ClientSize = new Size(1200, 760);
         Controls.Add(dgvLichSu);
+        Controls.Add(panelLocLichSu);
         Controls.Add(btnDangKy);
         Controls.Add(group);
         Controls.Add(panel);
@@ -287,10 +382,11 @@ partial class FrmDangKyGoi
         panel.PerformLayout();
         group.ResumeLayout(false);
         table.ResumeLayout(false);
+        panelLocLichSu.ResumeLayout(false);
+        panelLocLichSu.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLichSu).EndInit();
         ResumeLayout(false);
     }
-
 
     private Panel panel;
     private Label title, l1, l2, l3, l4, l5, l6, lblGia;
@@ -299,5 +395,12 @@ partial class FrmDangKyGoi
     private ComboBox cboThanhVien, cboGoiTap, cboKhuyenMai;
     private DateTimePicker dtpNgayBatDau, dtpNgayKetThuc;
     private Button btnDangKy;
+    private FlowLayoutPanel panelLocLichSu;
+    private Label lblTimKiemLichSu;
+    private TextBox txtTimKiemLichSu;
+    private Label lblLocTrangThai;
+    private ComboBox cboLocTrangThai;
+    private Button btnLamMoiLichSu;
+    private Label lblThongKeLichSu;
     private DataGridView dgvLichSu;
 }

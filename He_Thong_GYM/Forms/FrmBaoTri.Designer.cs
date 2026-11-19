@@ -30,6 +30,12 @@ partial class FrmBaoTri
         nudChiPhi = new NumericUpDown();
         flowThaoTac = new FlowLayoutPanel();
         btnTao = new Button();
+        btnLamMoi = new Button();
+        lblTimKiem = new Label();
+        txtTimKiem = new TextBox();
+        lblTrangThai = new Label();
+        cboLocTrangThai = new ComboBox();
+        lblThongKe = new Label();
         dgv = new DataGridView();
         panelTieuDe.SuspendLayout();
         groupThongTin.SuspendLayout();
@@ -203,6 +209,12 @@ partial class FrmBaoTri
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnTao);
+        flowThaoTac.Controls.Add(btnLamMoi);
+        flowThaoTac.Controls.Add(lblTimKiem);
+        flowThaoTac.Controls.Add(txtTimKiem);
+        flowThaoTac.Controls.Add(lblTrangThai);
+        flowThaoTac.Controls.Add(cboLocTrangThai);
+        flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 212);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(952, 42);
@@ -219,11 +231,83 @@ partial class FrmBaoTri
         btnTao.Location = new Point(0, 0);
         btnTao.Margin = new Padding(0, 0, 8, 0);
         btnTao.Name = "btnTao";
-        btnTao.Size = new Size(150, 36);
+        btnTao.Size = new Size(140, 36);
         btnTao.TabIndex = 0;
         btnTao.Text = "Tạo phiếu bảo trì";
         btnTao.UseVisualStyleBackColor = false;
         btnTao.Click += btnTao_Click;
+        // 
+        // btnLamMoi
+        // 
+        btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
+        btnLamMoi.Cursor = Cursors.Hand;
+        btnLamMoi.FlatAppearance.BorderSize = 0;
+        btnLamMoi.FlatStyle = FlatStyle.Flat;
+        btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLamMoi.ForeColor = Color.White;
+        btnLamMoi.Location = new Point(148, 0);
+        btnLamMoi.Margin = new Padding(0, 0, 16, 0);
+        btnLamMoi.Name = "btnLamMoi";
+        btnLamMoi.Size = new Size(90, 36);
+        btnLamMoi.TabIndex = 1;
+        btnLamMoi.Text = "Làm mới";
+        btnLamMoi.UseVisualStyleBackColor = false;
+        btnLamMoi.Click += btnLamMoi_Click;
+        // 
+        // lblTimKiem
+        // 
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTimKiem.Location = new Point(257, 0);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(68, 36);
+        lblTimKiem.TabIndex = 2;
+        lblTimKiem.Text = "Tìm kiếm:";
+        lblTimKiem.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // txtTimKiem
+        // 
+        txtTimKiem.Location = new Point(331, 6);
+        txtTimKiem.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Tên thiết bị, NV, nội dung...";
+        txtTimKiem.Size = new Size(170, 23);
+        txtTimKiem.TabIndex = 3;
+        txtTimKiem.TextChanged += BoLocThayDoi;
+        // 
+        // lblTrangThai
+        // 
+        lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTrangThai.Location = new Point(519, 0);
+        lblTrangThai.Name = "lblTrangThai";
+        lblTrangThai.Size = new Size(72, 36);
+        lblTrangThai.TabIndex = 4;
+        lblTrangThai.Text = "Trạng thái:";
+        lblTrangThai.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // cboLocTrangThai
+        // 
+        cboLocTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboLocTrangThai.FormattingEnabled = true;
+        cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Hoàn thành", "Đang xử lý", "Chờ linh kiện" });
+        cboLocTrangThai.Location = new Point(597, 6);
+        cboLocTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboLocTrangThai.Name = "cboLocTrangThai";
+        cboLocTrangThai.Size = new Size(130, 23);
+        cboLocTrangThai.TabIndex = 5;
+        cboLocTrangThai.SelectedIndexChanged += BoLocThayDoi;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(100, 116, 139);
+        lblThongKe.Location = new Point(742, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Size = new Size(190, 36);
+        lblThongKe.TabIndex = 6;
+        lblThongKe.Text = "Hiển thị: 0 phiếu";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgv
         // 
@@ -267,6 +351,7 @@ partial class FrmBaoTri
         tableThongTin.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)nudChiPhi).EndInit();
         flowThaoTac.ResumeLayout(false);
+        flowThaoTac.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
         ResumeLayout(false);
     }
@@ -286,5 +371,11 @@ partial class FrmBaoTri
     private NumericUpDown nudChiPhi;
     private FlowLayoutPanel flowThaoTac;
     private Button btnTao;
+    private Button btnLamMoi;
+    private Label lblTimKiem;
+    private TextBox txtTimKiem;
+    private Label lblTrangThai;
+    private ComboBox cboLocTrangThai;
+    private Label lblThongKe;
     private DataGridView dgv;
 }

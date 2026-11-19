@@ -36,6 +36,12 @@ partial class FrmLopTap
         cboTrangThai = new ComboBox();
         flowThaoTac = new FlowLayoutPanel();
         btnThem = new Button();
+        btnLamMoi = new Button();
+        lblTimKiem = new Label();
+        txtTimKiem = new TextBox();
+        lblTrangThaiLoc = new Label();
+        cboLocTrangThai = new ComboBox();
+        lblThongKe = new Label();
         dgvLop = new DataGridView();
         panelTieuDe.SuspendLayout();
         groupThongTin.SuspendLayout();
@@ -63,9 +69,9 @@ partial class FrmLopTap
         lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
         lblMoTa.Location = new Point(26, 48);
         lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(347, 15);
+        lblMoTa.Size = new Size(337, 15);
         lblMoTa.TabIndex = 1;
-        lblMoTa.Text = "Mở các lớp học Yoga, Boxing, Dance, phân công HLV và xếp lịch.";
+        lblMoTa.Text = "Quản lý các lớp tập Yoga, Zumba, Boxing và phân công giảng dạy.";
         // 
         // lblTieuDe
         // 
@@ -74,7 +80,7 @@ partial class FrmLopTap
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
         lblTieuDe.Location = new Point(24, 14);
         lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(203, 30);
+        lblTieuDe.Size = new Size(204, 30);
         lblTieuDe.TabIndex = 0;
         lblTieuDe.Text = "QUẢN LÝ LỚP TẬP";
         // 
@@ -178,7 +184,7 @@ partial class FrmLopTap
         lblHLV.Name = "lblHLV";
         lblHLV.Size = new Size(114, 30);
         lblHLV.TabIndex = 4;
-        lblHLV.Text = "HLV đứng lớp:";
+        lblHLV.Text = "Huấn luyện viên:";
         lblHLV.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // cboHLV
@@ -207,7 +213,7 @@ partial class FrmLopTap
         // 
         nudSucChua.Dock = DockStyle.Fill;
         nudSucChua.Location = new Point(633, 33);
-        nudSucChua.Maximum = new decimal(new int[] { 500, 0, 0, 0 });
+        nudSucChua.Maximum = new decimal(new int[] { 200, 0, 0, 0 });
         nudSucChua.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
         nudSucChua.Name = "nudSucChua";
         nudSucChua.Size = new Size(384, 23);
@@ -285,6 +291,12 @@ partial class FrmLopTap
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnThem);
+        flowThaoTac.Controls.Add(btnLamMoi);
+        flowThaoTac.Controls.Add(lblTimKiem);
+        flowThaoTac.Controls.Add(txtTimKiem);
+        flowThaoTac.Controls.Add(lblTrangThaiLoc);
+        flowThaoTac.Controls.Add(cboLocTrangThai);
+        flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 272);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(1052, 42);
@@ -301,11 +313,83 @@ partial class FrmLopTap
         btnThem.Location = new Point(0, 0);
         btnThem.Margin = new Padding(0, 0, 8, 0);
         btnThem.Name = "btnThem";
-        btnThem.Size = new Size(150, 36);
+        btnThem.Size = new Size(140, 36);
         btnThem.TabIndex = 0;
         btnThem.Text = "Thêm lớp tập mới";
         btnThem.UseVisualStyleBackColor = false;
         btnThem.Click += btnThem_Click;
+        // 
+        // btnLamMoi
+        // 
+        btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
+        btnLamMoi.Cursor = Cursors.Hand;
+        btnLamMoi.FlatAppearance.BorderSize = 0;
+        btnLamMoi.FlatStyle = FlatStyle.Flat;
+        btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLamMoi.ForeColor = Color.White;
+        btnLamMoi.Location = new Point(148, 0);
+        btnLamMoi.Margin = new Padding(0, 0, 16, 0);
+        btnLamMoi.Name = "btnLamMoi";
+        btnLamMoi.Size = new Size(90, 36);
+        btnLamMoi.TabIndex = 1;
+        btnLamMoi.Text = "Làm mới";
+        btnLamMoi.UseVisualStyleBackColor = false;
+        btnLamMoi.Click += btnLamMoi_Click;
+        // 
+        // lblTimKiem
+        // 
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTimKiem.Location = new Point(257, 0);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(68, 36);
+        lblTimKiem.TabIndex = 2;
+        lblTimKiem.Text = "Tìm kiếm:";
+        lblTimKiem.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // txtTimKiem
+        // 
+        txtTimKiem.Location = new Point(331, 6);
+        txtTimKiem.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Tên lớp, loại lớp, HLV...";
+        txtTimKiem.Size = new Size(180, 23);
+        txtTimKiem.TabIndex = 3;
+        txtTimKiem.TextChanged += BoLocThayDoi;
+        // 
+        // lblTrangThaiLoc
+        // 
+        lblTrangThaiLoc.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTrangThaiLoc.ForeColor = Color.FromArgb(30, 41, 59);
+        lblTrangThaiLoc.Location = new Point(529, 0);
+        lblTrangThaiLoc.Name = "lblTrangThaiLoc";
+        lblTrangThaiLoc.Size = new Size(72, 36);
+        lblTrangThaiLoc.TabIndex = 4;
+        lblTrangThaiLoc.Text = "Trạng thái:";
+        lblTrangThaiLoc.TextAlign = ContentAlignment.MiddleRight;
+        // 
+        // cboLocTrangThai
+        // 
+        cboLocTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboLocTrangThai.FormattingEnabled = true;
+        cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Đang mở", "Đã đóng" });
+        cboLocTrangThai.Location = new Point(607, 6);
+        cboLocTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboLocTrangThai.Name = "cboLocTrangThai";
+        cboLocTrangThai.Size = new Size(130, 23);
+        cboLocTrangThai.TabIndex = 5;
+        cboLocTrangThai.SelectedIndexChanged += BoLocThayDoi;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(100, 116, 139);
+        lblThongKe.Location = new Point(752, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Size = new Size(200, 36);
+        lblThongKe.TabIndex = 6;
+        lblThongKe.Text = "Hiển thị: 0 lớp";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
         // dgvLop
         // 
@@ -349,6 +433,7 @@ partial class FrmLopTap
         tableThongTin.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)nudSucChua).EndInit();
         flowThaoTac.ResumeLayout(false);
+        flowThaoTac.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvLop).EndInit();
         ResumeLayout(false);
     }
@@ -374,5 +459,11 @@ partial class FrmLopTap
     private ComboBox cboTrangThai;
     private FlowLayoutPanel flowThaoTac;
     private Button btnThem;
+    private Button btnLamMoi;
+    private Label lblTimKiem;
+    private TextBox txtTimKiem;
+    private Label lblTrangThaiLoc;
+    private ComboBox cboLocTrangThai;
+    private Label lblThongKe;
     private DataGridView dgvLop;
 }

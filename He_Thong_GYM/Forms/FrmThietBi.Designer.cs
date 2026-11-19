@@ -19,6 +19,9 @@ partial class FrmThietBi
         lblTieuDe = new Label();
         lblMoTa = new Label();
         groupThongTin = new GroupBox();
+        panelThaoTac = new Panel();
+        lblThongKe = new Label();
+        btnLamMoi = new Button();
         tableThongTin = new TableLayoutPanel();
         lblTen = new Label();
         txtTen = new TextBox();
@@ -31,6 +34,7 @@ partial class FrmThietBi
         dgv = new DataGridView();
         panelTieuDe.SuspendLayout();
         groupThongTin.SuspendLayout();
+        panelThaoTac.SuspendLayout();
         tableThongTin.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)dgv).BeginInit();
         SuspendLayout();
@@ -72,19 +76,62 @@ partial class FrmThietBi
         // 
         groupThongTin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         groupThongTin.BackColor = Color.White;
+        groupThongTin.Controls.Add(panelThaoTac);
         groupThongTin.Controls.Add(tableThongTin);
         groupThongTin.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         groupThongTin.ForeColor = Color.FromArgb(30, 41, 59);
         groupThongTin.Location = new Point(24, 96);
         groupThongTin.Name = "groupThongTin";
         groupThongTin.Padding = new Padding(16, 12, 16, 12);
-        groupThongTin.Size = new Size(952, 90);
+        groupThongTin.Size = new Size(952, 134);
         groupThongTin.TabIndex = 1;
         groupThongTin.TabStop = false;
-        groupThongTin.Text = "Thông tin thiết bị";
+        groupThongTin.Text = "Bộ lọc & Tra cứu thiết bị";
+        // 
+        // panelThaoTac
+        // 
+        panelThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        panelThaoTac.Controls.Add(lblThongKe);
+        panelThaoTac.Controls.Add(btnLamMoi);
+        panelThaoTac.Location = new Point(16, 90);
+        panelThaoTac.Name = "panelThaoTac";
+        panelThaoTac.Size = new Size(920, 34);
+        panelThaoTac.TabIndex = 1;
+        // 
+        // lblThongKe
+        // 
+        lblThongKe.AutoSize = true;
+        lblThongKe.Dock = DockStyle.Left;
+        lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblThongKe.ForeColor = Color.FromArgb(71, 85, 105);
+        lblThongKe.Location = new Point(0, 0);
+        lblThongKe.Name = "lblThongKe";
+        lblThongKe.Padding = new Padding(0, 8, 0, 0);
+        lblThongKe.Size = new Size(98, 23);
+        lblThongKe.TabIndex = 0;
+        lblThongKe.Text = "Đang tải dữ liệu...";
+        lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // btnLamMoi
+        // 
+        btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
+        btnLamMoi.Cursor = Cursors.Hand;
+        btnLamMoi.Dock = DockStyle.Right;
+        btnLamMoi.FlatAppearance.BorderSize = 0;
+        btnLamMoi.FlatStyle = FlatStyle.Flat;
+        btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLamMoi.ForeColor = Color.White;
+        btnLamMoi.Location = new Point(780, 0);
+        btnLamMoi.Name = "btnLamMoi";
+        btnLamMoi.Size = new Size(140, 34);
+        btnLamMoi.TabIndex = 1;
+        btnLamMoi.Text = "Làm mới / Bỏ lọc";
+        btnLamMoi.UseVisualStyleBackColor = false;
+        btnLamMoi.Click += btnLamMoi_Click;
         // 
         // tableThongTin
         // 
+        tableThongTin.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         tableThongTin.ColumnCount = 4;
         tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
         tableThongTin.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -98,14 +145,13 @@ partial class FrmThietBi
         tableThongTin.Controls.Add(cboPhong, 1, 1);
         tableThongTin.Controls.Add(lblTinhTrang, 2, 1);
         tableThongTin.Controls.Add(cboTinhTrang, 3, 1);
-        tableThongTin.Dock = DockStyle.Fill;
         tableThongTin.Font = new Font("Segoe UI", 9F);
-        tableThongTin.Location = new Point(16, 30);
+        tableThongTin.Location = new Point(16, 26);
         tableThongTin.Name = "tableThongTin";
         tableThongTin.RowCount = 2;
         tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
         tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableThongTin.Size = new Size(920, 52);
+        tableThongTin.Size = new Size(920, 58);
         tableThongTin.TabIndex = 0;
         // 
         // lblTen
@@ -115,7 +161,7 @@ partial class FrmThietBi
         lblTen.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblTen.Location = new Point(3, 0);
         lblTen.Name = "lblTen";
-        lblTen.Size = new Size(104, 26);
+        lblTen.Size = new Size(104, 29);
         lblTen.TabIndex = 0;
         lblTen.Text = "Tên thiết bị:";
         lblTen.TextAlign = ContentAlignment.MiddleLeft;
@@ -125,9 +171,10 @@ partial class FrmThietBi
         txtTen.Dock = DockStyle.Fill;
         txtTen.Location = new Point(113, 3);
         txtTen.Name = "txtTen";
-        txtTen.PlaceholderText = "Nhập tên thiết bị...";
+        txtTen.PlaceholderText = "Nhập tên hoặc mã thiết bị...";
         txtTen.Size = new Size(344, 23);
         txtTen.TabIndex = 1;
+        txtTen.TextChanged += BoLocThayDoi;
         // 
         // lblLoai
         // 
@@ -136,7 +183,7 @@ partial class FrmThietBi
         lblLoai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblLoai.Location = new Point(463, 0);
         lblLoai.Name = "lblLoai";
-        lblLoai.Size = new Size(104, 26);
+        lblLoai.Size = new Size(104, 29);
         lblLoai.TabIndex = 2;
         lblLoai.Text = "Loại thiết bị:";
         lblLoai.TextAlign = ContentAlignment.MiddleLeft;
@@ -146,20 +193,20 @@ partial class FrmThietBi
         cboLoai.Dock = DockStyle.Fill;
         cboLoai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboLoai.FormattingEnabled = true;
-        cboLoai.Items.AddRange(new object[] { "Máy chạy bộ", "Xe đạp tập", "Giàn tạ đa năng", "Ghế tập ngực", "Tạ đơn", "Máy kéo xô" });
         cboLoai.Location = new Point(573, 3);
         cboLoai.Name = "cboLoai";
         cboLoai.Size = new Size(344, 23);
         cboLoai.TabIndex = 3;
+        cboLoai.SelectedIndexChanged += BoLocThayDoi;
         // 
         // lblPhong
         // 
         lblPhong.AutoSize = true;
         lblPhong.Dock = DockStyle.Fill;
         lblPhong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblPhong.Location = new Point(3, 26);
+        lblPhong.Location = new Point(3, 29);
         lblPhong.Name = "lblPhong";
-        lblPhong.Size = new Size(104, 26);
+        lblPhong.Size = new Size(104, 29);
         lblPhong.TabIndex = 4;
         lblPhong.Text = "Phòng tập:";
         lblPhong.TextAlign = ContentAlignment.MiddleLeft;
@@ -169,19 +216,20 @@ partial class FrmThietBi
         cboPhong.Dock = DockStyle.Fill;
         cboPhong.DropDownStyle = ComboBoxStyle.DropDownList;
         cboPhong.FormattingEnabled = true;
-        cboPhong.Location = new Point(113, 29);
+        cboPhong.Location = new Point(113, 32);
         cboPhong.Name = "cboPhong";
         cboPhong.Size = new Size(344, 23);
         cboPhong.TabIndex = 5;
+        cboPhong.SelectedIndexChanged += BoLocThayDoi;
         // 
         // lblTinhTrang
         // 
         lblTinhTrang.AutoSize = true;
         lblTinhTrang.Dock = DockStyle.Fill;
         lblTinhTrang.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblTinhTrang.Location = new Point(463, 26);
+        lblTinhTrang.Location = new Point(463, 29);
         lblTinhTrang.Name = "lblTinhTrang";
-        lblTinhTrang.Size = new Size(104, 26);
+        lblTinhTrang.Size = new Size(104, 29);
         lblTinhTrang.TabIndex = 6;
         lblTinhTrang.Text = "Tình trạng:";
         lblTinhTrang.TextAlign = ContentAlignment.MiddleLeft;
@@ -191,11 +239,11 @@ partial class FrmThietBi
         cboTinhTrang.Dock = DockStyle.Fill;
         cboTinhTrang.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTinhTrang.FormattingEnabled = true;
-        cboTinhTrang.Items.AddRange(new object[] { "Hoạt động", "Bảo trì", "Hư hỏng", "Thanh lý" });
-        cboTinhTrang.Location = new Point(573, 29);
+        cboTinhTrang.Location = new Point(573, 32);
         cboTinhTrang.Name = "cboTinhTrang";
         cboTinhTrang.Size = new Size(344, 23);
         cboTinhTrang.TabIndex = 7;
+        cboTinhTrang.SelectedIndexChanged += BoLocThayDoi;
         // 
         // dgv
         // 
@@ -206,14 +254,14 @@ partial class FrmThietBi
         dgv.BackgroundColor = Color.White;
         dgv.BorderStyle = BorderStyle.None;
         dgv.ColumnHeadersHeight = 36;
-        dgv.Location = new Point(24, 200);
+        dgv.Location = new Point(24, 242);
         dgv.MultiSelect = false;
         dgv.Name = "dgv";
         dgv.ReadOnly = true;
         dgv.RowHeadersVisible = false;
         dgv.RowTemplate.Height = 32;
         dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgv.Size = new Size(952, 465);
+        dgv.Size = new Size(952, 423);
         dgv.TabIndex = 2;
         // 
         // FrmThietBi
@@ -234,6 +282,8 @@ partial class FrmThietBi
         panelTieuDe.ResumeLayout(false);
         panelTieuDe.PerformLayout();
         groupThongTin.ResumeLayout(false);
+        panelThaoTac.ResumeLayout(false);
+        panelThaoTac.PerformLayout();
         tableThongTin.ResumeLayout(false);
         tableThongTin.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgv).EndInit();
@@ -244,6 +294,9 @@ partial class FrmThietBi
     private Label lblTieuDe;
     private Label lblMoTa;
     private GroupBox groupThongTin;
+    private Panel panelThaoTac;
+    private Label lblThongKe;
+    private Button btnLamMoi;
     private TableLayoutPanel tableThongTin;
     private Label lblTen;
     private TextBox txtTen;
