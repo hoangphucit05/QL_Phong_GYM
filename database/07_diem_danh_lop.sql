@@ -7,6 +7,7 @@ AS
 BEGIN TRY
  SET NOCOUNT ON; SET XACT_ABORT ON; BEGIN TRAN;
  IF @TrangThai NOT IN(N'Có mặt',N'Vắng mặt') THROW 51050,N'Trạng thái điểm danh không hợp lệ.',1;
+ IF @NgayDiemDanh>CAST(SYSDATETIME() AS DATE) THROW 51052,N'Không thể điểm danh cho ngày trong tương lai.',1;
  IF NOT EXISTS(SELECT 1 FROM dbo.DangKyLop WHERE MaDKL=@MaDKL AND TrangThai=N'Đang tham gia') THROW 51051,N'Đăng ký lớp không hợp lệ.',1;
  UPDATE dbo.DiemDanhLop SET TrangThai=@TrangThai WHERE MaDKL=@MaDKL AND NgayDiemDanh=@NgayDiemDanh;
  IF @@ROWCOUNT=0 INSERT dbo.DiemDanhLop(MaDKL,NgayDiemDanh,TrangThai) VALUES(@MaDKL,@NgayDiemDanh,@TrangThai);
