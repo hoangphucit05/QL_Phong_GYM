@@ -1292,3 +1292,38 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Đã sửa:** tìm cột đang hiển thị rồi mới đặt `CurrentCell`; không còn thao tác trên cột ẩn.
 - **Rà soát luồng nút:** `FrmDiemDanh` đã thay việc bật cứng nút trong `finally` bằng tính lại trạng thái theo quyền/lớp/học viên; hóa đơn đã thanh toán/đã hủy không còn hiện nút thao tác không hợp lệ; gói đã ngừng áp dụng và nhân viên đã nghỉ việc không còn nút chuyển trạng thái tương ứng.
 - **Kiểm thử build:** PASS, 0 warning, 0 error.
+
+## Phiên UX — Tìm kiếm hội viên khi Check-in
+
+- **Ngày:** 23/11/2026.
+- **Yêu cầu:** thêm ô tìm kiếm để nhân viên không phải dò thủ công trong ComboBox hội viên khi Check-in.
+- **Thực hiện:** `FrmVanHanhGoi` có ô `Tìm hội viên`; lọc tức thời theo mã hội viên, họ tên, số điện thoại hoặc email. Danh sách kết quả vẫn dùng cùng model `ThanhVien`, nên khi chọn kết quả các luồng tải gói, quyền dịch vụ/phòng và trạng thái Check-in giữ nguyên.
+- Khi chọn phiên trong tab `Đang tập / Chờ Check-out`, bộ lọc được xóa trước khi chọn hội viên để không làm mất hội viên của phiên đang cần xử lý.
+- **Kiểm thử:** UI checker 21/21 form PASS; build `0 warning, 0 error`.
+
+## Phiên kiểm thử database — Rà soát luồng nghiệp vụ
+
+- **Ngày:** 23/11/2026.
+- **Toàn vẹn dữ liệu:** `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS` PASS; không có orphan trong quyền phòng của gói (`GoiTapPhong`). Database hiện có 47 bảng và 28 stored procedure.
+- **Procedure chính:** đã rà soát `sp_CheckIn`, `sp_CheckOut`, `sp_ChuyenPhongCheckIn`, `sp_ThanhToanHoaDon`, `sp_HoanTien`, `sp_HuyHoaDon`, `sp_BaoLuuGoiTap`, `sp_MoLaiBaoLuuGoiTap`; metadata `ANSI_NULLS` và `QUOTED_IDENTIFIER` đúng.
+- **Regression:** `database/24_final_regression_test.sql` đạt **12/12 luồng**; toàn bộ dữ liệu test được rollback, số phiên Check-in mở sau kiểm thử là 0.
+- **Thanh toán:** trả trước được ghi nhận đúng là `Đã thanh toán một phần` và vẫn còn công nợ; thanh toán vượt công nợ bị từ chối, transaction rollback đúng.
+- **Check-in:** gói không có quyền phòng/dịch vụ bị từ chối; gói có quyền được ghi nhận; chuyển phòng tiếp tục kiểm tra quyền của gói hiện tại.
+- **Kết luận:** chưa phát hiện lỗi database trong các luồng đã kiểm tra. Các hóa đơn còn nợ sau trả trước là dữ liệu hợp lệ và phải tiếp tục xuất hiện ở bộ lọc `Chưa thanh toán`.
+
+## Phiên UX — Cải thiện tìm hội viên ở form Vận hành gói
+
+- **Ngày:** 23/11/2026.
+- **Vấn đề:** ô tìm kiếm cũ nằm rời bên dưới ComboBox, gợi ý dài bị cắt và chưa có thao tác xóa bộ lọc rõ ràng.
+- **Đã sửa:** đổi nhãn thành `Tìm nhanh`, mở rộng ô nhập, thêm nút `Xóa`, tự mở danh sách kết quả khi gõ và hỗ trợ nhấn Enter nếu chỉ còn một hội viên phù hợp.
+- Nút Xóa bị khóa khi không có từ khóa; khi xóa bộ lọc, hệ thống cố gắng giữ hội viên đang chọn để không làm mất ngữ cảnh thao tác.
+- Đã loại bỏ handler `TextChanged` rỗng bị gắn trùng trong Designer.
+- **Kiểm thử:** build `He_Thong_GYM.csproj --no-restore` PASS, 0 warning, 0 error.
+
+## Phiên UX — Đồng bộ font và cỡ chữ ô tìm kiếm
+
+- **Ngày:** 23/11/2026.
+- **Phản hồi:** font/cỡ chữ của ô tìm hội viên ở `FrmVanHanhGoi` chưa đồng bộ với các form có sẵn.
+- **Đã sửa:** đối chiếu `FrmHoaDon`, `FrmThanhVien`, `FrmGoiTap`, `FrmBaoTri`; đặt ô tìm kiếm về `Segoe UI 9F` thường, cao 23px, viền `Fixed3D`, nhãn `Tìm kiếm:` và nút `Xóa lọc` cao 30px.
+- Không thay đổi nghiệp vụ lọc tức thời, tự mở danh sách kết quả hoặc phím Enter.
+- **Kiểm thử:** build với `GenerateResource=false` PASS, 0 warning, 0 error.

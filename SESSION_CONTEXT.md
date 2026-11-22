@@ -1017,3 +1017,37 @@ Thực hiện theo lộ trình đã chốt:
 - Rà soát thêm: nút hủy hóa đơn chỉ bật khi chưa phát sinh thanh toán; nút thu/hoàn tiền chỉ bật khi hóa đơn còn thao tác hợp lệ; nút nghỉ việc/ngừng áp dụng bị khóa khi bản ghi đã ở trạng thái cuối.
 - Build sau sửa: PASS, 0 warning, 0 error.
 
+## Phiên hiện tại — Tìm kiếm hội viên tại Check-in
+
+- Bổ sung ô **Tìm hội viên** trong `FrmVanHanhGoi`, đặt ngay dưới khu vực chọn hội viên.
+- Tìm theo mã hội viên, họ tên, số điện thoại hoặc email; danh sách ComboBox được lọc tức thời, không cần mở và dò toàn bộ danh sách.
+- Sau khi chọn hội viên từ kết quả lọc, hệ thống vẫn tải đúng gói đăng ký, dịch vụ/phòng được cấp quyền và trạng thái phiên Check-in.
+- Khi chọn phiên đang tập từ tab Check-out, bộ lọc được xóa tự động để tìm và chọn đúng hội viên của phiên đó.
+- Kiểm tra UI 21/21 form: không overlap, không out-of-bounds, không lỗi encoding. Build: 0 warning, 0 error.
+
+## Phiên hiện tại — Kiểm tra luồng database và nghiệp vụ (23/11/2026)
+
+- Đã kiểm tra toàn vẹn database `QL_PhongGym`: `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS` PASS; không phát hiện bản ghi vi phạm ràng buộc hoặc orphan trong `GoiTapPhong`.
+- Đã rà soát 47 bảng, 28 stored procedure và các procedure chính: `sp_CheckIn`, `sp_CheckOut`, `sp_ChuyenPhongCheckIn`, `sp_ThanhToanHoaDon`, `sp_HoanTien`, `sp_HuyHoaDon`, `sp_BaoLuuGoiTap`, `sp_MoLaiBaoLuuGoiTap`. Các procedure đều có `ANSI_NULLS` và `QUOTED_IDENTIFIER` đúng.
+- Regression test `database/24_final_regression_test.sql`: 12/12 luồng nghiệp vụ PASS; dữ liệu kiểm thử được rollback, không để lại phiên Check-in mở.
+- Luồng thanh toán trả trước PASS: hóa đơn chuyển sang `Đã thanh toán một phần`, số tiền còn nợ được giữ lại; thanh toán vượt quá công nợ bị chặn và transaction rollback đúng.
+- Luồng Check-in theo quyền gói PASS: gói không được cấp phòng/dịch vụ bị chặn; gói hợp lệ được Check-in; kiểm thử chuyển phòng vẫn kiểm tra quyền gói.
+- Kết luận: hiện chưa thấy lỗi do luồng database trong các nghiệp vụ đã kiểm tra. Các hóa đơn còn công nợ hiện có là trạng thái hợp lệ của dữ liệu trả trước, không phải lỗi database.
+
+## Phiên hiện tại — Cải thiện UX tìm hội viên tại Vận hành gói (23/11/2026)
+
+- Phần tìm kiếm cũ đặt rời bên dưới ComboBox và chưa dẫn dắt rõ thao tác chọn kết quả.
+- Đã đổi nhãn thành `Tìm nhanh`, mở rộng ô nhập và dùng gợi ý `Nhập mã, tên hoặc số điện thoại...`.
+- Thêm nút `Xóa` để bỏ bộ lọc; nút chỉ sáng khi có từ khóa và khi xóa bộ lọc sẽ cố gắng giữ lại hội viên đang chọn.
+- Khi gõ từ khóa, danh sách hội viên được lọc và tự mở để người dùng chọn; nếu chỉ còn một kết quả, có thể nhấn Enter để chọn nhanh.
+- Đã bỏ handler rỗng bị trùng trong Designer, tránh gây nhầm khi bảo trì.
+- Build sau thay đổi: PASS, 0 warning, 0 error.
+
+## Điều chỉnh đồng bộ font ô tìm kiếm — FrmVanHanhGoi (23/11/2026)
+
+- Đối chiếu với ô tìm kiếm ở `FrmHoaDon`, `FrmThanhVien`, `FrmGoiTap` và `FrmBaoTri`.
+- Ô tìm kiếm hội viên nay dùng `Segoe UI 9F` thường, chiều cao 23px, viền mặc định `Fixed3D` và placeholder ngắn gọn; không còn kế thừa font 10 đậm của `GroupBox`.
+- Nhãn đổi về `Tìm kiếm:` và nút đổi thành `Xóa lọc`, cùng kiểu cỡ chữ 9 đậm và chiều cao 30px như các nút tìm kiếm/làm mới hiện có.
+- Giữ nguyên lọc tức thời, tự mở danh sách kết quả và phím Enter; chỉ điều chỉnh kiểu trình bày để đồng bộ UX toàn hệ thống.
+- Build kiểm tra lại: PASS, 0 warning, 0 error.
+

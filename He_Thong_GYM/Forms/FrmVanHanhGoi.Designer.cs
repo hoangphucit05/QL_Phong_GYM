@@ -16,9 +16,12 @@ partial class FrmVanHanhGoi
     private void InitializeComponent()
     {
         panelTieuDe = new Panel();
-        lblTieuDe = new Label();
         lblMoTa = new Label();
+        lblTieuDe = new Label();
         groupCheckIn = new GroupBox();
+        btnXoaTimThanhVien = new Button();
+        txtTimThanhVien = new TextBox();
+        lblTimThanhVien = new Label();
         tableCheckIn = new TableLayoutPanel();
         lblTV = new Label();
         cboThanhVien = new ComboBox();
@@ -55,9 +58,9 @@ partial class FrmVanHanhGoi
         ((System.ComponentModel.ISupportInitialize)nudSoNgay).BeginInit();
         panelTrangThai.SuspendLayout();
         SuspendLayout();
-        //
+        // 
         // panelTieuDe
-        //
+        // 
         panelTieuDe.BackColor = Color.White;
         panelTieuDe.Controls.Add(lblMoTa);
         panelTieuDe.Controls.Add(lblTieuDe);
@@ -67,17 +70,6 @@ partial class FrmVanHanhGoi
         panelTieuDe.Padding = new Padding(24, 16, 24, 16);
         panelTieuDe.Size = new Size(1100, 80);
         panelTieuDe.TabIndex = 0;
-        //
-        // lblTieuDe
-        //
-        lblTieuDe.AutoSize = true;
-        lblTieuDe.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-        lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
-        lblTieuDe.Location = new Point(24, 14);
-        lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(390, 30);
-        lblTieuDe.TabIndex = 0;
-        lblTieuDe.Text = "VẬN HÀNH GÓI TẬP VÀ CHECK-IN";
         // 
         // lblMoTa
         // 
@@ -85,24 +77,72 @@ partial class FrmVanHanhGoi
         lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
         lblMoTa.Location = new Point(26, 48);
         lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(360, 15);
+        lblMoTa.Size = new Size(372, 15);
         lblMoTa.TabIndex = 1;
         lblMoTa.Text = "Kiểm soát lượt vào/ra phòng gym, gia hạn và bảo lưu gói đang dùng.";
+        // 
+        // lblTieuDe
+        // 
+        lblTieuDe.AutoSize = true;
+        lblTieuDe.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+        lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
+        lblTieuDe.Location = new Point(24, 14);
+        lblTieuDe.Name = "lblTieuDe";
+        lblTieuDe.Size = new Size(371, 30);
+        lblTieuDe.TabIndex = 0;
+        lblTieuDe.Text = "VẬN HÀNH GÓI TẬP VÀ CHECK-IN";
         // 
         // groupCheckIn
         // 
         groupCheckIn.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         groupCheckIn.BackColor = Color.White;
+        groupCheckIn.Controls.Add(btnXoaTimThanhVien);
+        groupCheckIn.Controls.Add(txtTimThanhVien);
+        groupCheckIn.Controls.Add(lblTimThanhVien);
         groupCheckIn.Controls.Add(tableCheckIn);
         groupCheckIn.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
         groupCheckIn.ForeColor = Color.FromArgb(30, 41, 59);
         groupCheckIn.Location = new Point(24, 96);
         groupCheckIn.Name = "groupCheckIn";
         groupCheckIn.Padding = new Padding(16, 10, 16, 10);
-        groupCheckIn.Size = new Size(1052, 75);
+        groupCheckIn.Size = new Size(1052, 110);
         groupCheckIn.TabIndex = 1;
         groupCheckIn.TabStop = false;
         groupCheckIn.Text = "Check-in / Check-out";
+        // 
+        // btnXoaTimThanhVien
+        // 
+        btnXoaTimThanhVien.BackColor = Color.FromArgb(100, 116, 139);
+        btnXoaTimThanhVien.Cursor = Cursors.Hand;
+        btnXoaTimThanhVien.FlatAppearance.BorderSize = 0;
+        btnXoaTimThanhVien.FlatStyle = FlatStyle.Flat;
+        btnXoaTimThanhVien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnXoaTimThanhVien.ForeColor = Color.White;
+        btnXoaTimThanhVien.Location = new Point(416, 61);
+        btnXoaTimThanhVien.Name = "btnXoaTimThanhVien";
+        btnXoaTimThanhVien.Size = new Size(76, 30);
+        btnXoaTimThanhVien.TabIndex = 9;
+        btnXoaTimThanhVien.Text = "Xóa lọc";
+        btnXoaTimThanhVien.UseVisualStyleBackColor = false;
+        // 
+        // txtTimThanhVien
+        // 
+        txtTimThanhVien.BorderStyle = BorderStyle.Fixed3D;
+        txtTimThanhVien.Font = new Font("Segoe UI", 9F);
+        txtTimThanhVien.Location = new Point(109, 65);
+        txtTimThanhVien.Name = "txtTimThanhVien";
+        txtTimThanhVien.Size = new Size(300, 23);
+        txtTimThanhVien.TabIndex = 8;
+        // 
+        // lblTimThanhVien
+        // 
+        lblTimThanhVien.AutoSize = true;
+        lblTimThanhVien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimThanhVien.Location = new Point(16, 69);
+        lblTimThanhVien.Name = "lblTimThanhVien";
+        lblTimThanhVien.Size = new Size(68, 15);
+        lblTimThanhVien.TabIndex = 7;
+        lblTimThanhVien.Text = "Tìm kiếm:";
         // 
         // tableCheckIn
         // 
@@ -121,7 +161,7 @@ partial class FrmVanHanhGoi
         tableCheckIn.Controls.Add(btnCheckIn, 4, 0);
         tableCheckIn.Controls.Add(btnCheckOut, 5, 0);
         tableCheckIn.Controls.Add(btnChuyenPhong, 6, 0);
-        tableCheckIn.Dock = DockStyle.Fill;
+        tableCheckIn.Dock = DockStyle.Top;
         tableCheckIn.Font = new Font("Segoe UI", 9F);
         tableCheckIn.Location = new Point(16, 28);
         tableCheckIn.Name = "tableCheckIn";
@@ -150,7 +190,7 @@ partial class FrmVanHanhGoi
         cboThanhVien.Location = new Point(93, 7);
         cboThanhVien.Margin = new Padding(3, 7, 8, 3);
         cboThanhVien.Name = "cboThanhVien";
-        cboThanhVien.Size = new Size(234, 23);
+        cboThanhVien.Size = new Size(221, 23);
         cboThanhVien.TabIndex = 1;
         // 
         // lblPhong
@@ -158,7 +198,7 @@ partial class FrmVanHanhGoi
         lblPhong.AutoSize = true;
         lblPhong.Dock = DockStyle.Fill;
         lblPhong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblPhong.Location = new Point(338, 0);
+        lblPhong.Location = new Point(325, 0);
         lblPhong.Name = "lblPhong";
         lblPhong.Size = new Size(84, 37);
         lblPhong.TabIndex = 2;
@@ -170,10 +210,10 @@ partial class FrmVanHanhGoi
         cboPhong.Dock = DockStyle.Fill;
         cboPhong.DropDownStyle = ComboBoxStyle.DropDownList;
         cboPhong.FormattingEnabled = true;
-        cboPhong.Location = new Point(428, 7);
+        cboPhong.Location = new Point(415, 7);
         cboPhong.Margin = new Padding(3, 7, 8, 3);
         cboPhong.Name = "cboPhong";
-        cboPhong.Size = new Size(234, 23);
+        cboPhong.Size = new Size(221, 23);
         cboPhong.TabIndex = 3;
         // 
         // btnCheckIn
@@ -185,7 +225,7 @@ partial class FrmVanHanhGoi
         btnCheckIn.FlatStyle = FlatStyle.Flat;
         btnCheckIn.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnCheckIn.ForeColor = Color.White;
-        btnCheckIn.Location = new Point(673, 3);
+        btnCheckIn.Location = new Point(647, 3);
         btnCheckIn.Margin = new Padding(3, 3, 6, 3);
         btnCheckIn.Name = "btnCheckIn";
         btnCheckIn.Size = new Size(116, 31);
@@ -202,7 +242,7 @@ partial class FrmVanHanhGoi
         btnCheckOut.FlatStyle = FlatStyle.Flat;
         btnCheckOut.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnCheckOut.ForeColor = Color.White;
-        btnCheckOut.Location = new Point(798, 3);
+        btnCheckOut.Location = new Point(772, 3);
         btnCheckOut.Name = "btnCheckOut";
         btnCheckOut.Size = new Size(119, 31);
         btnCheckOut.TabIndex = 5;
@@ -210,7 +250,7 @@ partial class FrmVanHanhGoi
         btnCheckOut.UseVisualStyleBackColor = false;
         // 
         // btnChuyenPhong
-        //
+        // 
         btnChuyenPhong.BackColor = Color.FromArgb(13, 148, 136);
         btnChuyenPhong.Cursor = Cursors.Hand;
         btnChuyenPhong.Dock = DockStyle.Fill;
@@ -218,14 +258,13 @@ partial class FrmVanHanhGoi
         btnChuyenPhong.FlatStyle = FlatStyle.Flat;
         btnChuyenPhong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnChuyenPhong.ForeColor = Color.White;
-        btnChuyenPhong.Location = new Point(923, 3);
-        btnChuyenPhong.Margin = new Padding(3, 3, 3, 3);
+        btnChuyenPhong.Location = new Point(897, 3);
         btnChuyenPhong.Name = "btnChuyenPhong";
-        btnChuyenPhong.Size = new Size(119, 31);
+        btnChuyenPhong.Size = new Size(120, 31);
         btnChuyenPhong.TabIndex = 6;
         btnChuyenPhong.Text = "Chuyển phòng";
         btnChuyenPhong.UseVisualStyleBackColor = false;
-        //
+        // 
         // dgvGoi
         // 
         dgvGoi.AllowUserToAddRows = false;
@@ -235,14 +274,14 @@ partial class FrmVanHanhGoi
         dgvGoi.BackgroundColor = Color.White;
         dgvGoi.BorderStyle = BorderStyle.None;
         dgvGoi.ColumnHeadersHeight = 36;
-        dgvGoi.Location = new Point(24, 185);
+        dgvGoi.Location = new Point(24, 220);
         dgvGoi.MultiSelect = false;
         dgvGoi.Name = "dgvGoi";
         dgvGoi.ReadOnly = true;
         dgvGoi.RowHeadersVisible = false;
         dgvGoi.RowTemplate.Height = 32;
         dgvGoi.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvGoi.Size = new Size(1052, 235);
+        dgvGoi.Size = new Size(1052, 200);
         dgvGoi.TabIndex = 2;
         // 
         // groupGoi
@@ -352,7 +391,7 @@ partial class FrmVanHanhGoi
         txtLyDo.Margin = new Padding(3, 11, 8, 3);
         txtLyDo.Name = "txtLyDo";
         txtLyDo.PlaceholderText = "Lý do bảo lưu gói...";
-        txtLyDo.Size = new Size(404, 23);
+        txtLyDo.Size = new Size(279, 23);
         txtLyDo.TabIndex = 5;
         // 
         // btnBaoLuu
@@ -364,7 +403,7 @@ partial class FrmVanHanhGoi
         btnBaoLuu.FlatStyle = FlatStyle.Flat;
         btnBaoLuu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnBaoLuu.ForeColor = Color.White;
-        btnBaoLuu.Location = new Point(898, 7);
+        btnBaoLuu.Location = new Point(773, 7);
         btnBaoLuu.Margin = new Padding(3, 7, 3, 7);
         btnBaoLuu.Name = "btnBaoLuu";
         btnBaoLuu.Size = new Size(119, 31);
@@ -373,7 +412,7 @@ partial class FrmVanHanhGoi
         btnBaoLuu.UseVisualStyleBackColor = false;
         // 
         // btnMoLaiBaoLuu
-        //
+        // 
         btnMoLaiBaoLuu.BackColor = Color.FromArgb(14, 116, 144);
         btnMoLaiBaoLuu.Cursor = Cursors.Hand;
         btnMoLaiBaoLuu.Dock = DockStyle.Fill;
@@ -381,16 +420,16 @@ partial class FrmVanHanhGoi
         btnMoLaiBaoLuu.FlatStyle = FlatStyle.Flat;
         btnMoLaiBaoLuu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnMoLaiBaoLuu.ForeColor = Color.White;
-        btnMoLaiBaoLuu.Location = new Point(1023, 7);
+        btnMoLaiBaoLuu.Location = new Point(898, 7);
         btnMoLaiBaoLuu.Margin = new Padding(3, 7, 3, 7);
         btnMoLaiBaoLuu.Name = "btnMoLaiBaoLuu";
         btnMoLaiBaoLuu.Size = new Size(119, 31);
         btnMoLaiBaoLuu.TabIndex = 7;
-        btnMoLaiBaoLuu.Text = "M\u1edf l\u1ea1i b\u1ea3o l\u01b0u";
+        btnMoLaiBaoLuu.Text = "Mở lại bảo lưu";
         btnMoLaiBaoLuu.UseVisualStyleBackColor = false;
         // 
         // flowGiaHan
-        //
+        // 
         flowGiaHan.Controls.Add(lblNgay);
         flowGiaHan.Controls.Add(nudSoNgay);
         flowGiaHan.Controls.Add(lblDonViNgay);
@@ -410,13 +449,13 @@ partial class FrmVanHanhGoi
         lblNgay.Location = new Point(3, 10);
         lblNgay.Margin = new Padding(3, 6, 3, 0);
         lblNgay.Name = "lblNgay";
-        lblNgay.Size = new Size(86, 15);
+        lblNgay.Size = new Size(84, 15);
         lblNgay.TabIndex = 0;
         lblNgay.Text = "Gia hạn thêm:";
         // 
         // nudSoNgay
         // 
-        nudSoNgay.Location = new Point(95, 8);
+        nudSoNgay.Location = new Point(93, 8);
         nudSoNgay.Margin = new Padding(3, 4, 3, 3);
         nudSoNgay.Maximum = new decimal(new int[] { 3650, 0, 0, 0 });
         nudSoNgay.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
@@ -428,7 +467,7 @@ partial class FrmVanHanhGoi
         // lblDonViNgay
         // 
         lblDonViNgay.AutoSize = true;
-        lblDonViNgay.Location = new Point(191, 10);
+        lblDonViNgay.Location = new Point(189, 10);
         lblDonViNgay.Margin = new Padding(3, 6, 16, 0);
         lblDonViNgay.Name = "lblDonViNgay";
         lblDonViNgay.Size = new Size(33, 15);
@@ -443,7 +482,7 @@ partial class FrmVanHanhGoi
         btnGiaHan.FlatStyle = FlatStyle.Flat;
         btnGiaHan.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnGiaHan.ForeColor = Color.White;
-        btnGiaHan.Location = new Point(243, 4);
+        btnGiaHan.Location = new Point(241, 4);
         btnGiaHan.Margin = new Padding(3, 0, 3, 3);
         btnGiaHan.Name = "btnGiaHan";
         btnGiaHan.Size = new Size(120, 30);
@@ -469,7 +508,7 @@ partial class FrmVanHanhGoi
         lblTrangThai.ForeColor = Color.FromArgb(71, 85, 105);
         lblTrangThai.Location = new Point(8, 8);
         lblTrangThai.Name = "lblTrangThai";
-        lblTrangThai.Size = new Size(211, 15);
+        lblTrangThai.Size = new Size(216, 15);
         lblTrangThai.TabIndex = 0;
         lblTrangThai.Text = "Chọn thành viên để xem danh sách gói.";
         // 
@@ -493,6 +532,7 @@ partial class FrmVanHanhGoi
         panelTieuDe.ResumeLayout(false);
         panelTieuDe.PerformLayout();
         groupCheckIn.ResumeLayout(false);
+        groupCheckIn.PerformLayout();
         tableCheckIn.ResumeLayout(false);
         tableCheckIn.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvGoi).EndInit();
@@ -514,6 +554,9 @@ partial class FrmVanHanhGoi
     private TableLayoutPanel tableCheckIn;
     private Label lblTV;
     private ComboBox cboThanhVien;
+    private Label lblTimThanhVien;
+    private TextBox txtTimThanhVien;
+    private Button btnXoaTimThanhVien;
     private Label lblPhong;
     private ComboBox cboPhong;
     private Button btnCheckIn;

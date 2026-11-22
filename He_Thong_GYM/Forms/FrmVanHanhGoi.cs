@@ -10,6 +10,7 @@ public partial class FrmVanHanhGoi : Form
     private bool _coPhienCheckInMo;
     private bool _dangTaiPhong;
     private bool _dangChonPhien;
+    private bool _dangLocThanhVien;
     private int? _maPhongPhienMo;
     private TabControl _tabDanhSach = null!;
     private TabPage _tabGoi = null!;
@@ -18,11 +19,16 @@ public partial class FrmVanHanhGoi : Form
     private Button _btnLamMoiPhien = null!;
     private readonly DangKyBLL _dangKyBLL = new();
     private readonly VanHanhBLL _vanHanhBLL = new();
+    private List<ThanhVien> _thanhVienGoc = new();
 
     public FrmVanHanhGoi()
     {
         InitializeComponent();
         TaoTabDanhSach();
+        txtTimThanhVien.PlaceholderText = "Mã TV, tên hội viên hoặc SĐT...";
+        txtTimThanhVien.TextChanged += txtTimThanhVien_TextChanged;
+        txtTimThanhVien.KeyDown += txtTimThanhVien_KeyDown;
+        btnXoaTimThanhVien.Click += btnXoaTimThanhVien_Click;
         cboThanhVien.SelectedIndexChanged += cboThanhVien_SelectedIndexChanged;
         cboPhong.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
         dgvGoi.SelectionChanged += dgvGoi_SelectionChanged;
@@ -40,10 +46,8 @@ public partial class FrmVanHanhGoi : Form
     {
         try
         {
-            cboThanhVien.DataSource = await _dangKyBLL.LayThanhVienAsync();
-            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
-            cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
-            cboThanhVien.SelectedIndex = -1;
+            _thanhVienGoc = await _dangKyBLL.LayThanhVienAsync();
+            LocThanhVien();
             cboPhong.DataSource = null;
             await TaiGoiAsync();
             await TaiPhienMoAsync();
@@ -80,6 +84,79 @@ public partial class FrmVanHanhGoi : Form
             CapNhatTrangThaiNut();
         }
         catch (Exception ex) { HienThiLoi(ex); }
+    }
+
+    private void txtTimThanhVien_TextChanged(object? sender, EventArgs e)
+    {
+        LocThanhVien();
+    }
+
+    private void LocThanhVien() => LocThanhVien(null);
+
+    private void LocThanhVien(int? maThanhVienCanGiuLai)
+    {
+        if (_dangLocThanhVien) return;
+
+        var tuKhoa = txtTimThanhVien.Text.Trim();
+        var danhSach = string.IsNullOrWhiteSpace(tuKhoa)
+            ? _thanhVienGoc
+            : _thanhVienGoc.Where(x =>
+                x.MaThanhVien.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.HoTen.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.SDT.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                (x.Email?.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ?? false))
+                .ToList();
+
+        _dangLocThanhVien = true;
+        try
+        {
+            cboThanhVien.DataSource = null;
+            cboThanhVien.DataSource = danhSach.ToList();
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
+            cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            cboThanhVien.SelectedIndex = -1;
+            if (maThanhVienCanGiuLai.HasValue && danhSach.Any(x => x.MaTV == maThanhVienCanGiuLai.Value))
+                cboThanhVien.SelectedValue = maThanhVienCanGiuLai.Value;
+        }
+        finally { _dangLocThanhVien = false; }
+
+        UiButtonHelper.SetTrangThai(btnXoaTimThanhVien, !string.IsNullOrWhiteSpace(tuKhoa), Color.FromArgb(100, 116, 139));
+        if (!string.IsNullOrWhiteSpace(tuKhoa))
+        {
+            lblTrangThai.Text = danhSach.Count == 0
+                ? $"Không tìm thấy hội viên phù hợp với: {tuKhoa}"
+                : $"Tìm thấy {danhSach.Count} hội viên. Hãy chọn hội viên để xem gói.";
+
+            if (txtTimThanhVien.Focused && danhSach.Count > 0 && IsHandleCreated)
+            {
+                BeginInvoke(new Action(() =>
+                {
+                    if (!IsDisposed && txtTimThanhVien.Focused && cboThanhVien.Items.Count > 0)
+                        cboThanhVien.DroppedDown = true;
+                }));
+            }
+        }
+    }
+
+    private void txtTimThanhVien_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyCode != Keys.Enter || cboThanhVien.Items.Count != 1) return;
+
+        cboThanhVien.SelectedIndex = 0;
+        cboThanhVien.DroppedDown = false;
+        e.Handled = true;
+        e.SuppressKeyPress = true;
+    }
+
+    private void btnXoaTimThanhVien_Click(object? sender, EventArgs e)
+    {
+        var maThanhVienDangChon = (cboThanhVien.SelectedItem as ThanhVien)?.MaTV;
+        _dangLocThanhVien = true;
+        try { txtTimThanhVien.Clear(); }
+        finally { _dangLocThanhVien = false; }
+
+        LocThanhVien(maThanhVienDangChon);
+        txtTimThanhVien.Focus();
     }
 
     private async Task TaiPhongTheoGoiAsync()
@@ -143,7 +220,7 @@ public partial class FrmVanHanhGoi : Form
             Anchor = anchor,
             DrawMode = TabDrawMode.OwnerDrawFixed,
             SizeMode = TabSizeMode.Fixed,
-            ItemSize = new Size(178, 32),
+            ItemSize = new Size(178, 23),
             Padding = new Point(12, 5),
             BackColor = Color.FromArgb(226, 232, 240)
         };
@@ -258,6 +335,8 @@ public partial class FrmVanHanhGoi : Form
         _dangChonPhien = true;
         try
         {
+            if (!string.IsNullOrWhiteSpace(txtTimThanhVien.Text))
+                txtTimThanhVien.Clear();
             cboThanhVien.SelectedValue = phien.MaTV;
             await TaiGoiAsync();
             foreach (DataGridViewRow row in dgvGoi.Rows)
@@ -265,12 +344,12 @@ public partial class FrmVanHanhGoi : Form
                 if (row.DataBoundItem is DangKyGoiView goi && goi.MaDKG == phien.MaDKG)
                 {
                     row.Selected = true;
-                        // Cột đầu tiên là MaDKG và đã ẩn; CurrentCell không được trỏ vào cột ẩn.
-                        var cotHienThi = dgvGoi.Columns
-                            .Cast<DataGridViewColumn>()
-                            .FirstOrDefault(c => c.Visible && c.DataPropertyName != nameof(DangKyGoiView.MaDKG));
-                        if (cotHienThi is not null)
-                            dgvGoi.CurrentCell = row.Cells[cotHienThi.Index];
+                    // Cột đầu tiên là MaDKG và đã ẩn; CurrentCell không được trỏ vào cột ẩn.
+                    var cotHienThi = dgvGoi.Columns
+                        .Cast<DataGridViewColumn>()
+                        .FirstOrDefault(c => c.Visible && c.DataPropertyName != nameof(DangKyGoiView.MaDKG));
+                    if (cotHienThi is not null)
+                        dgvGoi.CurrentCell = row.Cells[cotHienThi.Index];
                     break;
                 }
             }
@@ -301,7 +380,7 @@ public partial class FrmVanHanhGoi : Form
 
     private async void cboThanhVien_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (_dangChonPhien) return;
+        if (_dangChonPhien || _dangLocThanhVien) return;
         try { await TaiGoiAsync(); } catch (Exception ex) { HienThiLoi(ex); }
     }
 
@@ -400,4 +479,5 @@ public partial class FrmVanHanhGoi : Form
         lblTrangThai.Text = message;
         MessageBox.Show(message, "Không thể thực hiện", MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
+
 }
