@@ -10,7 +10,17 @@ public partial class FrmLogin : Form
     public FrmLogin()
     {
         InitializeComponent();
+        txtTenDangNhap.TextChanged += (s, e) => CapNhatTrangThaiNut();
+        txtMatKhau.TextChanged += (s, e) => CapNhatTrangThaiNut();
+        CapNhatTrangThaiNut();
         TaiBranding();
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        bool sanSang = !string.IsNullOrWhiteSpace(txtTenDangNhap.Text) &&
+                       !string.IsNullOrWhiteSpace(txtMatKhau.Text);
+        UiButtonHelper.SetTrangThai(btnDangNhap, sanSang, Color.FromArgb(37, 99, 235));
     }
 
     private void TaiBranding()
@@ -138,7 +148,7 @@ public partial class FrmLogin : Form
         }
         finally
         {
-            btnDangNhap.Enabled = true;
+            CapNhatTrangThaiNut();
         }
     }
 

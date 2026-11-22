@@ -21,18 +21,23 @@ public partial class FrmThanhVien : Form
     public FrmThanhVien()
     {
         InitializeComponent();
+        txtHoTen.PlaceholderText = "Nhập họ và tên hội viên...";
+        txtSoDienThoai.PlaceholderText = "Nhập số điện thoại...";
+        txtEmail.PlaceholderText = "Nhập email (không bắt buộc)...";
+        txtDiaChi.PlaceholderText = "Nhập địa chỉ (không bắt buộc)...";
     }
 
     private async void FrmThanhVien_Load(object? sender, EventArgs e)
     {
-        cboGioiTinh.SelectedIndex = 0;
-        cboTrangThai.SelectedIndex = 0;
+        cboGioiTinh.SelectedIndex = -1;
+        cboTrangThai.SelectedIndex = -1;
         dgvThanhVien.AutoGenerateColumns = false;
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
 
         await TaiDuLieuAsync();
         DatTrangThaiNghiBanDau();
+        BeginInvoke(new Action(DatTrangThaiNghiBanDau));
     }
 
     private void KhoaOThongTin(bool khoa)
@@ -97,10 +102,10 @@ public partial class FrmThanhVien : Form
         txtDiaChi.Clear();
         txtTimKiem.Clear();
         dtpNgaySinh.Value = DateTime.Today.AddYears(-18);
-        cboGioiTinh.SelectedIndex = 0;
-        cboTrangThai.SelectedIndex = 0;
-        if (cboLoaiThanhVien.Items.Count > 0) cboLoaiThanhVien.SelectedIndex = 0;
-        dgvThanhVien.ClearSelection();
+        cboGioiTinh.SelectedIndex = -1;
+        cboTrangThai.SelectedIndex = -1;
+        if (cboLoaiThanhVien.Items.Count > 0) cboLoaiThanhVien.SelectedIndex = -1;
+        UiGridHelper.BoChon(dgvThanhVien);
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
     }
@@ -155,7 +160,7 @@ public partial class FrmThanhVien : Form
         cboGioiTinh.SelectedIndex = 0;
         cboTrangThai.SelectedIndex = 0;
         if (cboLoaiThanhVien.Items.Count > 0) cboLoaiThanhVien.SelectedIndex = 0;
-        dgvThanhVien.ClearSelection();
+        UiGridHelper.BoChon(dgvThanhVien);
         KhoaOThongTin(false);
         CapNhatTrangThaiNut();
         txtHoTen.Focus();

@@ -13,6 +13,8 @@ public partial class FrmDangKyGoi : Form
     public FrmDangKyGoi()
     {
         InitializeComponent();
+        UiButtonHelper.SetTrangThai(btnDangKy, false, UiButtonHelper.MauThemMoi);
+        cboThanhVien.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
     }
 
     private async void FrmDangKyGoi_Load(object? s, EventArgs e)
@@ -23,19 +25,23 @@ public partial class FrmDangKyGoi : Form
             cboThanhVien.DataSource = await _bll.LayThanhVienAsync();
             cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            cboThanhVien.SelectedIndex = -1;
 
             cboGoiTap.DataSource = await _bll.LayGoiTapAsync();
             cboGoiTap.DisplayMember = nameof(GoiTap.HienThi);
             cboGoiTap.ValueMember = nameof(GoiTap.MaGoi);
+            cboGoiTap.SelectedIndex = -1;
 
             cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
             cboKhuyenMai.DisplayMember = nameof(KhuyenMai.HienThi);
             cboKhuyenMai.ValueMember = nameof(KhuyenMai.MaKM);
+            cboKhuyenMai.SelectedIndex = -1;
 
             cboLocTrangThai.SelectedIndex = 0;
             TinhGia();
 
             await TaiLichSuAsync();
+            CapNhatTrangThaiNut();
             _dangKhoiTao = false;
         }
         catch (Exception ex)
@@ -157,10 +163,22 @@ public partial class FrmDangKyGoi : Form
 
     private void TinhGia()
     {
-        if (cboGoiTap.SelectedItem is not GoiTap g) return;
+        if (cboGoiTap.SelectedItem is not GoiTap g)
+        {
+            lblGia.Text = "Chưa chọn gói tập";
+            CapNhatTrangThaiNut();
+            return;
+        }
         var km = cboKhuyenMai.SelectedItem as KhuyenMai;
         dtpNgayKetThuc.Value = dtpNgayBatDau.Value.AddDays(g.ThoiHanNgay - 1);
         lblGia.Text = $"{g.Gia * (1 - (km?.PhanTramGiam ?? 0) / 100):N0} đ";
+        CapNhatTrangThaiNut();
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        bool sanSang = cboThanhVien.SelectedItem is ThanhVien && cboGoiTap.SelectedItem is GoiTap;
+        UiButtonHelper.SetTrangThai(btnDangKy, sanSang, UiButtonHelper.MauThemMoi);
     }
 
     private async void btnDangKy_Click(object? s, EventArgs e)

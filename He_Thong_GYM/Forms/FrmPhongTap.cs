@@ -23,8 +23,14 @@ public partial class FrmPhongTap : Form
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
         await TaiDanhSachAsync();
         _phongDangChon = null;
-        dgv.ClearSelection();
+        UiGridHelper.BoChon(dgv);
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        BeginInvoke(new Action(() =>
+        {
+            _phongDangChon = null;
+            UiGridHelper.BoChon(dgv);
+            UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        }));
         _dangKhoiTao = false;
     }
 

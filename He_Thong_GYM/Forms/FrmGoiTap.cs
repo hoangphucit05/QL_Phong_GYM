@@ -14,15 +14,18 @@ public partial class FrmGoiTap : Form
     public FrmGoiTap()
     {
         InitializeComponent();
+        txtTenGoi.PlaceholderText = "Nhập tên gói tập...";
+        txtMoTa.PlaceholderText = "Nhập mô tả gói tập (không bắt buộc)...";
     }
 
     private async void FrmGoiTap_Load(object? s, EventArgs e)
     {
-        cboTrangThai.SelectedIndex = 0;
+        cboTrangThai.SelectedIndex = -1;
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
         await TaiAsync();
         DatTrangThaiNghi();
+        BeginInvoke(new Action(DatTrangThaiNghi));
     }
 
     private void KhoaOThongTin(bool khoa)
@@ -56,8 +59,8 @@ public partial class FrmGoiTap : Form
         txtMoTa.Clear();
         nudThoiHan.Value = 30;
         nudGia.Value = 0;
-        cboTrangThai.SelectedIndex = 0;
-        dgvGoiTap.ClearSelection();
+        cboTrangThai.SelectedIndex = -1;
+        UiGridHelper.BoChon(dgvGoiTap);
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
     }
@@ -108,7 +111,7 @@ public partial class FrmGoiTap : Form
         nudThoiHan.Value = 30;
         nudGia.Value = 0;
         cboTrangThai.SelectedIndex = 0;
-        dgvGoiTap.ClearSelection();
+        UiGridHelper.BoChon(dgvGoiTap);
         KhoaOThongTin(false);
         CapNhatTrangThaiNut();
         txtTenGoi.Focus();

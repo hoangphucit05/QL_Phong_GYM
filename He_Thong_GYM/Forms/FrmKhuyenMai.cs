@@ -23,8 +23,14 @@ public partial class FrmKhuyenMai : Form
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         await TaiDanhSachAsync();
         _khuyenMaiDangChon = null;
-        dgvKhuyenMai.ClearSelection();
+        UiGridHelper.BoChon(dgvKhuyenMai);
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        BeginInvoke(new Action(() =>
+        {
+            _khuyenMaiDangChon = null;
+            UiGridHelper.BoChon(dgvKhuyenMai);
+            UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        }));
         _dangKhoiTao = false;
     }
 
@@ -79,6 +85,7 @@ public partial class FrmKhuyenMai : Form
         dgvKhuyenMai.DataSource = null;
         dgvKhuyenMai.DataSource = list;
         DinhDangLuoi();
+        UiGridHelper.BoChon(dgvKhuyenMai);
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} chương trình";
     }
@@ -171,7 +178,7 @@ public partial class FrmKhuyenMai : Form
         };
 
         var lblTen = new Label { Text = "Tên chương trình:", Left = 20, Top = 20, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
-        var txtTenKM = new TextBox { Left = 150, Top = 18, Width = 260 };
+        var txtTenKM = new TextBox { Left = 150, Top = 18, Width = 260, PlaceholderText = "Nhập tên chương trình..." };
 
         var lblCode = new Label { Text = "Mã Code (tùy chọn):", Left = 20, Top = 55, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
         var txtCode = new TextBox { Left = 150, Top = 53, Width = 260, PlaceholderText = "Bỏ trống để tự sinh..." };
@@ -246,7 +253,7 @@ public partial class FrmKhuyenMai : Form
         };
 
         var lblTen = new Label { Text = "Tên chương trình:", Left = 20, Top = 20, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
-        var txtTenKM = new TextBox { Left = 150, Top = 18, Width = 260, Text = _khuyenMaiDangChon.TenKM };
+        var txtTenKM = new TextBox { Left = 150, Top = 18, Width = 260, Text = _khuyenMaiDangChon.TenKM, PlaceholderText = "Nhập tên chương trình..." };
 
         var lblCode = new Label { Text = "Mã Code:", Left = 20, Top = 55, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
         var txtCode = new TextBox { Left = 150, Top = 53, Width = 260, Text = _khuyenMaiDangChon.MaCode };

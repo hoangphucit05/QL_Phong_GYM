@@ -94,8 +94,14 @@ public partial class FrmThietBi : Form
             ApDungLoc();
             DinhDangLuoi();
             _thietBiDangChon = null;
-            dgv.ClearSelection();
+            UiGridHelper.BoChon(dgv);
             UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+            BeginInvoke(new Action(() =>
+            {
+                _thietBiDangChon = null;
+                UiGridHelper.BoChon(dgv);
+                UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+            }));
         }
         catch (Exception ex)
         {

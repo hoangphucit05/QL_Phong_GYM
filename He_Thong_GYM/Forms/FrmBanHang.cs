@@ -12,6 +12,8 @@ public partial class FrmBanHang : Form
     public FrmBanHang()
     {
         InitializeComponent();
+        UiButtonHelper.SetTrangThai(btnBan, false, UiButtonHelper.MauThemMoi);
+        cboThanhVien.SelectedIndexChanged += GiaThayDoi;
         cboSanPham.SelectedIndexChanged += GiaThayDoi;
         nudSoLuong.ValueChanged += GiaThayDoi;
     }
@@ -24,14 +26,11 @@ public partial class FrmBanHang : Form
             cboThanhVien.DataSource = dsThanhVien;
             cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
-            var khachLe = dsThanhVien.FirstOrDefault(x => x.HoTen.Contains("Khách vãng lai") || x.SDT == "0900000000");
-            if (khachLe != null)
-            {
-                cboThanhVien.SelectedItem = khachLe;
-            }
+            cboThanhVien.SelectedIndex = -1;
 
             cboSanPham.DataSource = await _sp.LayAsync();
             cboSanPham.DisplayMember = nameof(SanPham.HienThi);
+            cboSanPham.SelectedIndex = -1;
 
             TinhTien();
         }
@@ -49,8 +48,14 @@ public partial class FrmBanHang : Form
         }
         else
         {
-            lblThanhTien.Text = "0 đ";
+            lblThanhTien.Text = "Chưa chọn sản phẩm";
         }
+
+        bool sanSang = cboThanhVien.SelectedItem is ThanhVien &&
+                       cboSanPham.SelectedItem is SanPham p2 &&
+                       p2.SoLuongTon > 0 &&
+                       nudSoLuong.Value > 0;
+        UiButtonHelper.SetTrangThai(btnBan, sanSang, UiButtonHelper.MauThemMoi);
     }
 
     private async void btnBan_Click(object? sender, EventArgs e)

@@ -17,6 +17,7 @@ public partial class FrmDiemDanh : Form
     {
         InitializeComponent();
         cboLop.SelectedIndexChanged += cboLop_SelectedIndexChanged;
+        cboThanhVien.SelectedIndexChanged += (s, e) => CapNhatQuyenThaoTac();
         dtpNgay.ValueChanged += dtpNgay_ValueChanged;
         cboBuoiHoc.SelectedIndexChanged += cboBuoiHoc_SelectedIndexChanged;
         btnDangKy.Click += btnDangKy_Click;
@@ -33,12 +34,14 @@ public partial class FrmDiemDanh : Form
         try
         {
             cboLop.DataSource = await _bll.LayDanhSachAsync();
-        cboLop.DisplayMember = nameof(LopTap.HienThi);
+            cboLop.DisplayMember = nameof(LopTap.HienThi);
             cboLop.ValueMember = nameof(LopTap.MaLop);
+            cboLop.SelectedIndex = -1;
 
             cboThanhVien.DataSource = await _dk.LayThanhVienAsync();
-        cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            cboThanhVien.SelectedIndex = -1;
 
             cboTrangThai.SelectedIndex = 0;
             cboLocDiemDanh.SelectedIndex = 0;
@@ -65,6 +68,7 @@ public partial class FrmDiemDanh : Form
             dgvHocVien.DataSource = null;
             _hocVienGoc.Clear();
             lblTrangThaiBuoi.Text = "Hãy chọn lớp và ngày học.";
+            CapNhatQuyenThaoTac();
             return;
         }
 
@@ -76,6 +80,7 @@ public partial class FrmDiemDanh : Form
             dgvHocVien.DataSource = null;
             _hocVienGoc.Clear();
             lblTrangThaiBuoi.Text = "Chưa có buổi học cho lớp này trong ngày đã chọn. Hãy tạo buổi học trước khi điểm danh.";
+            CapNhatQuyenThaoTac();
             return;
         }
 
@@ -89,6 +94,7 @@ public partial class FrmDiemDanh : Form
         cboBuoiHoc.SelectedIndex = viTriUuTien >= 0 ? viTriUuTien : 0;
         _dangTaiBuoi = false;
         await TaiHocVienTheoBuoiAsync(lop);
+        CapNhatQuyenThaoTac();
     }
 
     private async Task TaiHocVienTheoBuoiAsync(LopTap? lop = null)
@@ -172,23 +178,6 @@ public partial class FrmDiemDanh : Form
             cboTrangThai.SelectedItem = hocVien.TrangThaiDiemDanh;
     }
 
-    private void DinhDangLuoiHocVien()
-    {
-        if (dgvHocVien.Columns.Count == 0) return;
-        DinhDang(nameof(HocVienLop.MaDKL), "Mã ĐK", 70);
-        DinhDang(nameof(HocVienLop.MaTV), "Mã TV", 70);
-        DinhDang(nameof(HocVienLop.HoTen), "Thành viên", 180);
-        DinhDang(nameof(HocVienLop.SDT), "Số điện thoại", 120);
-        DinhDang(nameof(HocVienLop.TrangThaiDiemDanh), "Điểm danh", 130);
-    }
-
-    private void DinhDang(string tenCot, string tieuDe, int rong)
-    {
-        if (!dgvHocVien.Columns.Contains(tenCot)) return;
-        dgvHocVien.Columns[tenCot]!.HeaderText = tieuDe;
-        dgvHocVien.Columns[tenCot]!.Width = rong;
-    }
-
     private async void btnTaoBuoi_Click(object? sender, EventArgs e)
     {
         try
@@ -264,6 +253,7 @@ public partial class FrmDiemDanh : Form
         dgvHocVien.DataSource = null;
         dgvHocVien.DataSource = ketQua.ToList();
         DinhDangLuoiHocVien();
+        UiGridHelper.BoChon(dgvHocVien);
     }
 
     private static int ThuTuDiemDanh(string? trangThai) => trangThai switch
@@ -279,8 +269,10 @@ public partial class FrmDiemDanh : Form
         var coQuyenDangKy = SessionManager.CoVaiTro("Admin", "Quản lý", "Lễ tân", "Nhân viên");
         var coQuyenDiemDanh = SessionManager.CoVaiTro("Admin", "Quản lý", "Lễ tân", "HLV", "Huấn luyện viên");
 
-        UiButtonHelper.SetTrangThai(btnDangKy, coQuyenDangKy, UiButtonHelper.MauThemMoi);
-        UiButtonHelper.SetTrangThai(btnTaoBuoi, coQuyenDiemDanh, UiButtonHelper.MauChinhSua);
+        bool coLop = cboLop.SelectedItem is LopTap;
+        bool coThanhVien = cboThanhVien.SelectedItem is ThanhVien;
+        UiButtonHelper.SetTrangThai(btnDangKy, coQuyenDangKy && coLop && coThanhVien, UiButtonHelper.MauThemMoi);
+        UiButtonHelper.SetTrangThai(btnTaoBuoi, coQuyenDiemDanh && coLop, UiButtonHelper.MauChinhSua);
         cboTrangThai.Enabled = coQuyenDiemDanh;
 
         CapNhatTrangThaiDiemDanh();

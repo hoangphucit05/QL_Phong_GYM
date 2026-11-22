@@ -14,6 +14,8 @@ public partial class FrmThanhToan : Form
     {
         _maHDDuocChon = maHDDuocChon;
         InitializeComponent();
+        UiButtonHelper.SetTrangThai(btnThanhToan, false, UiButtonHelper.MauLuu);
+        UiButtonHelper.SetTrangThai(btnHoanTien, false, UiButtonHelper.MauXoa);
         cboHoaDon.SelectedIndexChanged += (s, e) => HienThi();
     }
 
@@ -27,6 +29,8 @@ public partial class FrmThanhToan : Form
             cboHoaDon.ValueMember = nameof(HoaDonView.MaHD);
             if (_maHDDuocChon is int maHD && _hd.Any(x => x.MaHD == maHD))
                 cboHoaDon.SelectedValue = maHD;
+            else
+                cboHoaDon.SelectedIndex = -1;
             HienThi();
         }
         catch (Exception ex)
@@ -42,11 +46,16 @@ public partial class FrmThanhToan : Form
             lblCongNo.Text = $"Tổng tiền: {h.TongTien:N0} đ | Đã trả: {h.DaThanhToan:N0} đ | Còn nợ: {h.ConNo:N0} đ";
             lblCongNo.ForeColor = h.ConNo > 0 ? Color.FromArgb(185, 28, 28) : Color.FromArgb(5, 150, 105);
             nudSoTien.Value = h.ConNo > 0 ? h.ConNo : 0;
+            UiButtonHelper.SetTrangThai(btnThanhToan, h.ConNo > 0, UiButtonHelper.MauLuu);
+            UiButtonHelper.SetTrangThai(btnHoanTien, h.DaThanhToan > 0, UiButtonHelper.MauXoa);
         }
         else
         {
             lblCongNo.Text = "Không có thông tin hóa đơn.";
             lblCongNo.ForeColor = Color.FromArgb(71, 85, 105);
+            nudSoTien.Value = 0;
+            UiButtonHelper.SetTrangThai(btnThanhToan, false, UiButtonHelper.MauLuu);
+            UiButtonHelper.SetTrangThai(btnHoanTien, false, UiButtonHelper.MauXoa);
         }
     }
 

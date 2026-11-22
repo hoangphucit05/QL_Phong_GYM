@@ -15,6 +15,7 @@ public partial class FrmHLV : Form
     public FrmHLV()
     {
         InitializeComponent();
+        txtChuyenMon.PlaceholderText = "Nhập chuyên môn của HLV...";
     }
 
     private async void FrmHLV_Load(object? s, EventArgs e)
@@ -28,6 +29,7 @@ public partial class FrmHLV : Form
             CapNhatTrangThaiNut();
             await TaiAsync();
             DatTrangThaiNghi();
+            BeginInvoke(new Action(DatTrangThaiNghi));
         }
         catch (Exception ex)
         {
@@ -62,8 +64,8 @@ public partial class FrmHLV : Form
         txtChuyenMon.Clear();
         nudKinhNghiem.Value = 0;
         nudPhiThue.Value = 0;
-        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = 0;
-        dgvHLV.ClearSelection();
+        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = -1;
+        UiGridHelper.BoChon(dgvHLV);
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
     }
@@ -111,7 +113,7 @@ public partial class FrmHLV : Form
         nudKinhNghiem.Value = 0;
         nudPhiThue.Value = 0;
         if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = 0;
-        dgvHLV.ClearSelection();
+        UiGridHelper.BoChon(dgvHLV);
         KhoaOThongTin(false);
         CapNhatTrangThaiNut();
         txtChuyenMon.Focus();

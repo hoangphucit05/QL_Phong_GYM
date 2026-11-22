@@ -1,4 +1,5 @@
 using He_Thong_GYM.BLL;
+using He_Thong_GYM.Helpers;
 using He_Thong_GYM.Models;
 
 namespace He_Thong_GYM.Forms;
@@ -14,6 +15,9 @@ public partial class FrmBaoTri : Form
     public FrmBaoTri()
     {
         InitializeComponent();
+        txtNoiDung.TextChanged += (s, e) => CapNhatTrangThaiNut();
+        cboThietBi.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
+        cboNhanVien.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
     }
 
     private async void FrmBaoTri_Load(object? sender, EventArgs e)
@@ -25,9 +29,11 @@ public partial class FrmBaoTri : Form
             _tb = await _bll.LayThietBiAsync();
             cboThietBi.DataSource = _tb;
             cboThietBi.DisplayMember = nameof(ThietBi.HienThi);
+            cboThietBi.SelectedIndex = -1;
 
             cboNhanVien.DataSource = await _nv.LayNhanVienDangLamAsync();
             cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
+            cboNhanVien.SelectedIndex = -1;
 
             if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
 
@@ -53,7 +59,10 @@ public partial class FrmBaoTri : Form
         bool coChon = baoTri != null;
         bool chuaHoanThanh = coChon && !string.Equals(baoTri!.TrangThai, "Hoàn thành", StringComparison.OrdinalIgnoreCase);
 
-        UiButtonHelper.SetTrangThai(btnTao, true, UiButtonHelper.MauThemMoi);
+        bool duThongTinTao = cboThietBi.SelectedItem is ThietBi &&
+                             cboNhanVien.SelectedItem is NhanVien &&
+                             !string.IsNullOrWhiteSpace(txtNoiDung.Text);
+        UiButtonHelper.SetTrangThai(btnTao, duThongTinTao, UiButtonHelper.MauThemMoi);
         UiButtonHelper.SetTrangThai(btnHoanTat, chuaHoanThanh, UiButtonHelper.MauLuu);
         UiButtonHelper.SetTrangThai(btnLamMoi, true, UiButtonHelper.MauLamMoi);
     }

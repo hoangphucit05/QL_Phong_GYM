@@ -14,6 +14,8 @@ public partial class FrmTaiKhoan : Form
     public FrmTaiKhoan()
     {
         InitializeComponent();
+        txtTenDangNhap.PlaceholderText = "Nhập tên đăng nhập...";
+        txtMatKhau.PlaceholderText = "Nhập mật khẩu tối thiểu 8 ký tự...";
     }
 
     private async void FrmTaiKhoan_Load(object? s, EventArgs e)
@@ -27,6 +29,7 @@ public partial class FrmTaiKhoan : Form
             CapNhatTrangThaiNut();
             await TaiAsync();
             DatTrangThaiTaoMoi();
+            BeginInvoke(new Action(DatTrangThaiTaoMoi));
         }
         catch (Exception ex)
         {
@@ -49,9 +52,9 @@ public partial class FrmTaiKhoan : Form
         _chon = null;
         txtTenDangNhap.Clear();
         txtMatKhau.Clear();
-        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = 0;
-        if (cboVaiTro.Items.Count > 0) cboVaiTro.SelectedIndex = 0;
-        dgvTaiKhoan.ClearSelection();
+        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = -1;
+        if (cboVaiTro.Items.Count > 0) cboVaiTro.SelectedIndex = -1;
+        UiGridHelper.BoChon(dgvTaiKhoan);
         lblTrangThai.Text = "Nhập thông tin để tạo tài khoản mới.";
         CapNhatTrangThaiNut();
         txtTenDangNhap.Focus();

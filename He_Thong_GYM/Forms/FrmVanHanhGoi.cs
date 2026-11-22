@@ -15,6 +15,7 @@ public partial class FrmVanHanhGoi : Form
     {
         InitializeComponent();
         cboThanhVien.SelectedIndexChanged += cboThanhVien_SelectedIndexChanged;
+        cboPhong.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
         dgvGoi.SelectionChanged += (s, e) => CapNhatTrangThaiNut();
         btnCheckIn.Click += btnCheckIn_Click;
         btnCheckOut.Click += btnCheckOut_Click;
@@ -29,12 +30,14 @@ public partial class FrmVanHanhGoi : Form
             cboThanhVien.DataSource = await _dangKyBLL.LayThanhVienAsync();
             cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            cboThanhVien.SelectedIndex = -1;
             // Chỉ cho chọn phòng đang hoạt động; procedure vẫn kiểm tra lại ở database.
             cboPhong.DataSource = (await _taiSanBLL.LayPhongAsync())
                 .Where(x => string.Equals(x.TrangThai, "Hoạt động", StringComparison.OrdinalIgnoreCase))
                 .ToList();
             cboPhong.DisplayMember = nameof(PhongTapModel.HienThi);
             cboPhong.ValueMember = "MaPhong";
+            cboPhong.SelectedIndex = -1;
             await TaiGoiAsync();
         }
         catch (Exception ex) { HienThiLoi(ex); }
@@ -45,7 +48,8 @@ public partial class FrmVanHanhGoi : Form
         bool coThanhVien = cboThanhVien.SelectedItem is ThanhVien;
         bool coGoiChon = dgvGoi.CurrentRow?.DataBoundItem is DangKyGoiView;
 
-        UiButtonHelper.SetTrangThai(btnCheckIn, coThanhVien, Color.FromArgb(5, 150, 105));
+        bool coPhong = cboPhong.SelectedItem is PhongTapModel;
+        UiButtonHelper.SetTrangThai(btnCheckIn, coThanhVien && coPhong, Color.FromArgb(5, 150, 105));
         UiButtonHelper.SetTrangThai(btnCheckOut, coThanhVien, Color.FromArgb(30, 64, 175));
         UiButtonHelper.SetTrangThai(btnGiaHan, coGoiChon, Color.FromArgb(16, 185, 129));
         UiButtonHelper.SetTrangThai(btnBaoLuu, coGoiChon, Color.FromArgb(124, 58, 237));
@@ -62,6 +66,7 @@ public partial class FrmVanHanhGoi : Form
 
         dgvGoi.DataSource = await _vanHanhBLL.LayGoiThanhVienAsync(thanhVien.MaTV);
         DinhDangLuoiGoi();
+        UiGridHelper.BoChon(dgvGoi);
         CapNhatTrangThaiNut();
     }
 

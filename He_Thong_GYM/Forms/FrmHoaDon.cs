@@ -24,6 +24,11 @@ public partial class FrmHoaDon : Form
         await TaiDanhSachAsync();
         CapNhatTrangThaiNut();
         _dangKhoiTao = false;
+        BeginInvoke(new Action(() =>
+        {
+            UiGridHelper.BoChon(dgvHoaDon);
+            CapNhatTrangThaiNut();
+        }));
     }
 
     private void dgvHoaDon_SelectionChanged(object? sender, EventArgs e)
@@ -87,6 +92,7 @@ public partial class FrmHoaDon : Form
         dgvHoaDon.DataSource = null;
         dgvHoaDon.DataSource = list;
         DinhDangLuoi();
+        UiGridHelper.BoChon(dgvHoaDon);
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} hóa đơn";
     }

@@ -23,6 +23,7 @@ public partial class FrmSanPham : Form
         if (cboTrangThaiSP.Items.Count > 0) cboTrangThaiSP.SelectedIndex = 0;
         await TaiDanhSachAsync();
         DatTrangThaiTaoMoi();
+        BeginInvoke(new Action(DatTrangThaiTaoMoi));
         _dangKhoiTao = false;
     }
 
@@ -158,7 +159,7 @@ public partial class FrmSanPham : Form
         if (cboTrangThaiSP.Items.Count > 0) cboTrangThaiSP.SelectedIndex = 0;
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         UiButtonHelper.SetTrangThai(btnNhapKho, false, UiButtonHelper.MauChucNangPhu);
-        dgvSanPham.ClearSelection();
+        UiGridHelper.BoChon(dgvSanPham);
         txtTenSP.Focus();
     }
 

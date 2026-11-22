@@ -13,6 +13,8 @@ public partial class FrmDangKyPT : Form
     public FrmDangKyPT()
     {
         InitializeComponent();
+        UiButtonHelper.SetTrangThai(btnDangKy, false, UiButtonHelper.MauThemMoi);
+        cboThanhVien.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
     }
 
     private async void FrmDangKyPT_Load(object? s, EventArgs e)
@@ -23,19 +25,23 @@ public partial class FrmDangKyPT : Form
             cboThanhVien.DataSource = await _bll.LayThanhVienAsync();
             cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            cboThanhVien.SelectedIndex = -1;
 
             cboHLV.DataSource = await _bll.LayHLVAsync();
             cboHLV.DisplayMember = nameof(HuanLuyenVien.HoTen);
             cboHLV.ValueMember = nameof(HuanLuyenVien.MaHLV);
+            cboHLV.SelectedIndex = -1;
 
             cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
             cboKhuyenMai.DisplayMember = nameof(KhuyenMai.HienThi);
             cboKhuyenMai.ValueMember = nameof(KhuyenMai.MaKM);
+            cboKhuyenMai.SelectedIndex = -1;
 
             cboLocTrangThai.SelectedIndex = 0;
             TinhGia();
 
             await TaiLichSuAsync();
+            CapNhatTrangThaiNut();
             _dangKhoiTao = false;
         }
         catch (Exception ex)
@@ -157,10 +163,22 @@ public partial class FrmDangKyPT : Form
 
     private void TinhGia()
     {
-        if (cboHLV.SelectedItem is not HuanLuyenVien h) return;
+        if (cboHLV.SelectedItem is not HuanLuyenVien h)
+        {
+            lblTongTien.Text = "Chưa chọn HLV";
+            CapNhatTrangThaiNut();
+            return;
+        }
         var km = cboKhuyenMai.SelectedItem as KhuyenMai;
         dtpKetThuc.Value = dtpBatDau.Value.AddDays((int)nudSoBuoi.Value * 7);
         lblTongTien.Text = $"{(h.PhiThue ?? 0) * nudSoBuoi.Value * (1 - (km?.PhanTramGiam ?? 0) / 100):N0} đ";
+        CapNhatTrangThaiNut();
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        bool sanSang = cboThanhVien.SelectedItem is ThanhVien && cboHLV.SelectedItem is HuanLuyenVien;
+        UiButtonHelper.SetTrangThai(btnDangKy, sanSang, UiButtonHelper.MauThemMoi);
     }
 
     private async void btnDangKy_Click(object? s, EventArgs e)

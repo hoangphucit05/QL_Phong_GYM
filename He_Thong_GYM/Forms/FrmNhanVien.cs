@@ -14,16 +14,22 @@ public partial class FrmNhanVien : Form
     public FrmNhanVien()
     {
         InitializeComponent();
+        txtHoTen.PlaceholderText = "Nhập họ và tên nhân viên...";
+        txtSDT.PlaceholderText = "Nhập số điện thoại...";
+        txtEmail.PlaceholderText = "Nhập email (không bắt buộc)...";
+        txtDiaChi.PlaceholderText = "Nhập địa chỉ (không bắt buộc)...";
+        txtChucVu.PlaceholderText = "Nhập chức vụ...";
     }
 
     private async void FrmNhanVien_Load(object? s, EventArgs e)
     {
-        cboGioiTinh.SelectedIndex = 0;
-        cboTrangThai.SelectedIndex = 0;
+        cboGioiTinh.SelectedIndex = -1;
+        cboTrangThai.SelectedIndex = -1;
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
         await TaiAsync();
         DatTrangThaiNghi();
+        BeginInvoke(new Action(DatTrangThaiNghi));
     }
 
     private void KhoaOThongTin(bool khoa)
@@ -67,9 +73,9 @@ public partial class FrmNhanVien : Form
         txtChucVu.Clear();
         nudLuong.Value = 0;
         dtpNgaySinh.Value = DateTime.Today.AddYears(-22);
-        cboGioiTinh.SelectedIndex = 0;
-        cboTrangThai.SelectedIndex = 0;
-        dgvNhanVien.ClearSelection();
+        cboGioiTinh.SelectedIndex = -1;
+        cboTrangThai.SelectedIndex = -1;
+        UiGridHelper.BoChon(dgvNhanVien);
         KhoaOThongTin(true);
         CapNhatTrangThaiNut();
     }
@@ -139,7 +145,7 @@ public partial class FrmNhanVien : Form
         dtpNgaySinh.Value = DateTime.Today.AddYears(-22);
         cboGioiTinh.SelectedIndex = 0;
         cboTrangThai.SelectedIndex = 0;
-        dgvNhanVien.ClearSelection();
+        UiGridHelper.BoChon(dgvNhanVien);
         KhoaOThongTin(false);
         CapNhatTrangThaiNut();
         txtHoTen.Focus();

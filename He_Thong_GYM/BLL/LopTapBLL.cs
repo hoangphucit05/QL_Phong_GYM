@@ -8,7 +8,7 @@ public sealed class LopTapBLL
     public Task<List<(int, string)>> LayLoaiAsync() => _d.LayLoaiAsync();
     public Task<List<HocVienLop>> LayHocVienAsync(int maLop, int maLichHoc) => _d.LayHocVienAsync(maLop, maLichHoc);
     public Task<List<BuoiHoc>> LayBuoiHocAsync(int maLop, DateTime ngay) => _d.LayBuoiHocAsync(maLop, ngay);
-    public Task DangKyLopAsync(int maTV, int maLop){He_Thong_GYM.Helpers.AuthorizationPolicy.Require("Admin", "Quản lý", "Lễ tân", "Nhân viên");return _d.DangKyLopAsync(maTV, maLop, He_Thong_GYM.Helpers.SessionManager.NguoiDungHienTai!.MaNV);}
+    public Task<DangKyLopKetQua> DangKyLopAsync(int maTV, int maLop){He_Thong_GYM.Helpers.AuthorizationPolicy.Require("Admin", "Quản lý", "Lễ tân", "Nhân viên");return _d.DangKyLopAsync(maTV, maLop, He_Thong_GYM.Helpers.SessionManager.NguoiDungHienTai!.MaNV);}
 
     public Task<int> TaoBuoiHocAsync(LopTap lop, DateTime ngay)
     {

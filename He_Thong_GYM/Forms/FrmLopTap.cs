@@ -35,6 +35,8 @@ public partial class FrmLopTap : Form
             if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
 
             await TaiDanhSachAsync();
+            DatTrangThaiTaoMoi();
+            BeginInvoke(new Action(DatTrangThaiTaoMoi));
             _dangKhoiTao = false;
         }
         catch (Exception ex)
@@ -309,7 +311,7 @@ public partial class FrmLopTap : Form
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         UiButtonHelper.SetTrangThai(btnDongLop, false, UiButtonHelper.MauXoa);
-        dgvLop.ClearSelection();
+        UiGridHelper.BoChon(dgvLop);
         txtTenLop.Focus();
     }
 
