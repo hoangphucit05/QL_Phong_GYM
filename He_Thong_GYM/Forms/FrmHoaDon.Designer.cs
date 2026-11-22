@@ -20,6 +20,7 @@ partial class FrmHoaDon
         lblMoTa = new Label();
         flowThaoTac = new FlowLayoutPanel();
         btnThanhToan = new Button();
+        btnHuyHoaDon = new Button();
         btnLamMoi = new Button();
         lblTimKiem = new Label();
         txtTimKiem = new TextBox();
@@ -69,6 +70,7 @@ partial class FrmHoaDon
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnThanhToan);
+        flowThaoTac.Controls.Add(btnHuyHoaDon);
         flowThaoTac.Controls.Add(btnLamMoi);
         flowThaoTac.Controls.Add(lblTimKiem);
         flowThaoTac.Controls.Add(txtTimKiem);
@@ -96,6 +98,23 @@ partial class FrmHoaDon
         btnThanhToan.Text = "Thanh toán / Hoàn tiền";
         btnThanhToan.UseVisualStyleBackColor = false;
         btnThanhToan.Click += btnThanhToan_Click;
+        // 
+        // btnHuyHoaDon
+        // 
+        btnHuyHoaDon.BackColor = Color.FromArgb(239, 68, 68);
+        btnHuyHoaDon.Cursor = Cursors.Hand;
+        btnHuyHoaDon.FlatAppearance.BorderSize = 0;
+        btnHuyHoaDon.FlatStyle = FlatStyle.Flat;
+        btnHuyHoaDon.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnHuyHoaDon.ForeColor = Color.White;
+        btnHuyHoaDon.Location = new Point(168, 0);
+        btnHuyHoaDon.Margin = new Padding(0, 0, 8, 0);
+        btnHuyHoaDon.Name = "btnHuyHoaDon";
+        btnHuyHoaDon.Size = new Size(110, 36);
+        btnHuyHoaDon.TabIndex = 1;
+        btnHuyHoaDon.Text = "Hủy hóa đơn";
+        btnHuyHoaDon.UseVisualStyleBackColor = false;
+        btnHuyHoaDon.Click += btnHuyHoaDon_Click;
         // 
         // btnLamMoi
         // 
@@ -150,7 +169,7 @@ partial class FrmHoaDon
         // 
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.FormattingEnabled = true;
-        cboTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Chờ thanh toán", "Đã thanh toán", "Một phần", "Hủy" });
+        cboTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Chưa thanh toán", "Đã thanh toán", "Đã thanh toán một phần", "Đã hoàn tiền", "Hủy" });
         cboTrangThai.Location = new Point(629, 6);
         cboTrangThai.Margin = new Padding(3, 6, 12, 3);
         cboTrangThai.Name = "cboTrangThai";
@@ -216,6 +235,7 @@ partial class FrmHoaDon
     private Label lblMoTa;
     private FlowLayoutPanel flowThaoTac;
     private Button btnThanhToan;
+    private Button btnHuyHoaDon;
     private Button btnLamMoi;
     private Label lblTimKiem;
     private TextBox txtTimKiem;

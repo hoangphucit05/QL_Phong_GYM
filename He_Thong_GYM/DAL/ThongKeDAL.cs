@@ -53,14 +53,42 @@ public sealed class ThongKeDAL
     public async Task<List<ThongKeGoiTapView>> LayDoanhThuGoiTapAsync(DateTime? tuNgay = null, DateTime? denNgay = null)
     {
         const string sql = @"
-            SELECT gt.TenGoi,
-                   COUNT(dkg.MaDKG) AS SoLuotDangKy,
-                   ISNULL(SUM(dkg.GiaSauGiam), 0) AS DoanhThu
+            WITH HoaDonDaThu AS (
+                SELECT h.MaHD,
+                       h.TongTien,
+                       ISNULL(SUM(CASE
+                           WHEN tt.TrangThai = N'Thành công' AND tt.LoaiGiaoDich = N'Thanh toán' THEN tt.SoTien
+                           WHEN tt.TrangThai = N'Thành công' THEN -tt.SoTien
+                           ELSE 0
+                       END), 0) AS DaThu
+                FROM dbo.HoaDon h
+                LEFT JOIN dbo.ThanhToan tt ON tt.MaHD = h.MaHD
+                WHERE h.TrangThai NOT IN (N'Hủy', N'Đã hoàn tiền')
+                GROUP BY h.MaHD, h.TongTien
+            ), DoanhThuGoi AS (
+                SELECT dkg.MaDKG,
+                       gt.MaGoiTap,
+                       gt.TenGoi,
+                       c.SoLuong * c.DonGia AS GiaTriDong,
+                       hd.TongTien,
+                       hd.DaThu
+                FROM dbo.DangKyGoi dkg
+                JOIN dbo.GoiTap gt ON gt.MaGoi = dkg.MaGoi
+                JOIN dbo.HoaDonGoiTap x ON x.MaDKG = dkg.MaDKG
+                JOIN dbo.ChiTietHoaDon c ON c.MaCTHD = x.MaCTHD AND c.LoaiDichVu = N'Gói tập'
+                JOIN HoaDonDaThu hd ON hd.MaHD = c.MaHD AND hd.DaThu > 0
+                WHERE dkg.TrangThai <> N'Hủy'
+                  AND (@TuNgay IS NULL OR dkg.NgayBatDau >= @TuNgay)
+                  AND (@DenNgay IS NULL OR dkg.NgayBatDau <= @DenNgay)
+            )
+            SELECT gt.MaGoiTap, gt.TenGoi,
+                   COUNT(DISTINCT dt.MaDKG) AS SoLuotDangKy,
+                   ISNULL(SUM(CASE WHEN dt.TongTien > 0
+                                   THEN dt.GiaTriDong * dt.DaThu / dt.TongTien
+                                   ELSE 0 END), 0) AS DoanhThu
             FROM dbo.GoiTap gt
-            LEFT JOIN dbo.DangKyGoi dkg ON gt.MaGoi = dkg.MaGoi
-                 AND (@TuNgay IS NULL OR dkg.NgayBatDau >= @TuNgay)
-                 AND (@DenNgay IS NULL OR dkg.NgayBatDau <= @DenNgay)
-            GROUP BY gt.TenGoi
+            LEFT JOIN DoanhThuGoi dt ON gt.MaGoiTap = dt.MaGoiTap
+            GROUP BY gt.MaGoiTap, gt.TenGoi
             ORDER BY DoanhThu DESC;";
 
         var list = new List<ThongKeGoiTapView>();
@@ -75,9 +103,10 @@ public sealed class ThongKeDAL
         {
             list.Add(new ThongKeGoiTapView
             {
-                TenGoi = reader.GetString(0),
-                SoLuotDangKy = reader.GetInt32(1),
-                DoanhThu = reader.GetDecimal(2)
+                MaGoiTap = reader.GetString(0),
+                TenGoi = reader.GetString(1),
+                SoLuotDangKy = reader.GetInt32(2),
+                DoanhThu = reader.GetDecimal(3)
             });
         }
         return list;
@@ -147,15 +176,42 @@ public sealed class ThongKeDAL
     public async Task<List<ThongKeHLVView>> LayTopHuanLuyenVienAsync(DateTime? tuNgay = null, DateTime? denNgay = null)
     {
         const string sql = @"
+            WITH HoaDonDaThu AS (
+                SELECT h.MaHD,
+                       h.TongTien,
+                       ISNULL(SUM(CASE
+                           WHEN tt.TrangThai = N'Thành công' AND tt.LoaiGiaoDich = N'Thanh toán' THEN tt.SoTien
+                           WHEN tt.TrangThai = N'Thành công' THEN -tt.SoTien
+                           ELSE 0
+                       END), 0) AS DaThu
+                FROM dbo.HoaDon h
+                LEFT JOIN dbo.ThanhToan tt ON tt.MaHD = h.MaHD
+                WHERE h.TrangThai NOT IN (N'Hủy', N'Đã hoàn tiền')
+                GROUP BY h.MaHD, h.TongTien
+            ), DoanhThuPT AS (
+                SELECT dk.MaDKPT,
+                       hlv.MaHLV,
+                       c.SoLuong * c.DonGia AS GiaTriDong,
+                       hd.TongTien,
+                       hd.DaThu
+                FROM dbo.DangKyPT dk
+                JOIN dbo.HuanLuyenVien hlv ON hlv.MaHLV = dk.MaHLV
+                JOIN dbo.HoaDonPT x ON x.MaDKPT = dk.MaDKPT
+                JOIN dbo.ChiTietHoaDon c ON c.MaCTHD = x.MaCTHD AND c.LoaiDichVu = N'PT'
+                JOIN HoaDonDaThu hd ON hd.MaHD = c.MaHD AND hd.DaThu > 0
+                WHERE dk.TrangThai <> N'Hủy'
+                  AND (@TuNgay IS NULL OR dk.NgayBatDau >= @TuNgay)
+                  AND (@DenNgay IS NULL OR dk.NgayBatDau <= @DenNgay)
+            )
             SELECT nv.HoTen,
                    ISNULL(hlv.ChuyenMon, N'--') AS ChuyenMon,
-                   COUNT(dk.MaDKPT) AS SoHocVien,
-                   ISNULL(SUM(dk.TongTien), 0) AS DoanhThu
+                   COUNT(DISTINCT dt.MaDKPT) AS SoHocVien,
+                   ISNULL(SUM(CASE WHEN dt.TongTien > 0
+                                   THEN dt.GiaTriDong * dt.DaThu / dt.TongTien
+                                   ELSE 0 END), 0) AS DoanhThu
             FROM dbo.HuanLuyenVien hlv
             JOIN dbo.NhanVien nv ON hlv.MaNV = nv.MaNV
-            LEFT JOIN dbo.DangKyPT dk ON hlv.MaHLV = dk.MaHLV
-                 AND (@TuNgay IS NULL OR dk.NgayBatDau >= @TuNgay)
-                 AND (@DenNgay IS NULL OR dk.NgayBatDau <= @DenNgay)
+            LEFT JOIN DoanhThuPT dt ON hlv.MaHLV = dt.MaHLV
             GROUP BY nv.HoTen, hlv.ChuyenMon
             ORDER BY DoanhThu DESC;";
 
@@ -183,24 +239,21 @@ public sealed class ThongKeDAL
     public async Task<List<ThongKeSanPhamView>> LayThongKeSanPhamAsync()
     {
         const string sql = @"
-            SELECT sp.TenSP,
+            SELECT sp.MaSanPham, sp.TenSP,
                    sp.DonGia,
-                   ISNULL(cthd.DaBan, 0) + ISNULL(pbh.DaBan, 0) AS DaBan,
+                   ISNULL(cthd.DaBan, 0) AS DaBan,
                    sp.SoLuongTon AS TonKho,
-                   ISNULL(cthd.DoanhThu, 0) + ISNULL(pbh.DoanhThu, 0) AS DoanhThu
+                   ISNULL(cthd.DoanhThu, 0) AS DoanhThu
             FROM dbo.SanPham sp
             OUTER APPLY (
                 SELECT SUM(ct.SoLuong) AS DaBan,
                        SUM(ct.SoLuong * ct.DonGia) AS DoanhThu
                 FROM dbo.ChiTietHoaDon ct
-                WHERE ct.LoaiDichVu = N'Sản phẩm' AND ct.MaThamChieu = sp.MaSP
+                JOIN dbo.HoaDon h ON h.MaHD = ct.MaHD
+                WHERE ct.LoaiDichVu = N'Sản phẩm'
+                  AND ct.MaThamChieu = sp.MaSP
+                  AND h.TrangThai = N'Đã thanh toán'
             ) cthd
-            OUTER APPLY (
-                SELECT SUM(pb.SoLuong) AS DaBan,
-                       SUM(pb.SoLuong * pb.DonGia) AS DoanhThu
-                FROM dbo.ChiTietPhieuBanHang pb
-                WHERE pb.MaSP = sp.MaSP
-            ) pbh
             ORDER BY DaBan DESC, sp.MaSP DESC;";
 
         var list = new List<ThongKeSanPhamView>();
@@ -213,11 +266,12 @@ public sealed class ThongKeDAL
         {
             list.Add(new ThongKeSanPhamView
             {
-                TenSP = reader.GetString(0),
-                DonGia = reader.GetDecimal(1),
-                DaBan = reader.GetInt32(2),
-                TonKho = reader.GetInt32(3),
-                DoanhThu = reader.GetDecimal(4)
+                MaSanPham = reader.GetString(0),
+                TenSP = reader.GetString(1),
+                DonGia = reader.GetDecimal(2),
+                DaBan = reader.GetInt32(3),
+                TonKho = reader.GetInt32(4),
+                DoanhThu = reader.GetDecimal(5)
             });
         }
         return list;

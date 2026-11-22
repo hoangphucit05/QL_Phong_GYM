@@ -30,6 +30,7 @@ partial class FrmBaoTri
         nudChiPhi = new NumericUpDown();
         flowThaoTac = new FlowLayoutPanel();
         btnTao = new Button();
+        btnHoanTat = new Button();
         btnLamMoi = new Button();
         lblTimKiem = new Label();
         txtTimKiem = new TextBox();
@@ -209,6 +210,7 @@ partial class FrmBaoTri
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnTao);
+        flowThaoTac.Controls.Add(btnHoanTat);
         flowThaoTac.Controls.Add(btnLamMoi);
         flowThaoTac.Controls.Add(lblTimKiem);
         flowThaoTac.Controls.Add(txtTimKiem);
@@ -237,6 +239,23 @@ partial class FrmBaoTri
         btnTao.UseVisualStyleBackColor = false;
         btnTao.Click += btnTao_Click;
         // 
+        // btnHoanTat
+        // 
+        btnHoanTat.BackColor = Color.FromArgb(37, 99, 235);
+        btnHoanTat.Cursor = Cursors.Hand;
+        btnHoanTat.FlatAppearance.BorderSize = 0;
+        btnHoanTat.FlatStyle = FlatStyle.Flat;
+        btnHoanTat.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnHoanTat.ForeColor = Color.White;
+        btnHoanTat.Location = new Point(148, 0);
+        btnHoanTat.Margin = new Padding(0, 0, 8, 0);
+        btnHoanTat.Name = "btnHoanTat";
+        btnHoanTat.Size = new Size(130, 36);
+        btnHoanTat.TabIndex = 1;
+        btnHoanTat.Text = "Hoàn tất bảo trì";
+        btnHoanTat.UseVisualStyleBackColor = false;
+        btnHoanTat.Click += btnHoanTat_Click;
+        // 
         // btnLamMoi
         // 
         btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
@@ -245,11 +264,11 @@ partial class FrmBaoTri
         btnLamMoi.FlatStyle = FlatStyle.Flat;
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
-        btnLamMoi.Location = new Point(148, 0);
+        btnLamMoi.Location = new Point(286, 0);
         btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
         btnLamMoi.Size = new Size(90, 36);
-        btnLamMoi.TabIndex = 1;
+        btnLamMoi.TabIndex = 2;
         btnLamMoi.Text = "Làm mới";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
@@ -371,6 +390,7 @@ partial class FrmBaoTri
     private NumericUpDown nudChiPhi;
     private FlowLayoutPanel flowThaoTac;
     private Button btnTao;
+    private Button btnHoanTat;
     private Button btnLamMoi;
     private Label lblTimKiem;
     private TextBox txtTimKiem;

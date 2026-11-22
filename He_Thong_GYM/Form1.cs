@@ -21,6 +21,18 @@ namespace He_Thong_GYM
             _nguoiDung = nguoiDung;
             InitializeComponent();
             TaiLogo();
+            PhanQuyenMenu();
+        }
+
+        private void PhanQuyenMenu()
+        {
+            foreach (Control control in flowMenu.Controls)
+            {
+                if (control is not Button button || button == btnTongQuan || button == btnDangXuat)
+                    continue;
+
+                button.Visible = button.Tag is string menu && AuthorizationPolicy.CanAccessMenu(menu);
+            }
         }
 
         private void TaiLogo()
@@ -55,14 +67,23 @@ namespace He_Thong_GYM
 
         private async void Form1_Load(object? sender, EventArgs e)
         {
-            CapNhatNutMenuDangChon(btnTongQuan);
-            lblThoiGian.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy HH:mm");
-            if (_nguoiDung is not null)
+            try
             {
-                lblTenNguoiDung.Text = _nguoiDung.HoTen;
-                lblVaiTro.Text = _nguoiDung.VaiTro;
+                CapNhatNutMenuDangChon(btnTongQuan);
+                lblThoiGian.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy HH:mm");
+                if (_nguoiDung is not null)
+                {
+                    lblTenNguoiDung.Text = _nguoiDung.HoTen;
+                    lblVaiTro.Text = _nguoiDung.VaiTro;
+                }
+
+                await _dashboardBLL.CapNhatGoiHetHanAsync(_nguoiDung?.MaNV);
+                await TaiTongQuanAsync();
             }
-            await TaiTongQuanAsync();
+            catch (Exception)
+            {
+                lblMoTaNoiDung.Text = "Chưa tải được Dashboard. Hãy kiểm tra appsettings.json và kết nối SQL Server.";
+            }
         }
 
         private void CapNhatNutMenuDangChon(Button? nutMoi)
@@ -92,6 +113,12 @@ namespace He_Thong_GYM
             if (button != btnThongTin && button != btnDangXuat)
             {
                 CapNhatNutMenuDangChon(button);
+            }
+
+            if (!AuthorizationPolicy.CanAccessMenu(chucNang))
+            {
+                MessageBox.Show("Tài khoản hiện tại không có quyền truy cập chức năng này.", "Không có quyền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
             }
 
             lblTieuDeNoiDung.Text = chucNang;

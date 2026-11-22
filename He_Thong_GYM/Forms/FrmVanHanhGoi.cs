@@ -25,10 +25,13 @@ public partial class FrmVanHanhGoi : Form
         try
         {
             cboThanhVien.DataSource = await _dangKyBLL.LayThanhVienAsync();
-            cboThanhVien.DisplayMember = nameof(ThanhVien.HoTen);
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
-            cboPhong.DataSource = await _taiSanBLL.LayPhongAsync();
-            cboPhong.DisplayMember = "TenPhong";
+            // Chỉ cho chọn phòng đang hoạt động; procedure vẫn kiểm tra lại ở database.
+            cboPhong.DataSource = (await _taiSanBLL.LayPhongAsync())
+                .Where(x => string.Equals(x.TrangThai, "Hoạt động", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            cboPhong.DisplayMember = nameof(PhongTapModel.HienThi);
             cboPhong.ValueMember = "MaPhong";
             await TaiGoiAsync();
         }
@@ -39,6 +42,18 @@ public partial class FrmVanHanhGoi : Form
     {
         if (cboThanhVien.SelectedItem is not ThanhVien thanhVien) return;
         dgvGoi.DataSource = await _vanHanhBLL.LayGoiThanhVienAsync(thanhVien.MaTV);
+        DinhDangLuoiGoi();
+    }
+
+    private void DinhDangLuoiGoi()
+    {
+        if (dgvGoi.Columns.Contains(nameof(DangKyGoiView.MaDKG))) dgvGoi.Columns[nameof(DangKyGoiView.MaDKG)]!.Visible = false;
+        if (dgvGoi.Columns.Contains(nameof(DangKyGoiView.HienThi))) dgvGoi.Columns[nameof(DangKyGoiView.HienThi)]!.Visible = false;
+        if (dgvGoi.Columns.Contains(nameof(DangKyGoiView.MaDangKyGoi)))
+        {
+            dgvGoi.Columns[nameof(DangKyGoiView.MaDangKyGoi)]!.HeaderText = "Mã đăng ký";
+            dgvGoi.Columns[nameof(DangKyGoiView.MaDangKyGoi)]!.Width = 155;
+        }
     }
 
     private async void cboThanhVien_SelectedIndexChanged(object? sender, EventArgs e)
@@ -53,7 +68,7 @@ public partial class FrmVanHanhGoi : Form
             if (cboThanhVien.SelectedItem is not ThanhVien tv) throw new InvalidOperationException("Hãy chọn thành viên.");
             var maPhong = cboPhong.SelectedValue is int value ? value : (int?)null;
             var maCheckIn = await _vanHanhBLL.CheckInAsync(tv.MaTV, maPhong);
-            lblTrangThai.Text = $"Check-in thành công, mã lượt: {maCheckIn}.";
+            lblTrangThai.Text = $"Check-in thành công, mã phiên: {maCheckIn}.";
         }
         catch (Exception ex) { HienThiLoi(ex); }
     }
@@ -74,8 +89,10 @@ public partial class FrmVanHanhGoi : Form
         try
         {
             if (dgvGoi.CurrentRow?.DataBoundItem is not DangKyGoiView goi) throw new InvalidOperationException("Hãy chọn một gói đã đăng ký.");
-            await _vanHanhBLL.GiaHanAsync(goi.MaDKG, (int)nudSoNgay.Value, SessionManager.NguoiDungHienTai?.MaNV);
-            await TaiGoiAsync(); lblTrangThai.Text = "Đã gia hạn gói tập.";
+            var maHD = await _vanHanhBLL.GiaHanAsync(goi.MaDKG, (int)nudSoNgay.Value, SessionManager.NguoiDungHienTai?.MaNV);
+            await TaiGoiAsync();
+            lblTrangThai.Text = $"Đã gia hạn gói tập. Hóa đơn #{maHD} đã được tạo và đang chờ thanh toán.";
+            MessageBox.Show($"Đã gia hạn gói tập thành công!\nHóa đơn #{maHD} đã được tạo và chuyển sang trạng thái Chưa thanh toán.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex) { HienThiLoi(ex); }
     }
@@ -91,5 +108,5 @@ public partial class FrmVanHanhGoi : Form
         catch (Exception ex) { HienThiLoi(ex); }
     }
 
-    private void HienThiLoi(Exception ex) { lblTrangThai.Text = ex.Message; MessageBox.Show(ex.Message, "Không thể thực hiện", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+    private void HienThiLoi(Exception ex) { var message = UiErrorMessage.Get(ex); lblTrangThai.Text = message; MessageBox.Show(message, "Không thể thực hiện", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
 }

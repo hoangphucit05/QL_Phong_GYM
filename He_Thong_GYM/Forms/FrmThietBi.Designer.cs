@@ -21,6 +21,7 @@ partial class FrmThietBi
         groupThongTin = new GroupBox();
         panelThaoTac = new Panel();
         lblThongKe = new Label();
+        btnSua = new Button();
         btnLamMoi = new Button();
         tableThongTin = new TableLayoutPanel();
         lblTen = new Label();
@@ -92,6 +93,7 @@ partial class FrmThietBi
         // 
         panelThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         panelThaoTac.Controls.Add(lblThongKe);
+        panelThaoTac.Controls.Add(btnSua);
         panelThaoTac.Controls.Add(btnLamMoi);
         panelThaoTac.Location = new Point(16, 90);
         panelThaoTac.Name = "panelThaoTac";
@@ -112,6 +114,24 @@ partial class FrmThietBi
         lblThongKe.Text = "Đang tải dữ liệu...";
         lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
+        // btnSua
+        // 
+        btnSua.BackColor = Color.FromArgb(16, 185, 129);
+        btnSua.Cursor = Cursors.Hand;
+        btnSua.Dock = DockStyle.Right;
+        btnSua.FlatAppearance.BorderSize = 0;
+        btnSua.FlatStyle = FlatStyle.Flat;
+        btnSua.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnSua.ForeColor = Color.White;
+        btnSua.Location = new Point(630, 0);
+        btnSua.Margin = new Padding(0, 0, 10, 0);
+        btnSua.Name = "btnSua";
+        btnSua.Size = new Size(140, 34);
+        btnSua.TabIndex = 1;
+        btnSua.Text = "Cập nhật thiết bị";
+        btnSua.UseVisualStyleBackColor = false;
+        btnSua.Click += btnSua_Click;
+        // 
         // btnLamMoi
         // 
         btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
@@ -124,7 +144,7 @@ partial class FrmThietBi
         btnLamMoi.Location = new Point(780, 0);
         btnLamMoi.Name = "btnLamMoi";
         btnLamMoi.Size = new Size(140, 34);
-        btnLamMoi.TabIndex = 1;
+        btnLamMoi.TabIndex = 2;
         btnLamMoi.Text = "Làm mới / Bỏ lọc";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
@@ -263,6 +283,7 @@ partial class FrmThietBi
         dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgv.Size = new Size(952, 423);
         dgv.TabIndex = 2;
+        dgv.SelectionChanged += dgv_SelectionChanged;
         // 
         // FrmThietBi
         // 
@@ -296,6 +317,7 @@ partial class FrmThietBi
     private GroupBox groupThongTin;
     private Panel panelThaoTac;
     private Label lblThongKe;
+    private Button btnSua;
     private Button btnLamMoi;
     private TableLayoutPanel tableThongTin;
     private Label lblTen;

@@ -8,6 +8,7 @@ public partial class FrmThietBi : Form
     private readonly TaiSanBLL _bll = new();
     private List<ThietBi> _danhSachGoc = new();
     private bool _dangKhoiTao = true;
+    private ThietBi? _thietBiDangChon;
 
     public FrmThietBi()
     {
@@ -96,7 +97,7 @@ public partial class FrmThietBi : Form
         catch (Exception ex)
         {
             lblThongKe.Text = "Không thể tải dữ liệu. Kiểm tra kết nối SQL Server.";
-            MessageBox.Show(ex.Message, "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -106,8 +107,16 @@ public partial class FrmThietBi : Form
 
         if (dgv.Columns.Contains(nameof(ThietBi.MaTB)))
         {
-            dgv.Columns[nameof(ThietBi.MaTB)]!.HeaderText = "Mã TB";
-            dgv.Columns[nameof(ThietBi.MaTB)]!.Width = 80;
+            dgv.Columns[nameof(ThietBi.MaTB)]!.Visible = false;
+        }
+        if (dgv.Columns.Contains(nameof(ThietBi.MaThietBi)))
+        {
+            dgv.Columns[nameof(ThietBi.MaThietBi)]!.HeaderText = "Mã thiết bị";
+            dgv.Columns[nameof(ThietBi.MaThietBi)]!.Width = 105;
+        }
+        if (dgv.Columns.Contains(nameof(ThietBi.HienThi)))
+        {
+            dgv.Columns[nameof(ThietBi.HienThi)]!.Visible = false;
         }
         if (dgv.Columns.Contains(nameof(ThietBi.TenTB)))
         {
@@ -157,6 +166,7 @@ public partial class FrmThietBi : Form
             {
                 ketQua = ketQua.Where(t =>
                     (!string.IsNullOrEmpty(t.TenTB) && t.TenTB.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                    (!string.IsNullOrEmpty(t.MaThietBi) && t.MaThietBi.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                     t.MaTB.ToString().Contains(tuKhoa));
             }
 
@@ -203,7 +213,92 @@ public partial class FrmThietBi : Form
         }
         catch (Exception ex)
         {
-            lblThongKe.Text = "Lỗi khi lọc dữ liệu: " + ex.Message;
+            lblThongKe.Text = "Lỗi khi lọc dữ liệu: " + UiErrorMessage.Get(ex);
+        }
+    }
+
+    private void dgv_SelectionChanged(object? sender, EventArgs e)
+    {
+        if (_dangKhoiTao) return;
+        _thietBiDangChon = dgv.CurrentRow?.DataBoundItem as ThietBi;
+        btnSua.Enabled = _thietBiDangChon != null;
+    }
+
+    private async void btnSua_Click(object? sender, EventArgs e)
+    {
+        if (_thietBiDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn thiết bị cần cập nhật từ danh sách.", "Chưa chọn thiết bị", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var dlg = new Form
+        {
+            Text = $"Cập nhật thiết bị: {_thietBiDangChon.TenTB} ({_thietBiDangChon.MaThietBi})",
+            Width = 430,
+            Height = 220,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            StartPosition = FormStartPosition.CenterParent,
+            MaximizeBox = false,
+            MinimizeBox = false
+        };
+
+        var lblPhong = new Label { Text = "Phòng tập:", Left = 20, Top = 25, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var cboChonPhong = new ComboBox { Left = 130, Top = 22, Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+
+        var lblTT = new Label { Text = "Tình trạng:", Left = 20, Top = 65, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var cboChonTT = new ComboBox { Left = 130, Top = 62, Width = 250, DropDownStyle = ComboBoxStyle.DropDownList };
+        cboChonTT.Items.AddRange(new object[] { "Hoạt động", "Bảo trì", "Hư hỏng", "Thanh lý" });
+        cboChonTT.SelectedItem = _thietBiDangChon.TinhTrang ?? "Hoạt động";
+
+        try
+        {
+            var phongs = await _bll.LayPhongAsync();
+            cboChonPhong.Items.Add(new KeyValuePair<int?, string>(null, "(Chưa phân phòng)"));
+            foreach (var p in phongs)
+            {
+                cboChonPhong.Items.Add(new KeyValuePair<int?, string>(p.MaPhong, p.TenPhong));
+            }
+            cboChonPhong.DisplayMember = "Value";
+            cboChonPhong.ValueMember = "Key";
+
+            cboChonPhong.SelectedIndex = 0;
+            for (int i = 0; i < cboChonPhong.Items.Count; i++)
+            {
+                if (cboChonPhong.Items[i] is KeyValuePair<int?, string> kv && kv.Value == _thietBiDangChon.Phong)
+                {
+                    cboChonPhong.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+        catch
+        {
+            cboChonPhong.Items.Add(new KeyValuePair<int?, string>(null, "(Chưa phân phòng)"));
+            cboChonPhong.SelectedIndex = 0;
+        }
+
+        var btnLuu = new Button { Text = "Lưu thay đổi", Left = 160, Top = 115, Width = 110, Height = 34, DialogResult = DialogResult.OK, BackColor = Color.FromArgb(16, 185, 129), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+        var btnHuy = new Button { Text = "Hủy", Left = 280, Top = 115, Width = 80, Height = 34, DialogResult = DialogResult.Cancel, FlatStyle = FlatStyle.Flat };
+
+        dlg.Controls.AddRange(new Control[] { lblPhong, cboChonPhong, lblTT, cboChonTT, btnLuu, btnHuy });
+        dlg.AcceptButton = btnLuu;
+        dlg.CancelButton = btnHuy;
+
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            try
+            {
+                var phongItem = (KeyValuePair<int?, string>)cboChonPhong.SelectedItem!;
+                var tinhTrangMoi = cboChonTT.SelectedItem?.ToString() ?? "Hoạt động";
+                await _bll.CapNhatThietBiAsync(_thietBiDangChon.MaTB, phongItem.Key, tinhTrangMoi);
+                await TaiDuLieuAsync();
+                MessageBox.Show("Cập nhật thông tin thiết bị thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(UiErrorMessage.Get(ex), "Không thể cập nhật thiết bị", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 

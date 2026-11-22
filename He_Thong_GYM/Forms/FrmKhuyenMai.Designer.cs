@@ -27,6 +27,8 @@ partial class FrmKhuyenMai
         lblTrangThai = new Label();
         cboTrangThai = new ComboBox();
         flowThaoTac = new FlowLayoutPanel();
+        btnThem = new Button();
+        btnSua = new Button();
         btnLamMoi = new Button();
         lblThongKe = new Label();
         dgvKhuyenMai = new DataGridView();
@@ -180,12 +182,48 @@ partial class FrmKhuyenMai
         // flowThaoTac
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        flowThaoTac.Controls.Add(btnThem);
+        flowThaoTac.Controls.Add(btnSua);
         flowThaoTac.Controls.Add(btnLamMoi);
         flowThaoTac.Controls.Add(lblThongKe);
         flowThaoTac.Location = new Point(24, 212);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(952, 42);
         flowThaoTac.TabIndex = 2;
+        // 
+        // btnThem
+        // 
+        btnThem.BackColor = Color.FromArgb(37, 99, 235);
+        btnThem.Cursor = Cursors.Hand;
+        btnThem.FlatAppearance.BorderSize = 0;
+        btnThem.FlatStyle = FlatStyle.Flat;
+        btnThem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnThem.ForeColor = Color.White;
+        btnThem.Location = new Point(0, 0);
+        btnThem.Margin = new Padding(0, 0, 8, 0);
+        btnThem.Name = "btnThem";
+        btnThem.Size = new Size(130, 36);
+        btnThem.TabIndex = 0;
+        btnThem.Text = "Tạo khuyến mãi";
+        btnThem.UseVisualStyleBackColor = false;
+        btnThem.Click += btnThem_Click;
+        // 
+        // btnSua
+        // 
+        btnSua.BackColor = Color.FromArgb(16, 185, 129);
+        btnSua.Cursor = Cursors.Hand;
+        btnSua.FlatAppearance.BorderSize = 0;
+        btnSua.FlatStyle = FlatStyle.Flat;
+        btnSua.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnSua.ForeColor = Color.White;
+        btnSua.Location = new Point(138, 0);
+        btnSua.Margin = new Padding(0, 0, 8, 0);
+        btnSua.Name = "btnSua";
+        btnSua.Size = new Size(100, 36);
+        btnSua.TabIndex = 1;
+        btnSua.Text = "Cập nhật";
+        btnSua.UseVisualStyleBackColor = false;
+        btnSua.Click += btnSua_Click;
         // 
         // btnLamMoi
         // 
@@ -195,11 +233,11 @@ partial class FrmKhuyenMai
         btnLamMoi.FlatStyle = FlatStyle.Flat;
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
-        btnLamMoi.Location = new Point(0, 0);
+        btnLamMoi.Location = new Point(246, 0);
         btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
-        btnLamMoi.Size = new Size(130, 36);
-        btnLamMoi.TabIndex = 0;
+        btnLamMoi.Size = new Size(120, 36);
+        btnLamMoi.TabIndex = 2;
         btnLamMoi.Text = "Làm mới / Bỏ lọc";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
@@ -208,11 +246,11 @@ partial class FrmKhuyenMai
         // 
         lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
         lblThongKe.ForeColor = Color.FromArgb(71, 85, 105);
-        lblThongKe.Location = new Point(146, 0);
+        lblThongKe.Location = new Point(382, 0);
         lblThongKe.Name = "lblThongKe";
         lblThongKe.Padding = new Padding(0, 8, 0, 0);
         lblThongKe.Size = new Size(350, 36);
-        lblThongKe.TabIndex = 1;
+        lblThongKe.TabIndex = 3;
         lblThongKe.Text = "Đang tải dữ liệu...";
         lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -234,6 +272,7 @@ partial class FrmKhuyenMai
         dgvKhuyenMai.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvKhuyenMai.Size = new Size(952, 435);
         dgvKhuyenMai.TabIndex = 3;
+        dgvKhuyenMai.SelectionChanged += dgvKhuyenMai_SelectionChanged;
         // 
         // FrmKhuyenMai
         // 
@@ -274,6 +313,8 @@ partial class FrmKhuyenMai
     private Label lblTrangThai;
     private ComboBox cboTrangThai;
     private FlowLayoutPanel flowThaoTac;
+    private Button btnThem;
+    private Button btnSua;
     private Button btnLamMoi;
     private Label lblThongKe;
     private DataGridView dgvKhuyenMai;

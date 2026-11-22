@@ -23,10 +23,10 @@ public partial class FrmBaoTri : Form
             _dangKhoiTao = true;
             _tb = await _bll.LayThietBiAsync();
             cboThietBi.DataSource = _tb;
-            cboThietBi.DisplayMember = nameof(ThietBi.TenTB);
+            cboThietBi.DisplayMember = nameof(ThietBi.HienThi);
 
             cboNhanVien.DataSource = await _nv.LayNhanVienDangLamAsync();
-            cboNhanVien.DisplayMember = nameof(NhanVien.HoTen);
+            cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
 
             if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
 
@@ -35,7 +35,7 @@ public partial class FrmBaoTri : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -49,7 +49,7 @@ public partial class FrmBaoTri : Form
         catch (Exception ex)
         {
             lblThongKe.Text = "Lỗi tải dữ liệu";
-            MessageBox.Show(ex.Message, "Lỗi tải danh sách bảo trì", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải danh sách bảo trì", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -151,7 +151,37 @@ public partial class FrmBaoTri : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể tạo bảo trì", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể tạo bảo trì", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void btnHoanTat_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            if (dgv.CurrentRow?.DataBoundItem is not BaoTri b)
+            {
+                MessageBox.Show("Hãy chọn phiếu bảo trì cần hoàn tất.", "Chưa chọn phiếu", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            if (b.TrangThai == "Hoàn thành")
+            {
+                MessageBox.Show("Phiếu bảo trì này đã ở trạng thái Hoàn thành.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var xacNhan = MessageBox.Show($"Xác nhận hoàn tất bảo trì cho phiếu #{b.MaBaoTri} ({b.ThietBi})?\nThiết bị sẽ được khôi phục về trạng thái Hoạt động.", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (xacNhan != DialogResult.Yes) return;
+
+            var maNV = Helpers.SessionManager.NguoiDungHienTai?.MaNV ?? 1;
+            await _bll.HoanTatBaoTriAsync(b.MaBaoTri, maNV, "Đã sửa chữa và kiểm tra hoạt động tốt.");
+            MessageBox.Show("Đã hoàn tất bảo trì thiết bị thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            await TaiDanhSachAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể hoàn tất bảo trì", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 

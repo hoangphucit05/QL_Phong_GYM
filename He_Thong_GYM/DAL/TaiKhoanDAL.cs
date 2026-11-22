@@ -32,15 +32,16 @@ public sealed class TaiKhoanDAL
 
     public async Task CapNhatTrangThaiAsync(int maTK,string trangThai)
     {
-        await using var cn=DbConnectionFactory.CreateConnection();await using var cmd=new SqlCommand("UPDATE dbo.TaiKhoan SET TrangThai=@TrangThai WHERE MaTK=@MaTK;",cn);cmd.Parameters.Add("@MaTK",System.Data.SqlDbType.Int).Value=maTK;cmd.Parameters.Add("@TrangThai",System.Data.SqlDbType.NVarChar,30).Value=trangThai;await cn.OpenAsync();await cmd.ExecuteNonQueryAsync();
+        await using var cn=DbConnectionFactory.CreateConnection();await using var cmd=new SqlCommand("UPDATE dbo.TaiKhoan SET TrangThai=@TrangThai,SoLanDangNhapSai=CASE WHEN @TrangThai=N'Hoạt động' THEN 0 ELSE SoLanDangNhapSai END,KhoaDen=CASE WHEN @TrangThai=N'Hoạt động' THEN NULL ELSE KhoaDen END WHERE MaTK=@MaTK;",cn);cmd.Parameters.Add("@MaTK",System.Data.SqlDbType.Int).Value=maTK;cmd.Parameters.Add("@TrangThai",System.Data.SqlDbType.NVarChar,30).Value=trangThai;await cn.OpenAsync();await cmd.ExecuteNonQueryAsync();
     }
     public async Task<NguoiDung?> LayTheoTenDangNhapAsync(string tenDangNhap)
     {
         const string sql = """
-            SELECT tk.MaTK, tk.MaNV, tk.TenDangNhap, nv.HoTen, tk.VaiTro, tk.MatKhauHash, tk.MatKhauSalt
+            SELECT tk.MaTK, tk.MaNV, tk.TenDangNhap, nv.HoTen, tk.VaiTro, tk.MatKhauHash, tk.MatKhauSalt,
+                   tk.TrangThai, nv.TrangThai, ISNULL(tk.SoLanDangNhapSai,0), tk.KhoaDen
             FROM dbo.TaiKhoan tk
             INNER JOIN dbo.NhanVien nv ON nv.MaNV = tk.MaNV
-            WHERE tk.TenDangNhap = @TenDangNhap AND tk.TrangThai = N'Hoạt động' AND nv.TrangThai = N'Đang làm';
+            WHERE tk.TenDangNhap = @TenDangNhap;
             """;
         await using var connection = DbConnectionFactory.CreateConnection();
         await using var command = new SqlCommand(sql, connection);
@@ -53,8 +54,24 @@ public sealed class TaiKhoanDAL
             MaTK = reader.GetInt32(0), MaNV = reader.GetInt32(1), TenDangNhap = reader.GetString(2),
             HoTen = reader.GetString(3), VaiTro = reader.GetString(4),
             MatKhauHash = reader.IsDBNull(5) ? Array.Empty<byte>() : (byte[])reader.GetValue(5),
-            MatKhauSalt = reader.IsDBNull(6) ? Array.Empty<byte>() : (byte[])reader.GetValue(6)
+            MatKhauSalt = reader.IsDBNull(6) ? Array.Empty<byte>() : (byte[])reader.GetValue(6),
+            TrangThaiTaiKhoan = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
+            TrangThaiNhanVien = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
+            SoLanDangNhapSai = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
+            KhoaDen = reader.IsDBNull(10) ? null : reader.GetDateTime(10)
         };
+    }
+
+    public async Task GhiKetQuaDangNhapAsync(int? maTK, string tenDangNhap, bool thanhCong, string? thietBi = null)
+    {
+        await using var connection = DbConnectionFactory.CreateConnection();
+        await using var command = new SqlCommand("dbo.sp_GhiKetQuaDangNhap", connection) { CommandType = System.Data.CommandType.StoredProcedure };
+        command.Parameters.Add("@MaTK", System.Data.SqlDbType.Int).Value = (object?)maTK ?? DBNull.Value;
+        command.Parameters.Add("@TenDangNhap", System.Data.SqlDbType.VarChar, 50).Value = tenDangNhap;
+        command.Parameters.Add("@ThanhCong", System.Data.SqlDbType.Bit).Value = thanhCong;
+        command.Parameters.Add("@ThietBi", System.Data.SqlDbType.NVarChar, 255).Value = (object?)thietBi ?? Environment.MachineName;
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
     }
 
     public async Task CapNhatMatKhauAsync(int maTK, byte[] hash, byte[] salt)

@@ -16,10 +16,21 @@ namespace He_Thong_GYM
                 return;
             }
 
-            using var frmLogin = new Forms.FrmLogin();
-            if (frmLogin.ShowDialog() == DialogResult.OK && Helpers.SessionManager.NguoiDungHienTai is not null)
+            while (true)
             {
-                Application.Run(new Form1(Helpers.SessionManager.NguoiDungHienTai));
+                using var frmLogin = new Forms.FrmLogin();
+                if (frmLogin.ShowDialog() != DialogResult.OK || Helpers.SessionManager.NguoiDungHienTai is null)
+                {
+                    break;
+                }
+
+                using var formChinh = new Form1(Helpers.SessionManager.NguoiDungHienTai);
+                Application.Run(formChinh);
+
+                if (Helpers.SessionManager.NguoiDungHienTai is not null)
+                {
+                    break;
+                }
             }
         }
     }

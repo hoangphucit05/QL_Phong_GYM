@@ -1,0 +1,49 @@
+/* Đồng bộ schema MaCode khuyến mãi với source và giao diện. */
+USE QL_PhongGym;
+GO
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET XACT_ABORT ON;
+GO
+
+IF COL_LENGTH(N'dbo.KhuyenMai', N'MaCode') IS NULL
+    ALTER TABLE dbo.KhuyenMai ADD MaCode NVARCHAR(30) NULL;
+GO
+
+UPDATE k
+SET MaCode = CASE k.MaKM
+    WHEN 1 THEN N'CHAOHE10'
+    WHEN 2 THEN N'SINHVIEN15'
+    WHEN 3 THEN N'NEWGYM5'
+    WHEN 4 THEN N'BLACKFRIDAY30'
+    WHEN 5 THEN N'TET2026'
+    WHEN 6 THEN N'FAMILY12'
+    WHEN 7 THEN N'PROPT10'
+    WHEN 8 THEN N'YOGAMAY8'
+    WHEN 9 THEN N'CARDIO7'
+    WHEN 10 THEN N'VIPPRO18'
+    WHEN 11 THEN N'NOEL25'
+    WHEN 12 THEN N'TRIAN15'
+    WHEN 13 THEN N'FREETRIAL'
+    WHEN 14 THEN N'BACK2GYM10'
+    WHEN 15 THEN N'GOLDHEALTH9'
+    ELSE N'KM' + RIGHT(N'000000' + CONVERT(NVARCHAR(10), k.MaKM), 6)
+END
+FROM dbo.KhuyenMai k
+WHERE k.MaCode IS NULL OR LTRIM(RTRIM(k.MaCode)) = N'';
+GO
+
+IF EXISTS (SELECT 1 FROM dbo.KhuyenMai WHERE MaCode IS NULL OR LTRIM(RTRIM(MaCode)) = N'')
+    THROW 53000, N'Còn khuyến mãi chưa có MaCode.', 1;
+
+IF COL_LENGTH(N'dbo.KhuyenMai', N'MaCode') IS NOT NULL
+BEGIN
+    IF EXISTS (SELECT 1 FROM sys.key_constraints WHERE name = N'UQ_KhuyenMai_MaCode')
+        ALTER TABLE dbo.KhuyenMai DROP CONSTRAINT UQ_KhuyenMai_MaCode;
+    ALTER TABLE dbo.KhuyenMai ALTER COLUMN MaCode NVARCHAR(30) NOT NULL;
+END;
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.key_constraints WHERE name = N'UQ_KhuyenMai_MaCode')
+    ALTER TABLE dbo.KhuyenMai ADD CONSTRAINT UQ_KhuyenMai_MaCode UNIQUE (MaCode);
+GO

@@ -1,4 +1,4 @@
-﻿
+
 using He_Thong_GYM.BLL;
 using He_Thong_GYM.Models;
 
@@ -75,10 +75,11 @@ public partial class FrmThanhVien : Form
     {
         if (_maTVDangChon is null)
         {
-            MessageBox.Show("Hãy chọn một thành viên cần cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Hãy chọn một thành viên từ danh sách cần cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
         txtHoTen.Focus();
+        txtHoTen.SelectAll();
     }
 
     private async void btnLuu_Click(object? sender, EventArgs e)
@@ -91,13 +92,31 @@ public partial class FrmThanhVien : Form
             _maTVDangChon = maTV;
             MessageBox.Show("Đã lưu thông tin thành viên.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        catch (Microsoft.Data.SqlClient.SqlException sqlEx) when (sqlEx.Number is 2601 or 2627)
+        {
+            var msg = sqlEx.Message;
+            if (msg.Contains("SDT", StringComparison.OrdinalIgnoreCase) || msg.Contains("UQ__ThanhVie__CA1930A5", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Số điện thoại này đã được sử dụng bởi hội viên khác. Vui lòng nhập số điện thoại khác.", "Trùng lặp dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSoDienThoai.Focus();
+            }
+            else if (msg.Contains("Email", StringComparison.OrdinalIgnoreCase) || msg.Contains("UQ__ThanhVie__A9D10534", StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Địa chỉ email này đã được sử dụng bởi hội viên khác. Vui lòng kiểm tra lại.", "Trùng lặp dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+            }
+            else
+            {
+                MessageBox.Show($"Dữ liệu bị trùng lặp với bản ghi đã có:\n{UiErrorMessage.Get(sqlEx)}", "Trùng lặp dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
         catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
         {
-            MessageBox.Show(ex.Message, "Không thể lưu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể lưu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
         catch (Exception ex)
         {
-            HienThiLoiKetNoi(ex);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi lưu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -168,6 +187,6 @@ public partial class FrmThanhVien : Form
     private void HienThiLoiKetNoi(Exception ex)
     {
         lblTrangThaiTimKiem.Text = "Không thể tải dữ liệu. Kiểm tra appsettings.json và SQL Server.";
-        MessageBox.Show(ex.Message, "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 }

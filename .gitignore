@@ -12,3 +12,7 @@
 ## Temporary / Lock files
 *.locked
 *.backup.json
+
+## Database backups (kept by SQL Server, never commit backup files)
+*.bak
+*.trn

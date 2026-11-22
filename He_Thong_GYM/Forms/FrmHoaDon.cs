@@ -1,4 +1,5 @@
 using He_Thong_GYM.BLL;
+using He_Thong_GYM.Helpers;
 using He_Thong_GYM.Models;
 
 namespace He_Thong_GYM.Forms;
@@ -31,8 +32,8 @@ public partial class FrmHoaDon : Form
         }
         catch (Exception ex)
         {
-            lblThongKe.Text = "Lỗi tải hóa đơn";
-            MessageBox.Show(ex.Message, "Lỗi tải hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            lblThongKe.Text = "Không tải được hóa đơn.";
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -51,6 +52,7 @@ public partial class FrmHoaDon : Form
         {
             ketQua = ketQua.Where(h =>
                 (!string.IsNullOrEmpty(h.ThanhVien) && h.ThanhVien.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(h.SoHoaDon) && h.SoHoaDon.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 h.MaHD.ToString().Contains(tuKhoa));
         }
 
@@ -77,8 +79,16 @@ public partial class FrmHoaDon : Form
 
         if (dgvHoaDon.Columns.Contains(nameof(HoaDonView.MaHD)))
         {
-            dgvHoaDon.Columns[nameof(HoaDonView.MaHD)]!.HeaderText = "Mã HĐ";
-            dgvHoaDon.Columns[nameof(HoaDonView.MaHD)]!.Width = 80;
+            dgvHoaDon.Columns[nameof(HoaDonView.MaHD)]!.Visible = false;
+        }
+        if (dgvHoaDon.Columns.Contains(nameof(HoaDonView.SoHoaDon)))
+        {
+            dgvHoaDon.Columns[nameof(HoaDonView.SoHoaDon)]!.HeaderText = "Số hóa đơn";
+            dgvHoaDon.Columns[nameof(HoaDonView.SoHoaDon)]!.Width = 155;
+        }
+        if (dgvHoaDon.Columns.Contains(nameof(HoaDonView.HienThi)))
+        {
+            dgvHoaDon.Columns[nameof(HoaDonView.HienThi)]!.Visible = false;
         }
         if (dgvHoaDon.Columns.Contains(nameof(HoaDonView.ThanhVien)))
         {
@@ -121,10 +131,56 @@ public partial class FrmHoaDon : Form
 
     private async void btnThanhToan_Click(object? sender, EventArgs e)
     {
-        using var frm = new FrmThanhToan();
+        if (dgvHoaDon.CurrentRow?.DataBoundItem is not HoaDonView hoaDon)
+        {
+            MessageBox.Show("Hãy chọn hóa đơn cần thanh toán hoặc hoàn tiền.", "Chưa chọn hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var frm = new FrmThanhToan(hoaDon.MaHD);
         if (frm.ShowDialog(this) == DialogResult.OK)
         {
             await TaiDanhSachAsync();
+        }
+    }
+
+    private async void btnHuyHoaDon_Click(object? sender, EventArgs e)
+    {
+        if (dgvHoaDon.CurrentRow?.DataBoundItem is not HoaDonView hoaDon)
+        {
+            MessageBox.Show("Hãy chọn hóa đơn cần hủy.", "Chưa chọn hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (string.Equals(hoaDon.TrangThai, "Hủy", StringComparison.OrdinalIgnoreCase))
+        {
+            MessageBox.Show("Hóa đơn này đã được hủy trước đó.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (hoaDon.DaThanhToan > 0 || string.Equals(hoaDon.TrangThai, "Đã thanh toán", StringComparison.OrdinalIgnoreCase))
+        {
+            MessageBox.Show("Hóa đơn đã có phát sinh thanh toán. Theo quy định nghiệp vụ, vui lòng thực hiện Hoàn tiền đầy đủ cho khách hàng trước khi hủy hóa đơn.", "Yêu cầu hoàn tiền trước", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var xacNhan = MessageBox.Show(
+            $"Bạn có chắc chắn muốn hủy hóa đơn #{hoaDon.SoHoaDon} (Tổng tiền: {hoaDon.TongTien:N0} đ)?\n\nThao tác này sẽ ghi nhận hủy hóa đơn và tự động hoàn trả số lượng tồn kho sản phẩm (nếu có).",
+            "Xác nhận hủy hóa đơn",
+            MessageBoxButtons.YesNo,
+            MessageBoxIcon.Warning);
+
+        if (xacNhan != DialogResult.Yes) return;
+
+        try
+        {
+            await _bll.HuyHoaDonAsync(hoaDon.MaHD, "Hủy hóa đơn từ giao diện Quản lý", SessionManager.NguoiDungHienTai?.MaNV);
+            MessageBox.Show("Đã hủy hóa đơn thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            await TaiDanhSachAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể hủy hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

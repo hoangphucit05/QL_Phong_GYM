@@ -507,9 +507,9 @@ partial class FrmThanhVien
         // 
         // colMaTV
         // 
-        colMaTV.DataPropertyName = "MaTV";
-        colMaTV.FillWeight = 55F;
-        colMaTV.HeaderText = "Mã TV";
+        colMaTV.DataPropertyName = "MaThanhVien";
+        colMaTV.FillWeight = 90F;
+        colMaTV.HeaderText = "Mã thành viên";
         colMaTV.Name = "colMaTV";
         colMaTV.ReadOnly = true;
         // 

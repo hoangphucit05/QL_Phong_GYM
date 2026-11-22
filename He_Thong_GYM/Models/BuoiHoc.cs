@@ -7,4 +7,5 @@ public sealed class BuoiHoc
     public DateTime ThoiGianBatDau { get; set; }
     public DateTime ThoiGianKetThuc { get; set; }
     public string TrangThai { get; set; } = string.Empty;
+    public string HienThi => $"#{MaLichHoc} - {ThoiGianBatDau:HH:mm}–{ThoiGianKetThuc:HH:mm} ({TrangThai})";
 }

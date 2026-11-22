@@ -8,6 +8,7 @@ public partial class FrmPhongTap : Form
     private readonly TaiSanBLL _bll = new();
     private List<PhongTapModel> _danhSachGoc = new();
     private bool _dangKhoiTao = true;
+    private PhongTapModel? _phongDangChon;
 
     public FrmPhongTap()
     {
@@ -33,7 +34,7 @@ public partial class FrmPhongTap : Form
         catch (Exception ex)
         {
             lblThongKe.Text = "Lỗi tải phòng tập";
-            MessageBox.Show(ex.Message, "Lỗi tải dữ liệu phòng tập", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải dữ liệu phòng tập", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -53,6 +54,7 @@ public partial class FrmPhongTap : Form
             ketQua = ketQua.Where(p =>
                 (!string.IsNullOrEmpty(p.TenPhong) && p.TenPhong.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(p.LoaiPhong) && p.LoaiPhong.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(p.MaPhongTap) && p.MaPhongTap.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 p.MaPhong.ToString().Contains(tuKhoa));
         }
 
@@ -93,8 +95,16 @@ public partial class FrmPhongTap : Form
 
         if (dgv.Columns.Contains(nameof(PhongTapModel.MaPhong)))
         {
-            dgv.Columns[nameof(PhongTapModel.MaPhong)]!.HeaderText = "Mã phòng";
-            dgv.Columns[nameof(PhongTapModel.MaPhong)]!.Width = 85;
+            dgv.Columns[nameof(PhongTapModel.MaPhong)]!.Visible = false;
+        }
+        if (dgv.Columns.Contains(nameof(PhongTapModel.MaPhongTap)))
+        {
+            dgv.Columns[nameof(PhongTapModel.MaPhongTap)]!.HeaderText = "Mã phòng";
+            dgv.Columns[nameof(PhongTapModel.MaPhongTap)]!.Width = 100;
+        }
+        if (dgv.Columns.Contains(nameof(PhongTapModel.HienThi)))
+        {
+            dgv.Columns[nameof(PhongTapModel.HienThi)]!.Visible = false;
         }
         if (dgv.Columns.Contains(nameof(PhongTapModel.TenPhong)))
         {
@@ -129,6 +139,63 @@ public partial class FrmPhongTap : Form
         {
             dgv.Columns[nameof(PhongTapModel.TrangThai)]!.HeaderText = "Trạng thái";
             dgv.Columns[nameof(PhongTapModel.TrangThai)]!.Width = 120;
+        }
+    }
+
+    private void dgv_SelectionChanged(object? sender, EventArgs e)
+    {
+        if (_dangKhoiTao) return;
+        _phongDangChon = dgv.CurrentRow?.DataBoundItem as PhongTapModel;
+        btnSua.Enabled = _phongDangChon != null;
+    }
+
+    private async void btnSua_Click(object? sender, EventArgs e)
+    {
+        if (_phongDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn phòng tập cần cập nhật từ danh sách.", "Chưa chọn phòng", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var dlg = new Form
+        {
+            Text = $"Cập nhật phòng tập: {_phongDangChon.TenPhong} ({_phongDangChon.MaPhongTap})",
+            Width = 400,
+            Height = 220,
+            FormBorderStyle = FormBorderStyle.FixedDialog,
+            StartPosition = FormStartPosition.CenterParent,
+            MaximizeBox = false,
+            MinimizeBox = false
+        };
+
+        var lblSc = new Label { Text = "Sức chứa tối đa:", Left = 20, Top = 25, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var nudSc = new NumericUpDown { Left = 140, Top = 22, Width = 220, Minimum = 1, Maximum = 500, Value = _phongDangChon.SucChua };
+
+        var lblTT = new Label { Text = "Trạng thái:", Left = 20, Top = 65, AutoSize = true, Font = new Font("Segoe UI", 9F, FontStyle.Bold) };
+        var cboChonTT = new ComboBox { Left = 140, Top = 62, Width = 220, DropDownStyle = ComboBoxStyle.DropDownList };
+        cboChonTT.Items.AddRange(new object[] { "Hoạt động", "Bảo trì", "Tạm ngưng" });
+        cboChonTT.SelectedItem = _phongDangChon.TrangThai ?? "Hoạt động";
+
+        var btnLuu = new Button { Text = "Lưu thay đổi", Left = 150, Top = 115, Width = 110, Height = 34, DialogResult = DialogResult.OK, BackColor = Color.FromArgb(16, 185, 129), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
+        var btnHuy = new Button { Text = "Hủy", Left = 270, Top = 115, Width = 80, Height = 34, DialogResult = DialogResult.Cancel, FlatStyle = FlatStyle.Flat };
+
+        dlg.Controls.AddRange(new Control[] { lblSc, nudSc, lblTT, cboChonTT, btnLuu, btnHuy });
+        dlg.AcceptButton = btnLuu;
+        dlg.CancelButton = btnHuy;
+
+        if (dlg.ShowDialog(this) == DialogResult.OK)
+        {
+            try
+            {
+                var trangThaiMoi = cboChonTT.SelectedItem?.ToString() ?? "Hoạt động";
+                await _bll.CapNhatPhongTapAsync(_phongDangChon.MaPhong, (int)nudSc.Value, trangThaiMoi);
+                await TaiDanhSachAsync();
+                MessageBox.Show("Cập nhật thông tin phòng tập thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(UiErrorMessage.Get(ex), "Không thể cập nhật phòng tập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
     }
 

@@ -3,9 +3,11 @@
 public sealed class GoiTap
 {
     public int MaGoi { get; set; }
+    public string MaGoiTap { get; set; } = string.Empty;
     public string TenGoi { get; set; } = string.Empty;
     public int ThoiHanNgay { get; set; }
     public decimal Gia { get; set; }
     public string? MoTa { get; set; }
     public string TrangThai { get; set; } = string.Empty;
+    public string HienThi => string.IsNullOrWhiteSpace(MaGoiTap) ? TenGoi : $"{MaGoiTap} - {TenGoi}";
 }

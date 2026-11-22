@@ -1,2 +1,2 @@
 ﻿namespace He_Thong_GYM.Models;
-public sealed class PhongTapModel{public int MaPhong{get;set;}public string TenPhong{get;set;}=string.Empty;public string LoaiPhong{get;set;}=string.Empty;public int SucChua{get;set;}public decimal? DienTich{get;set;}public int Tang{get;set;}public string TrangThai{get;set;}=string.Empty;}
+public sealed class PhongTapModel{public int MaPhong{get;set;}public string MaPhongTap{get;set;}=string.Empty;public string TenPhong{get;set;}=string.Empty;public string LoaiPhong{get;set;}=string.Empty;public int SucChua{get;set;}public decimal? DienTich{get;set;}public int Tang{get;set;}public string TrangThai{get;set;}=string.Empty;public string HienThi=>string.IsNullOrWhiteSpace(MaPhongTap)?TenPhong:$"{MaPhongTap} - {TenPhong}";}

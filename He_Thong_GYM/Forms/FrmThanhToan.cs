@@ -8,9 +8,11 @@ public partial class FrmThanhToan : Form
 {
     private readonly TaiChinhBLL _bll = new();
     private List<HoaDonView> _hd = new();
+    private readonly int? _maHDDuocChon;
 
-    public FrmThanhToan()
+    public FrmThanhToan(int? maHDDuocChon = null)
     {
+        _maHDDuocChon = maHDDuocChon;
         InitializeComponent();
         cboHoaDon.SelectedIndexChanged += (s, e) => HienThi();
     }
@@ -21,13 +23,15 @@ public partial class FrmThanhToan : Form
         {
             _hd = await _bll.LayHoaDonAsync();
             cboHoaDon.DataSource = _hd;
-            cboHoaDon.DisplayMember = nameof(HoaDonView.MaHD);
+            cboHoaDon.DisplayMember = nameof(HoaDonView.HienThi);
             cboHoaDon.ValueMember = nameof(HoaDonView.MaHD);
+            if (_maHDDuocChon is int maHD && _hd.Any(x => x.MaHD == maHD))
+                cboHoaDon.SelectedValue = maHD;
             HienThi();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi tải hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải hóa đơn", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -61,13 +65,13 @@ public partial class FrmThanhToan : Form
             }
 
             await _bll.ThanhToanAsync(h.MaHD, nudSoTien.Value, cboPhuongThuc.Text, SessionManager.NguoiDungHienTai.MaNV);
-            MessageBox.Show($"Thanh toán thành công {nudSoTien.Value:N0} đ cho hóa đơn #{h.MaHD}.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Thanh toán thành công {nudSoTien.Value:N0} đ cho hóa đơn {h.SoHoaDon}.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             DialogResult = DialogResult.OK;
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể thanh toán", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể thanh toán", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 
@@ -86,7 +90,7 @@ public partial class FrmThanhToan : Form
             }
 
             var confirm = MessageBox.Show(
-                $"Xác nhận hoàn tiền {nudSoTien.Value:N0} đ cho hóa đơn #{h.MaHD}?",
+                $"Xác nhận hoàn tiền {nudSoTien.Value:N0} đ cho hóa đơn {h.SoHoaDon}?",
                 "Xác nhận hoàn tiền",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
@@ -100,7 +104,7 @@ public partial class FrmThanhToan : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể hoàn tiền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể hoàn tiền", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 

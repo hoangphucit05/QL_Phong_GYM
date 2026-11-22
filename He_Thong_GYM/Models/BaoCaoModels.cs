@@ -2,6 +2,7 @@ namespace He_Thong_GYM.Models;
 
 public sealed class ThongKeGoiTapView
 {
+    public string MaGoiTap { get; set; } = string.Empty;
     public string TenGoi { get; set; } = string.Empty;
     public int SoLuotDangKy { get; set; }
     public decimal DoanhThu { get; set; }
@@ -32,6 +33,7 @@ public sealed class ThongKeHLVView
 
 public sealed class ThongKeSanPhamView
 {
+    public string MaSanPham { get; set; } = string.Empty;
     public string TenSP { get; set; } = string.Empty;
     public decimal DonGia { get; set; }
     public decimal GiaBan { get => DonGia; set => DonGia = value; }

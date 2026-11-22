@@ -55,6 +55,7 @@ partial class FrmThongKe
         tableDoanhThu = new TableLayoutPanel();
         groupDoanhThuGoi = new GroupBox();
         dgvDoanhThuGoi = new DataGridView();
+        colGoiMa = new DataGridViewTextBoxColumn();
         colGoiTen = new DataGridViewTextBoxColumn();
         colGoiSoLuot = new DataGridViewTextBoxColumn();
         colGoiDoanhThu = new DataGridViewTextBoxColumn();
@@ -80,6 +81,7 @@ partial class FrmThongKe
         tabSanPham = new TabPage();
         groupSanPham = new GroupBox();
         dgvSanPham = new DataGridView();
+        colSPMa = new DataGridViewTextBoxColumn();
         colSPTen = new DataGridViewTextBoxColumn();
         colSPGiaBan = new DataGridViewTextBoxColumn();
         colSPDaBan = new DataGridViewTextBoxColumn();
@@ -114,9 +116,9 @@ partial class FrmThongKe
         ((System.ComponentModel.ISupportInitialize)dgvSanPham).BeginInit();
         tabBieuDo.SuspendLayout();
         SuspendLayout();
-        // 
+        //
         // panelTieuDe
-        // 
+        //
         panelTieuDe.BackColor = Color.White;
         panelTieuDe.Controls.Add(lblMoTa);
         panelTieuDe.Controls.Add(lblTieuDe);
@@ -126,9 +128,9 @@ partial class FrmThongKe
         panelTieuDe.Padding = new Padding(24, 14, 24, 12);
         panelTieuDe.Size = new Size(1100, 72);
         panelTieuDe.TabIndex = 0;
-        // 
+        //
         // lblMoTa
-        // 
+        //
         lblMoTa.AutoSize = true;
         lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
         lblMoTa.Location = new Point(26, 44);
@@ -534,7 +536,7 @@ partial class FrmThongKe
         dgvDoanhThuGoi.BackgroundColor = Color.White;
         dgvDoanhThuGoi.BorderStyle = BorderStyle.None;
         dgvDoanhThuGoi.ColumnHeadersHeight = 36;
-        dgvDoanhThuGoi.Columns.AddRange(new DataGridViewColumn[] { colGoiTen, colGoiSoLuot, colGoiDoanhThu });
+        dgvDoanhThuGoi.Columns.AddRange(new DataGridViewColumn[] { colGoiMa, colGoiTen, colGoiSoLuot, colGoiDoanhThu });
         dgvDoanhThuGoi.Dock = DockStyle.Fill;
         dgvDoanhThuGoi.Font = new Font("Segoe UI", 9F);
         dgvDoanhThuGoi.Location = new Point(10, 27);
@@ -546,8 +548,16 @@ partial class FrmThongKe
         dgvDoanhThuGoi.Size = new Size(503, 379);
         dgvDoanhThuGoi.TabIndex = 0;
         // 
-        // colGoiTen
+        // colGoiMa
+        //
+        colGoiMa.DataPropertyName = "MaGoiTap";
+        colGoiMa.FillWeight = 90F;
+        colGoiMa.HeaderText = "Mã gói";
+        colGoiMa.Name = "colGoiMa";
+        colGoiMa.ReadOnly = true;
         // 
+        // colGoiTen
+        //
         colGoiTen.DataPropertyName = "TenGoi";
         colGoiTen.FillWeight = 140F;
         colGoiTen.HeaderText = "Tên gói tập";
@@ -834,7 +844,7 @@ partial class FrmThongKe
         dgvSanPham.BackgroundColor = Color.White;
         dgvSanPham.BorderStyle = BorderStyle.None;
         dgvSanPham.ColumnHeadersHeight = 36;
-        dgvSanPham.Columns.AddRange(new DataGridViewColumn[] { colSPTen, colSPGiaBan, colSPDaBan, colSPTonKho, colSPDoanhThu });
+        dgvSanPham.Columns.AddRange(new DataGridViewColumn[] { colSPMa, colSPTen, colSPGiaBan, colSPDaBan, colSPTonKho, colSPDoanhThu });
         dgvSanPham.Dock = DockStyle.Fill;
         dgvSanPham.Font = new Font("Segoe UI", 9F);
         dgvSanPham.Location = new Point(12, 29);
@@ -846,8 +856,16 @@ partial class FrmThongKe
         dgvSanPham.Size = new Size(1044, 381);
         dgvSanPham.TabIndex = 0;
         // 
-        // colSPTen
+        // colSPMa
+        //
+        colSPMa.DataPropertyName = "MaSanPham";
+        colSPMa.FillWeight = 90F;
+        colSPMa.HeaderText = "Mã sản phẩm";
+        colSPMa.Name = "colSPMa";
+        colSPMa.ReadOnly = true;
         // 
+        // colSPTen
+        //
         colSPTen.DataPropertyName = "TenSP";
         colSPTen.FillWeight = 150F;
         colSPTen.HeaderText = "Tên sản phẩm";
@@ -1004,6 +1022,7 @@ partial class FrmThongKe
     private TableLayoutPanel tableDoanhThu;
     private GroupBox groupDoanhThuGoi;
     private DataGridView dgvDoanhThuGoi;
+    private DataGridViewTextBoxColumn colGoiMa;
     private DataGridViewTextBoxColumn colGoiTen;
     private DataGridViewTextBoxColumn colGoiSoLuot;
     private DataGridViewTextBoxColumn colGoiDoanhThu;
@@ -1029,6 +1048,7 @@ partial class FrmThongKe
     private TabPage tabSanPham;
     private GroupBox groupSanPham;
     private DataGridView dgvSanPham;
+    private DataGridViewTextBoxColumn colSPMa;
     private DataGridViewTextBoxColumn colSPTen;
     private DataGridViewTextBoxColumn colSPGiaBan;
     private DataGridViewTextBoxColumn colSPDaBan;

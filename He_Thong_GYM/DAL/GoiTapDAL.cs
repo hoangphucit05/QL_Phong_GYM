@@ -8,15 +8,15 @@ public sealed class GoiTapDAL
     public async Task<List<GoiTap>> LayDanhSachAsync(string? tuKhoa = null)
     {
         const string sql = """
-            SELECT MaGoi,TenGoi,ThoiHanNgay,Gia,MoTa,TrangThai FROM dbo.GoiTap
-            WHERE @TuKhoa IS NULL OR TenGoi LIKE N'%' + @TuKhoa + N'%'
+            SELECT MaGoi,MaGoiTap,TenGoi,ThoiHanNgay,Gia,MoTa,TrangThai FROM dbo.GoiTap
+            WHERE @TuKhoa IS NULL OR MaGoiTap LIKE '%' + @TuKhoa + '%' OR TenGoi LIKE N'%' + @TuKhoa + N'%'
             ORDER BY MaGoi DESC;
             """;
         var result = new List<GoiTap>();
         await using var cn = DbConnectionFactory.CreateConnection(); await using var cmd = new SqlCommand(sql, cn);
         cmd.Parameters.Add("@TuKhoa", System.Data.SqlDbType.NVarChar, 100).Value = string.IsNullOrWhiteSpace(tuKhoa) ? DBNull.Value : tuKhoa.Trim();
         await cn.OpenAsync(); await using var rd = await cmd.ExecuteReaderAsync();
-        while (await rd.ReadAsync()) result.Add(new GoiTap { MaGoi=rd.GetInt32(0), TenGoi=rd.GetString(1), ThoiHanNgay=rd.GetInt32(2), Gia=rd.GetDecimal(3), MoTa=rd.IsDBNull(4)?null:rd.GetString(4), TrangThai=rd.GetString(5) });
+        while (await rd.ReadAsync()) result.Add(new GoiTap { MaGoi=rd.GetInt32(0), MaGoiTap=rd.GetString(1), TenGoi=rd.GetString(2), ThoiHanNgay=rd.GetInt32(3), Gia=rd.GetDecimal(4), MoTa=rd.IsDBNull(5)?null:rd.GetString(5), TrangThai=rd.GetString(6) });
         return result;
     }
 

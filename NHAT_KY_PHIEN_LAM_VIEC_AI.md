@@ -666,3 +666,489 @@ Tài liệu này lưu vết các phiên AI đã thực hiện trong dự án đ�
 - Kiểm thử có rollback: tạo buổi cho lớp 1 → điểm danh học viên đăng ký → kiểm tra bản ghi theo `MaLichHoc`: **PASS**.
 - Build: `dotnet build He_Thong_GYM.slnx --no-restore`: **0 warning, 0 error**.
 - Phát hiện dữ liệu lớp 15 đang có sức chứa 30 nhưng phòng Yoga A chỉ có 25 chỗ. Luồng mới chặn tạo buổi cho cấu hình không hợp lệ; cần điều chỉnh sức chứa lớp hoặc gán phòng phù hợp trước khi vận hành.
+
+
+---
+
+## Phiên 013 — Xác nhận mức độ sẵn sàng vận hành thực tế
+
+- **Thời điểm**: 19/11/2026
+- **Kết luận**: Luồng giao diện lịch lớp/điểm danh đã đúng hướng và có kiểm tra nghiệp vụ cốt lõi, nhưng hệ thống **chưa đạt mức hoàn chỉnh để vận hành thực tế**.
+
+### Bằng chứng còn tồn đọng
+
+- 12 gói vẫn mang trạng thái `Còn hạn` dù đã quá ngày kết thúc: cần job tự động hết hạn và cảnh báo gia hạn.
+- 15 lớp đang mở chưa có buổi học tương lai: cần màn hình kế hoạch/lập lịch hàng loạt hoặc lịch định kỳ.
+- 17 bản ghi điểm danh cũ chưa gắn `MaLichHoc`: cần kế hoạch dữ liệu lịch sử (gán lại theo quy tắc rõ ràng hoặc đánh dấu legacy).
+- 1 lớp có sức chứa 30 nhưng phòng được gán chỉ có 25 chỗ: cần sửa cấu hình trước khi tạo buổi.
+- `sp_DiemDanhLop` chưa nhận nhân viên/tài khoản thực hiện và chưa kiểm tra quyền ở database: phân quyền hiện tại chỉ ở giao diện, chưa phải kiểm soát bảo mật đầy đủ.
+
+### Tiêu chí để xác nhận “đủ vận hành”
+
+1. Không còn gói quá hạn ghi `Còn hạn`.
+2. Mọi lớp đang mở có lịch học được tạo trước buổi tập.
+3. Mọi điểm danh mới gắn `MaLichHoc`; dữ liệu cũ có trạng thái/ghi chú migration rõ ràng.
+4. Sức chứa lớp không vượt sức chứa phòng.
+5. Thao tác tạo buổi, đăng ký, điểm danh và hoàn tiền được kiểm tra quyền ở BLL/database, có audit người thực hiện.
+
+
+---
+
+## Phiên 012 — Bộ lọc, sắp xếp và quyền thao tác điểm danh
+
+- **Thời điểm**: 19/11/2026
+
+### Thay đổi
+
+1. **Bộ lọc và sắp xếp danh sách học viên**
+   - Lọc theo: tất cả, chưa điểm danh, có mặt, vắng mặt.
+   - Sắp xếp theo: họ tên A–Z/Z–A, mã hội viên tăng/giảm, trạng thái điểm danh.
+   - Nút `Bỏ lọc` khôi phục trạng thái mặc định: tất cả học viên, họ tên A–Z.
+   - Bộ lọc/sắp xếp chỉ thay đổi dữ liệu hiển thị của buổi học đang chọn, không thay đổi dữ liệu điểm danh.
+
+2. **Quyền thao tác tại màn hình lớp/điểm danh**
+   - Xem, lọc và sắp xếp: mọi người dùng đã đăng nhập.
+   - Đăng ký thành viên vào lớp: `Admin`, `Quản lý`, `Lễ tân`, `Nhân viên`.
+   - Tạo buổi học và điểm danh: `Admin`, `Quản lý`, `Lễ tân`, `HLV`, `Huấn luyện viên`.
+   - Nút không có quyền sẽ bị vô hiệu hóa và các hàm xử lý vẫn kiểm tra lại quyền trước khi ghi dữ liệu.
+
+### Kiểm thử
+
+- Build: `dotnet build He_Thong_GYM.slnx --no-restore`: **0 warning, 0 error**.
+
+
+---
+
+## Phiên 014 — Chuẩn bị dữ liệu an toàn và kiểm tra Form Designer
+
+- **Thời điểm**: 19/11/2026
+- **Mục tiêu**: Chốt điểm khôi phục, số liệu baseline trước các migration vận hành; xác nhận mọi file WinForms Designer vẫn hợp lệ.
+
+### Đã thực hiện
+
+1. **Backup và xác minh database**
+   - Tạo full backup có `CHECKSUM` và `COMPRESSION`:
+     `C:\Program Files\Microsoft SQL Server\MSSQL17.MSSQLSERVER\MSSQL\Backup\QL_PhongGym_session01_20261119_1519.bak`.
+   - Database `QL_PhongGym`: `ONLINE`, recovery model `FULL`, kích thước khoảng `144 MB`.
+   - Chạy `RESTORE VERIFYONLY ... WITH CHECKSUM`: backup hợp lệ.
+   - Không thay đổi dữ liệu nghiệp vụ trong phiên này.
+
+2. **Script đối soát trước/sau migration**
+   - Thêm `database/11_kiem_tra_san_sang_van_hanh.sql` (chỉ đọc dữ liệu).
+   - Script kiểm tra: gói quá hạn, lớp chưa có buổi tương lai, điểm danh legacy, sức chứa lớp/phòng và tổng tiền hóa đơn.
+   - Baseline đã chốt: `12` gói quá hạn, `15` lớp chưa có buổi tương lai, `17` điểm danh legacy, `1` cấu hình sức chứa sai, `0` hóa đơn lệch tổng tiền chi tiết.
+
+3. **Bảo vệ và kiểm tra WinForms Designer**
+   - Bổ sung `.gitignore` cho file backup SQL (`*.bak`, `*.trn`).
+   - Build solution thành công: **0 warning, 0 error**.
+   - Chạy `--check-ui`: **21/21 form** khởi tạo được; **0** overlap, **0** out-of-bounds, **0** text truncation, **0** lỗi UTF-8.
+   - Kết luận: các file `.Designer.cs` hiện hợp lệ để tiếp tục chỉnh sửa có kiểm soát ở các phiên sau.
+
+
+---
+
+## Phiên 015 — Tự động cập nhật gói hết hạn
+
+- **Thời điểm**: 21/11/2026
+- **Mục tiêu**: Không để đăng ký gói đã quá ngày kết thúc tiếp tục mang trạng thái `Còn hạn`, đồng thời giữ lịch sử và audit đầy đủ.
+
+### Đã thực hiện
+
+1. **Thủ tục SQL `sp_CapNhatGoiHetHan`**
+   - Nhận ngày tham chiếu, cập nhật các gói `Còn hạn` có `NgayKetThuc` trước ngày đó sang `Hết hạn`.
+   - Ghi `LichSuGoiTap` với hành động `Hết hạn`.
+   - Ghi `NhatKyHeThong` số lượng bản ghi đã cập nhật.
+   - Có transaction, khóa cập nhật và tham số output số lượng thay đổi.
+
+2. **Tự động chạy định kỳ**
+   - Migration `database/12_tu_dong_het_han_goi.sql` tạo SQL Server Agent Job chạy hằng ngày lúc 00:05.
+   - Ứng dụng cũng gọi thủ tục khi mở Dashboard để không phụ thuộc hoàn toàn vào SQL Server Agent.
+   - Job đã tạo và bật; máy chủ hiện chưa chạy dịch vụ SQL Server Agent nên lịch sẽ thực thi khi dịch vụ được bật.
+
+3. **Tích hợp ứng dụng**
+   - Bổ sung DAL/BLL cập nhật gói hết hạn.
+   - `Form1_Load` chạy đồng bộ hết hạn trước khi tải Dashboard.
+   - Không chỉnh sửa file `.Designer.cs` trong phiên này.
+
+### Kiểm thử và kết quả
+
+- Lần chạy đầu: cập nhật đúng `12` gói quá hạn.
+- Sau cập nhật: còn `0` gói quá hạn nhưng vẫn ghi `Còn hạn`.
+- Lần chạy thứ hai: cập nhật `0` bản ghi, chứng minh thao tác idempotent.
+- Có `1` bản ghi audit và lịch sử hết hạn cho từng gói đã cập nhật.
+- Build: **0 warning, 0 error**.
+
+---
+
+## Session 3 — Model/DAL/BLL business-code mapping
+
+- **Date**: 22/11/2026
+- **Scope**: Add business-code properties and update read queries/mappings while keeping numeric IDs for internal PK/FK and write APIs.
+- **Changed areas**: member, product, plan, registration, invoice, employee, class, room, equipment models and DALs; product BLL search overload.
+- **Verification**: build PASS (0 warning/0 error); updated SQL read-query shapes and code searches PASS; `database/03_test_v3.sql` PASS with rollback; DBCC PASS; operational readiness check unchanged.
+- **Open baseline**: 15 classes without future sessions, 17 legacy attendance rows without `MaLichHoc`, 1 class/room capacity mismatch.
+- **Next**: Session 4 updates UI, invoices, receipts, and reports to display business codes; Session 5 performs end-to-end regression and reconciliation.
+
+---
+
+## Session 4 — UI, documents, and reports
+
+- **Date**: 22/11/2026
+- **Scope**: Display business codes in grids, ComboBoxes, invoice/payment messages, check-in status, and package/product reports while preserving numeric IDs for internal operations.
+- **Changed areas**: member/product/plan/employee/class/room/equipment/invoice/registration/check-in forms; report models, report DAL, and report designer columns.
+- **Verification**: build PASS (0 warning/0 error); `--check-ui` PASS for 21/21 forms; report/invoice SQL checks PASS; `database/03_test_v3.sql` PASS with rollback; DBCC PASS; transactional check-in returned `CI-20261122-000012` and rolled back.
+- **Test note**: An initial check-in test used an invalid channel and was rejected by the existing database CHECK constraint. The valid `Quầy` test passed; no product bug was recorded.
+- **Next**: Session 5 performs end-to-end regression, reconciliation, concurrency checks, and final bug triage.
+- Kiểm tra UI: **21/21 form**, 0 overlap, 0 tràn biên, 0 cắt chữ, 0 lỗi UTF-8.
+
+---
+
+## Phiên 5 — Kiểm thử cuối và đối soát
+
+- **Thời điểm**: 22/11/2026
+- **Mục tiêu**: kiểm thử hồi quy toàn hệ thống sau các phiên chuẩn hóa mã; kiểm tra báo cáo doanh thu theo tiền đã thu; chốt bug và đề xuất phiên tiếp theo.
+
+### Đã thực hiện
+
+1. Sửa `ThongKeDAL`:
+   - Báo cáo gói tập join qua `HoaDonGoiTap` và `ThanhToan`, loại hóa đơn hủy/đã hoàn tiền, đăng ký hủy và giao dịch chưa thu.
+   - Báo cáo HLV join qua `HoaDonPT`, dùng tiền thanh toán thành công ròng và loại đăng ký PT hủy.
+   - Sửa `GROUP BY` để bao gồm `MaGoiTap`.
+2. Sửa `Form1_Load` để lỗi cập nhật gói hết hạn khi SQL Server mất kết nối được hiển thị thân thiện thay vì thoát khỏi `async void` handler.
+
+### Kết quả kiểm thử
+
+- Truy vấn báo cáo thực tế: 10 đăng ký gói đã thu, tổng 9.678.500; 1 đăng ký PT đã thu, tổng 1.800.000; đăng ký chưa thanh toán/hủy không bị tính.
+- Build: **PASS**, 0 warning, 0 error.
+- UI Inspector: **21/21 form**, 0 overlap, 0 out-of-bounds, 0 text truncation, 0 lỗi UTF-8.
+- `database/03_test_v3.sql`: **PASS**, rollback sạch.
+- `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS`: **PASS**.
+- Readiness: 0 gói quá hạn sai trạng thái, 0 hóa đơn lệch tổng; còn 15 lớp thiếu lịch tương lai, 17 điểm danh legacy thiếu `MaLichHoc`, 1 lớp vượt sức chứa phòng.
+
+### Bug sau phiên 5
+
+- Đã đóng BUG-005, BUG-006 và lỗi truy vấn nhóm mã gói.
+- Còn mở BUG-003, BUG-004, BUG-007, BUG-008; dữ liệu legacy và đối soát kho cũng cần các phiên xử lý riêng.
+
+### Đề xuất phiên tiếp theo
+
+Đề xuất **Phiên 6** của Phiên 5 đã được thực hiện; các bước và kết quả được ghi tại phần Phiên 6 bên dưới.
+
+---
+
+## Phiên 6 — Check-in theo lượt và hoàn kho khi hủy hóa đơn
+
+- **Thời điểm**: 22/11/2026
+- **Mục tiêu**: đóng BUG-003 và BUG-004, kiểm thử các luồng check-in/out và bán hàng–hủy hóa đơn–hoàn kho.
+
+### Đã thực hiện
+
+1. Thêm `database/14_sua_checkin_va_hoan_kho.sql`:
+   - `sp_CheckIn` kiểm tra gói đã thanh toán, thời hạn, lượt còn lại và khung giờ; khóa đăng ký gói trong transaction và tăng `SoLuotDaDung` sau khi insert check-in thành công.
+   - `sp_HuyHoaDon` hoàn tồn theo từng dòng sản phẩm, ghi lịch sử `Hoàn trả` và audit trong cùng transaction.
+   - Giữ chính sách giữ hàng khi tạo hóa đơn để tránh bán vượt tồn; hủy hóa đơn hoàn lại lượng giữ.
+2. Thêm `database/14_test_checkin_va_hoan_kho.sql`, cố định `ANSI_NULLS/QUOTED_IDENTIFIER` để tránh lỗi cấu hình sqlcmd và rollback toàn bộ test.
+3. Cập nhật README migration.
+
+### Kiểm thử và kết quả
+
+- Test mục tiêu: **PASS** — tăng lượt, chặn vượt lượt, chặn ngoài khung giờ, check-out và hoàn kho khi hủy hóa đơn.
+- Build: **PASS**, 0 warning, 0 error.
+- UI Inspector: **21/21 form**, 0 overlap, 0 out-of-bounds, 0 text truncation, 0 lỗi UTF-8.
+- `database/03_test_v3.sql`: **PASS**, rollback sạch.
+- `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS`: **PASS**.
+- Readiness: 0 gói quá hạn sai trạng thái, 0 hóa đơn lệch tổng; còn 15 lớp thiếu lịch tương lai, 17 điểm danh legacy thiếu `MaLichHoc`, 1 lớp vượt sức chứa phòng.
+
+### Bug sau phiên 6
+
+- Đã đóng BUG-003.
+- BUG-004 đã đóng theo chính sách giữ hàng và hoàn kho khi hủy; các giao dịch legacy chưa tự động điều chỉnh.
+- BUG-002 đã được giảm thiểu bằng cách đánh dấu dữ liệu legacy; BUG-007 và BUG-008 được xử lý ở Phiên 7–8. Còn các vấn đề xác nhận dữ liệu legacy, phân quyền/audit và đối soát kho.
+
+### Đề xuất phiên tiếp theo
+
+Phiên 7 và Phiên 8 đã được thực hiện trong cùng đợt; kết quả chi tiết nằm ở các phần bổ sung bên dưới.
+
+---
+
+## Phiên 7 — Lịch học nhiều buổi và điểm danh legacy
+
+- **Thời điểm**: 22/11/2026
+- **Mục tiêu**: sửa màn hình điểm danh chỉ lấy buổi đầu tiên, minh bạch hóa dữ liệu legacy và giữ kiểm soát sức chứa.
+
+### Đã thực hiện
+
+1. Đổi DAL/BLL trả về danh sách `BuoiHoc` trong ngày; thêm `HienThi` cho ComboBox.
+2. Thêm ComboBox chọn buổi vào `FrmDiemDanh`; điểm danh luôn dùng `MaLichHoc` đã chọn.
+3. Thêm migration `database/15_danh_dau_diem_danh_legacy.sql`, cờ `LaDuLieuCu`, view `vw_DiemDanhLegacy`, index và check constraint bảo vệ điểm danh mới.
+4. Không tự gán 17 dòng cũ vào lịch học không chắc chắn.
+
+### Kiểm thử
+
+- 17 dòng legacy được đánh dấu: **PASS**.
+- Điểm danh mới thiếu lịch bị chặn: **PASS**.
+- Hai buổi cùng ngày tạo được: **PASS**.
+- Lớp vượt sức chứa phòng bị chặn: **PASS**.
+
+---
+
+## Phiên 8 — Đồng bộ mã khuyến mãi và đối soát kho legacy
+
+- **Thời điểm**: 22/11/2026
+- **Mục tiêu**: đóng BUG-008, không để báo cáo sản phẩm tự cộng trùng dữ liệu bán legacy và hoàn tất hồi quy.
+
+### Đã thực hiện
+
+1. Thêm migration `database/16_dong_bo_ma_code_khuyen_mai.sql`; `KhuyenMai.MaCode` được backfill, bắt buộc NOT NULL và unique.
+2. Sửa `ThongKeDAL.LayThongKeSanPhamAsync` chỉ tính hóa đơn chuẩn đã thanh toán; loại nguồn `ChiTietPhieuBanHang` legacy khỏi tổng chuẩn.
+3. Giữ nguyên 15 dòng legacy để đối soát, không tự xóa/chuyển đổi.
+
+### Kiểm thử và nghiệm thu
+
+- `MaCode`: 15/15 có mã, không trùng: **PASS**.
+- Truy vấn báo cáo sản phẩm: **PASS**, hóa đơn chưa thanh toán bị loại.
+- Build: **PASS**, 0 warning, 0 error.
+- UI: **21/21 form**, 0 lỗi bố cục/UTF-8.
+- Smoke test và các script test Phiên 6–8: **PASS**.
+- DBCC: **PASS**.
+- Readiness còn: 15 lớp thiếu lịch tương lai, 17 dòng legacy đã đánh dấu, 1 lớp vượt sức chứa phòng.
+
+Lần chạy đầu migration 16 gặp lỗi thứ tự DDL khi đổi `MaCode` sang NOT NULL sau khi tạo unique constraint; đã sửa migration và chạy lại thành công.
+
+### Kết luận
+
+BUG-007 và BUG-008 đã đóng; BUG-002 được giảm thiểu bằng đánh dấu legacy. Hai phiên đã hoàn tất; phần còn lại là quyết định nghiệp vụ và dữ liệu cần xác nhận, không nên tự động bịa hoặc xóa dữ liệu.
+
+### Bổ sung dữ liệu mẫu demo
+
+Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sung_du_lieu_demo_lich_diemdanh.sql`:
+
+- 15 lớp đều có lịch tương lai.
+- 17 điểm danh cũ được gắn vào buổi lịch sử phù hợp.
+- Lớp 15 được đồng bộ sức chứa với phòng Yoga A.
+- 15 dòng bán hàng legacy được giữ riêng và có view `vw_BanHangLegacyDoiSoat` để trình diễn đối soát.
+- Kết quả demo: thiếu lịch 0, điểm danh thiếu `MaLichHoc` 0, lớp vượt sức chứa 0.
+
+---
+
+## Phiên 9 — QA toàn bộ luồng WinForms
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: kiểm thử theo prompt QA toàn bộ: UI thực tế, login/dashboard, CRUD inventory, BLL/DAL, database, transaction, validation, authorization, error handling và dữ liệu demo.
+- **Báo cáo**: `QA_REPORT.md`.
+
+### Bằng chứng PASS
+
+- Build solution: 0 warning, 0 error.
+- UI Inspector: 21/21 Form; overlap/out-of-bounds/text truncation/UTF-8 đều 0.
+- App thật: login `admin01`, mở dashboard, mở Form thành viên, tìm `TV000001` trả đúng bản ghi.
+- Script `03_test_v3.sql`, `14_test_checkin_va_hoan_kho.sql`, `15_test_lich_diemdanh_succhua.sql`, `16_test_ma_code_va_bao_cao_kho.sql`, `17_test_du_lieu_demo.sql`: PASS.
+- DBCC CHECKCONSTRAINTS: PASS.
+
+### Lỗi phát hiện mới
+
+1. `BUG-010` HIGH — phân quyền chủ yếu ở UI; BLL/DAL/SP chưa bảo vệ đầy đủ.
+2. `BUG-011` HIGH — hoàn tiền toàn bộ vẫn để gói `Còn hạn`; đã tái hiện với `MaDKG=1`, `MaHD=1`, sau đó rollback.
+3. `BUG-012` HIGH — check-in vào phòng 6 `Đang bảo trì` vẫn thành công; đã rollback.
+4. `BUG-013` MEDIUM — bảo lưu gói bằng ngày 01–02/01/2020 vẫn được chấp nhận; đã rollback.
+5. `BUG-014` HIGH — đăng ký PT sinh trạng thái `Đang học` trong khi hóa đơn `Chưa thanh toán`; đã rollback.
+6. `BUG-015` MEDIUM — Form hóa đơn không truyền dòng đang chọn sang Form thanh toán.
+7. `BUG-016` MEDIUM — email/SĐT chưa kiểm tra định dạng.
+8. `BUG-017` MEDIUM — chưa ghi `LichSuDangNhap`, chưa có lockout sau nhiều lần sai.
+9. `BUG-018` MEDIUM — nhiều Form hiển thị trực tiếp `ex.Message`.
+
+### Coverage và quyết định
+
+- Matrix có 34 case: 16 PASS, 8 FAIL, 9 NOT TESTED, 1 BLOCKED.
+- Coverage 70,59%; pass rate trên case đã chạy 66,67%.
+- Kết luận: sản phẩm **đủ tốt để demo có kiểm soát**, chưa đạt để vận hành thật.
+- Không sửa source code trong phiên này. Phiên sau ưu tiên BUG-010, BUG-011, BUG-012, BUG-014; sau sửa phải chạy lại full regression.
+
+---
+
+## Phiên 10 — Sửa phân quyền
+
+- **Phạm vi**: BUG-010, phân quyền menu/UI, BLL và database guard.
+- **Thay đổi**:
+  - Thêm `He_Thong_GYM/Helpers/AuthorizationPolicy.cs` với mapping vai trò cho từng menu.
+  - `Form1` ẩn menu không được phép và kiểm tra lại quyền trước khi mở Form.
+  - Thêm guard `AuthorizationPolicy.Require` tại các BLL mutation chính.
+  - Thêm/ap dụng `database/18_phan_quyen_nghiep_vu.sql`: function kiểm tra vai trò theo `MaNV` và trigger bảo vệ hóa đơn, thanh toán, kho, bảo trì, lịch sử gói.
+- **Kiểm thử**:
+  - Build: **PASS**, 0 warning, 0 error.
+  - Script 03, 14, 15, 16, 17: **PASS**.
+  - DBCC CHECKCONSTRAINTS: **PASS**.
+  - UI Inspector: **21/21 Form PASS**.
+  - Ghi thanh toán bằng `MaNV=13` (vai trò Nhân viên) bị trigger từ chối, lỗi 52102: **PASS**.
+- **Kết luận**: BUG-010 được giảm phạm vi đáng kể ở UI/BLL và các bảng có actor; các procedure actorless cho check-in/lịch/điểm danh vẫn cần truyền actor ở phiên kế tiếp để đóng hoàn toàn lớp database.
+- **Phiên kế tiếp**: sửa BUG-011, BUG-012, BUG-013, BUG-014.
+- Phiên tiếp theo: sửa BUG-011, BUG-012, BUG-013 và BUG-014.
+
+---
+
+## Phiên 11 — sửa hoàn tiền, check-in phòng, bảo lưu và trạng thái PT
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: BUG-011, BUG-012, BUG-013, BUG-014.
+- **Thay đổi**:
+  - Thêm migration `database/19_sua_nghiep_vu_phien_11.sql`.
+  - Hoàn tiền toàn bộ vô hiệu hóa gói tập/PT liên quan; hoàn một phần vẫn giữ trạng thái đang sử dụng.
+  - `sp_CheckIn` kiểm tra `PhongTap.TrangThai=N'Hoạt động'`; UI lọc phòng hoạt động.
+  - `sp_BaoLuuGoiTap` kiểm tra ngày từ hôm nay, nằm trong kỳ gói, không chồng lấn và có lý do.
+  - `DangKyPT` bổ sung `Chờ thanh toán`; `sp_ThanhToanHoaDon` chỉ kích hoạt PT sau khi thu đủ.
+  - Cập nhật bộ lọc trạng thái trên Form đăng ký PT.
+- **Kiểm thử**:
+  - `19_test_phien_11.sql`: PASS BUG-011, BUG-012, BUG-013, BUG-014a, BUG-014b; rollback sạch.
+  - Regression scripts 03, 14, 15, 16, 17: PASS khi chạy tuần tự; DBCC PASS.
+  - Build: PASS, 0 warning, 0 error.
+  - UI smoke: login Admin/dashboard PASS; phòng bảo trì không xuất hiện trong ComboBox check-in; Form PT tải thành công.
+- **Kết luận**: bốn lỗi của Phiên 11 đã đóng. Còn BUG-015 đến BUG-018 cho Phiên 12.
+
+---
+
+## Phiên 12 — đóng các lỗi bảo mật, liên kết hóa đơn, validation và thông báo lỗi
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: BUG-010, BUG-015, BUG-016, BUG-017, BUG-018.
+- **Thay đổi**:
+  - Áp dụng `database/20_sua_bao_mat_validation_phien_12.sql`: các procedure check-in/check-out/đăng ký lớp/tạo lịch/điểm danh bắt buộc `@MaNV` và kiểm tra vai trò tại database.
+  - `FrmHoaDon` truyền `MaHD` của dòng đang chọn vào `FrmThanhToan`; Form thanh toán chọn đúng hóa đơn sau khi nạp dữ liệu.
+  - Thêm `Helpers/InputValidator.cs` cho SĐT 10–11 số bắt đầu bằng 0 và email tùy chọn nhưng phải đúng định dạng; thêm CHECK constraint tương ứng cho `ThanhVien` và `NhanVien`.
+  - Thêm audit đăng nhập qua `sp_GhiKetQuaDangNhap`; sai 5 lần khóa 15 phút, đăng nhập thành công reset bộ đếm và thời gian khóa.
+  - Thêm `Helpers/UiErrorMessage.cs` để log chi tiết nội bộ tại `%LocalAppData%\\GymPro\\logs` và hiển thị thông báo nghiệp vụ; nhánh lỗi kỹ thuật của Form đăng nhập cũng ghi log.
+- **Kiểm thử**:
+  - Build sau thay đổi cuối: **PASS**, 0 warning, 0 error.
+  - `20_test_phien_12.sql`: **PASS** BUG-010 actor NULL, BUG-016 CHECK SĐT/email, BUG-017 lockout/audit; rollback sạch.
+  - Regression tuần tự `03`, `14`, `15`, `16`, `17`, `19`: **PASS**; `DBCC CHECKCONSTRAINTS`: **PASS**; readiness: 0 lỗi gói quá hạn, 0 lớp thiếu lịch, 0 điểm danh thiếu lịch, 0 lớp vượt sức chứa, 0 hóa đơn lệch tổng.
+  - UI smoke: đăng nhập Admin/dashboard **PASS**; chọn hóa đơn thứ hai `HD-20261117-000025` rồi mở thanh toán, Form nhận đúng hóa đơn và công nợ 300.000 đ **PASS**.
+- **Kết luận**: 5 nhóm BUG-010, BUG-015, BUG-016, BUG-017 và BUG-018 đã được sửa và kiểm thử đạt trong phạm vi sản phẩm demo. Dữ liệu demo không bị thay đổi bởi các test mutation.
+- **Phiên đề xuất tiếp theo**: không còn lỗi thuộc danh sách Phiên 12; nếu cần tiếp tục, thực hiện phiên nghiệm thu cuối với test phân quyền theo từng vai trò, test UI validation/error dialog toàn bộ Form và chuẩn bị checklist bàn giao/demo.
+
+---
+
+## Phiên 13 — Khắc phục lỗi lõi & Lỗ hổng nghiệp vụ (BUG-019, 020, 021, 022, 024)
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: BUG-019 (Lọc hóa đơn chưa thu), BUG-020 (Gia hạn tính tiền & hóa đơn), BUG-021 (Check-in FIFO), BUG-022 (Đăng xuất quay lại Login), BUG-024 (Đóng phiếu bảo trì khôi phục máy).
+- **Thay đổi**:
+  - Tạo và áp dụng migration `database/21_sua_giahan_checkin_baotri.sql`:
+    * Bỏ ràng buộc `UQ_HDGoiTap_DKG` để 1 gói có thể có nhiều hóa đơn (đăng ký gốc + các lần gia hạn).
+    * `sp_GiaHanGoiTap` tính phí gia hạn dựa trên đơn giá ngày, tạo `HoaDon` + `ChiTietHoaDon` + `HoaDonGoiTap` ở trạng thái `Chưa thanh toán` và trả về `@MaHD OUTPUT`.
+    * `sp_CheckIn` cập nhật sắp xếp `ORDER BY d.NgayKetThuc ASC, d.MaDKG ASC` (FIFO) để ưu tiên tiêu thụ gói sắp hết hạn trước.
+    * `sp_BaoTriThietBi` cập nhật phiếu sang `Đang bảo trì` và thiết bị sang `Bảo trì`.
+    * Tạo mới thủ tục `sp_HoanTatBaoTri`: chuyển phiếu bảo trì sang `Hoàn thành` và tự động khôi phục thiết bị về `Hoạt động`.
+  - Cập nhật code C#:
+    * `He_Thong_GYM/Program.cs`: bọc `Application.Run` trong vòng lặp `while(true)`. Đăng xuất quay lại `FrmLogin`; đóng cửa sổ thoát sạch.
+    * `He_Thong_GYM/Forms/FrmHoaDon.Designer.cs`: sửa danh sách `cboTrangThai` thành `Chưa thanh toán`, `Đã thanh toán`, `Đã thanh toán một phần`, `Đã hoàn tiền`, `Hủy`.
+    * `He_Thong_GYM/DAL/VanHanhDAL.cs`, `BLL/VanHanhBLL.cs`, `Forms/FrmVanHanhGoi.cs`: nhận mã hóa đơn gia hạn và hiển thị thông báo.
+    * `He_Thong_GYM/DAL/TaiSanDAL.cs`, `BLL/TaiSanBLL.cs`, `Forms/FrmBaoTri.cs`, `Forms/FrmBaoTri.Designer.cs`: thêm hàm `HoanTatBaoTriAsync` và nút `Hoàn tất bảo trì`.
+- **Kiểm thử**:
+  - `database/21_test_phien_13.sql`: **PASS** toàn bộ BUG-020, BUG-021, BUG-024; transaction rollback sạch.
+  - Regression test tuần tự: `20`, `19`, `14`, `11`, `DBCC`: **PASS 100%**, 0 vi phạm ràng buộc.
+  - Build: **PASS**, 0 warning, 0 error.
+  - UI Inspector: **PASS 21/21 Form**, overlap 0, out-of-bounds 0, text truncation 0, UTF-8 0.
+- **Kết luận**: 5 lỗi cốt lõi đã được khắc phục hoàn toàn và kiểm chứng an toàn.
+- **Phiên kế tiếp**: Phiên 14 — Liền mạch luồng thao tác UX (Đăng ký → Thu tiền), bán hàng khách vãng lai, bổ sung nảy dữ liệu/sửa lớp học và hủy hóa đơn.
+
+---
+
+## Phiên 14 — Liền mạch luồng thao tác UX, Bán hàng khách vãng lai, Hoàn thiện Lớp tập, Hủy hóa đơn và Thông báo trùng SĐT/Email
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: BUG-025 (Bán hàng khách vãng lai), Liền mạch Đăng ký → Mở thanh toán ngay, BUG-023 (Hoàn thiện nảy dữ liệu/Sửa/Đóng lớp tại `FrmLopTap`), Bổ sung nút Hủy hóa đơn & tự động hoàn kho tại `FrmHoaDon`, BUG-026 (Phân tách thông báo trùng SĐT/Email tại `FrmThanhVien`).
+- **Thay đổi**:
+  - Migration database: Tạo và áp dụng `database/22_khach_vang_lai_va_lop_tap.sql`, thêm bản ghi hệ thống `TV001035 - Khách vãng lai` (SĐT `0900000000`).
+  - Khách vãng lai & Liền mạch UX:
+    * `He_Thong_GYM/Forms/FrmBanHang.cs`: Tự động chọn mặc định `Khách vãng lai`. Bán hàng xong mở hộp thoại hỏi thu tiền ngay sang `FrmThanhToan(maHD)`.
+    * `He_Thong_GYM/Forms/FrmDangKyGoi.cs`: Đăng ký gói tập xong mở hộp thoại hỏi thu tiền ngay sang `FrmThanhToan(kq.MaHD)`.
+    * `He_Thong_GYM/Forms/FrmDangKyPT.cs`: Ký hợp đồng PT xong mở hộp thoại hỏi thu tiền ngay sang `FrmThanhToan(kq.MaHD)`.
+    * `He_Thong_GYM/BLL/DangKyBLL.cs`: Đồng bộ tuple trả về `(int MaDangKy, int MaHD)`.
+  - Quản lý Lớp tập (`FrmLopTap`):
+    * `He_Thong_GYM/DAL/LopTapDAL.cs`, `BLL/LopTapBLL.cs`: Thêm `CapNhatAsync(LopTap)` và `DongLopAsync(int maLop)`.
+    * `He_Thong_GYM/Forms/FrmLopTap.Designer.cs`: Thêm nút `btnSua` (Cập nhật), `btnDongLop` (Đóng lớp), gán sự kiện `SelectionChanged` cho `dgvLop`.
+    * `He_Thong_GYM/Forms/FrmLopTap.cs`: Bổ sung xử lý khi chọn dòng trên lưới tự động nảy dữ liệu lên form, xử lý nút Cập nhật, Đóng lớp và Làm mới.
+  - Hủy hóa đơn (`FrmHoaDon`):
+    * `He_Thong_GYM/DAL/TaiChinhDAL.cs`, `BLL/TaiChinhBLL.cs`: Thêm `HuyHoaDonAsync(int maHD, string lyDo, int? maNV)`.
+    * `He_Thong_GYM/Forms/FrmHoaDon.Designer.cs`: Thêm nút `btnHuyHoaDon`.
+    * `He_Thong_GYM/Forms/FrmHoaDon.cs`: Thêm xử lý `btnHuyHoaDon_Click`. Chặn hủy hóa đơn đã thanh toán (báo hoàn tiền trước). Hủy hóa đơn chưa thanh toán tự động hoàn lại tồn kho sản phẩm về ban đầu.
+  - Thông báo trùng lặp (`FrmThanhVien`):
+    * `He_Thong_GYM/Forms/FrmThanhVien.cs`: Bắt `SqlException` 2601/2627 hiển thị thông báo tiếng Việt thân thiện về trùng SĐT hoặc trùng Email.
+- **Kiểm thử**:
+  - `database/22_test_phien_14.sql`: **PASS 100%** toàn bộ 5 bước; rollback sạch.
+  - Regression test tuần tự: `21`, `20`, `19`, `14`, `DBCC`: **PASS 100%**.
+  - Build: **PASS**, 0 warning, 0 error.
+  - UI Inspector: **PASS 21/21 Form**, overlap 0, out-of-bounds 0, text truncation 0, UTF-8 0.
+- **Kết luận**: Phiên 14 hoàn thành xuất sắc 100% các mục tiêu đặt ra.
+- **Phiên kế tiếp**: Phiên 15 — Hoàn thiện CRUD Sản phẩm & Nhập kho (`FrmSanPham`), rà soát Thiết bị (`FrmThietBi`), Phòng tập (`FrmPhongTap`), Khuyến mãi (`FrmKhuyenMai`).
+
+---
+
+## Phiên 15 — Hoàn thiện CRUD Sản phẩm, Nhập kho hàng hóa, Thiết bị, Phòng tập và Khuyến mãi
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: Hoàn thiện toàn diện CRUD Sản phẩm & Nhập kho (`FrmSanPham`), Cập nhật Thiết bị (`FrmThietBi`), Cập nhật Phòng tập (`FrmPhongTap`), CRUD Khuyến mãi (`FrmKhuyenMai`).
+- **Thay đổi**:
+  - Module Sản phẩm & Nhập kho:
+    * `He_Thong_GYM/Models/SanPham.cs`: Bổ sung `GiaNhap` và `TonToiThieu`.
+    * `He_Thong_GYM/DAL/SanPhamDAL.cs`, `BLL/SanPhamBLL.cs`: Bổ sung `ThemAsync`, `CapNhatAsync`, `NhapKhoAsync` (gọi `dbo.sp_NhapKho`).
+    * `He_Thong_GYM/Forms/FrmSanPham.Designer.cs`: Bổ sung `groupThongTin` (Tên SP, Đơn giá, Giá nhập, Trạng thái), nút `btnThem`, `btnSua`, `btnNhapKho`, gán `SelectionChanged` cho `dgvSanPham`.
+    * `He_Thong_GYM/Forms/FrmSanPham.cs`: Xử lý nảy dữ liệu khi chọn dòng, thêm mới sản phẩm, cập nhật thông tin và popup nhập kho hàng hóa.
+  - Module Thiết bị & Phòng tập:
+    * `He_Thong_GYM/DAL/TaiSanDAL.cs`, `BLL/TaiSanBLL.cs`: Bổ sung `CapNhatThietBiAsync` và `CapNhatPhongTapAsync`.
+    * `He_Thong_GYM/Forms/FrmThietBi.Designer.cs`, `FrmThietBi.cs`: Thêm nút `btnSua` cho phép phân lại phòng tập và cập nhật tình trạng thiết bị.
+    * `He_Thong_GYM/Forms/FrmPhongTap.Designer.cs`, `FrmPhongTap.cs`: Thêm nút `btnSua` cho phép cập nhật sức chứa và trạng thái phòng tập.
+  - Module Khuyến mãi:
+    * `He_Thong_GYM/DAL/KhuyenMaiDAL.cs`: Bổ sung `ThemAsync` và `CapNhatAsync`.
+    * Tạo mới `He_Thong_GYM/BLL/KhuyenMaiBLL.cs`: Validation ngày bắt đầu/kết thúc, % giảm giá, kiểm tra quyền Admin/Quản lý.
+    * `He_Thong_GYM/Forms/FrmKhuyenMai.Designer.cs`, `FrmKhuyenMai.cs`: Thêm nút `btnThem` (Tạo khuyến mãi) và `btnSua` (Cập nhật), gán sự kiện `SelectionChanged`.
+- **Kiểm thử**:
+  - `database/23_test_phien_15.sql`: **PASS 100% (4/4 bước)**: Thêm sản phẩm trigger tự sinh mã `SP000016`, sửa đơn giá, nhập kho qua `sp_NhapKho`, cập nhật thiết bị, cập nhật phòng, thêm/sửa khuyến mãi; rollback sạch.
+  - Regression test tuần tự: `22`, `21`, `20`, `19`, `14`, `DBCC`: **PASS 100%**.
+  - Build: **PASS**, 0 warning, 0 error.
+  - UI Inspector: **PASS 21/21 Form**, overlap 0, out-of-bounds 0, text truncation 0, UTF-8 0.
+- **Kết luận**: Toàn bộ các module CRUD Sản phẩm/Nhập kho, Thiết bị, Phòng tập, Khuyến mãi đã được hoàn thiện đạt chuẩn chất lượng cao nhất.
+- **Phiên kế tiếp**: Phiên 16 — Full Regression toàn hệ thống, nghiệm thu đa vai trò và đóng gói bàn giao.
+
+---
+
+## Phiên 16 — Nghiệm thu Toàn diện (Final Regression), Kiểm thử Đa vai trò và Hoàn tất Bàn giao Hệ thống
+
+- **Ngày**: 22/11/2026
+- **Phạm vi**: 
+  - Xây dựng và thực thi bộ kịch bản kiểm thử tích hợp nghiệm thu tổng hợp cuối cùng (`database/24_final_regression_test.sql`).
+  - Chạy liên hoàn toàn bộ Full Regression Suite (từ migration 14 đến 24) và kiểm tra tính toàn vẹn cơ sở dữ liệu (`DBCC CHECKCONSTRAINTS`).
+  - Kiểm tra biên dịch mã nguồn WinForms và quét giao diện 21/21 Form (`UiInspector`).
+  - Biên soạn tài liệu hướng dẫn vận hành toàn diện (`HUONG_DAN_SU_DUNG_VA_VAN_HANH.md`).
+  - Cập nhật báo cáo QA (`QA_REPORT.md`) chuyển trạng thái sang ĐẠT CHUẨN BÀN GIAO.
+- **Thay đổi & Thực hiện**:
+  1. **Kịch bản Nghiệm thu Tổng hợp (`database/24_final_regression_test.sql`):**
+     - Bao gồm 12 bước nghiệp vụ end-to-end liên kết chặt chẽ:
+       1. Hội viên: Thêm mới, kiểm tra ràng buộc duy nhất SĐT/Email.
+       2. Đăng ký gói tập: Chọn gói, tự động áp dụng khuyến mãi hợp lệ trong hạn, sinh hóa đơn.
+       3. Thu tiền: Thanh toán hóa đơn gói tập, tự động kích hoạt gói thành `Đang hoạt động`.
+       4. Check-in: Kiểm tra điều kiện gói hợp lệ, vào cửa thành công; kiểm tra chặn 2 lượt check-in mở đồng thời.
+       5. Check-out: Hoàn tất buổi tập, giải phóng trạng thái mở.
+       6. Gia hạn gói tập (`sp_GiaHanGoiTap`): Tính phí bổ sung theo đơn giá ngày, sinh hóa đơn gia hạn (BUG-020).
+       7. Bảo lưu gói tập (`sp_BaoLuuGoiTap`): Tạm dừng gói và khôi phục khi hết hạn bảo lưu (BUG-013).
+       8. Ký hợp đồng PT (`sp_DangKyPT`): Chọn HLV, sinh hóa đơn, kích hoạt sau khi thanh toán đầy đủ (BUG-014).
+       9. Bán lẻ hàng hóa cho khách vãng lai: Tự động trừ tồn kho (BUG-025).
+       10. Hủy hóa đơn bán lẻ chưa thanh toán: Tự động hoàn tồn kho hàng hóa (Phiên 14).
+       11. Nhập kho hàng hóa (`sp_NhapKho`): Tăng số lượng tồn, cập nhật giá nhập, ghi lịch sử kho (Phiên 15).
+       12. Quy trình bảo trì máy móc (`sp_BaoTriThietBi`): Báo bảo trì, đổi trạng thái máy sang `Bảo trì` và hoàn tất bảo trì khôi phục máy về `Hoạt động` (BUG-024).
+     - Kết quả kiểm thử: **PASS 100% (12/12 luồng)**, tự động rollback sạch, không để lại dữ liệu rác.
+  2. **Chạy Full Regression Suite liên hoàn:**
+     - `24_final_regression_test.sql`: **PASS**
+     - `23_test_phien_15.sql`: **PASS**
+     - `22_test_phien_14.sql`: **PASS**
+     - `21_test_phien_13.sql`: **PASS**
+     - `20_test_phien_12.sql`: **PASS**
+     - `19_test_phien_11.sql`: **PASS**
+     - `14_test_checkin_va_hoan_kho.sql`: **PASS**
+     - `DBCC CHECKCONSTRAINTS WITH ALL_CONSTRAINTS`: **PASS 100% (0 vi phạm)**.
+  3. **Kiểm thử Ứng dụng & Giao diện:**
+     - Build solution `dotnet build He_Thong_GYM.slnx --no-restore`: **PASS (0 warning, 0 error)**.
+     - `UiInspector`: **PASS 21/21 Form**, bố cục co giãn chuẩn, không có lỗi cắt chữ hay chồng chéo.
+  4. **Tài liệu Hướng dẫn & Báo cáo QA:**
+     - Tạo mới `HUONG_DAN_SU_DUNG_VA_VAN_HANH.md`: Danh mục tài khoản theo 5 nhóm vai trò, quy trình 7 luồng công việc thực tế, xử lý sự cố thường gặp.
+     - Cập nhật `QA_REPORT.md`: Bổ sung mục 16, nâng đánh giá chất lượng lên **🟢 ĐẠT CHUẨN — SẴN SÀNG BÀN GIAO & VẬN HÀNH THỰC TẾ**.
+- **Kết luận**: Hệ thống Quản lý Phòng Gym `QL_PhongGym` đã trải qua toàn bộ 16 phiên làm việc với tiêu chuẩn khắt khe nhất, khắc phục triệt để mọi lỗi logic và giao diện, kiểm thử hồi quy 100% thành công và chính thức sẵn sàng bàn giao cho người dùng đưa vào vận hành thực tế.

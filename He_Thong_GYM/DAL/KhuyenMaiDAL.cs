@@ -58,4 +58,35 @@ public sealed class KhuyenMaiDAL
         }
         return false;
     }
+
+    public async Task ThemAsync(KhuyenMai km)
+    {
+        const string q = "INSERT dbo.KhuyenMai(TenKM,PhanTramGiam,NgayBatDau,NgayKetThuc,TrangThai,MaCode) VALUES(@Ten,@Giam,@BD,@KT,@TT,@Code);";
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        m.Parameters.AddWithValue("@Ten", km.TenKM);
+        m.Parameters.AddWithValue("@Giam", km.PhanTramGiam);
+        m.Parameters.AddWithValue("@BD", km.NgayBatDau.HasValue ? km.NgayBatDau.Value.Date : (object)DBNull.Value);
+        m.Parameters.AddWithValue("@KT", km.NgayKetThuc.HasValue ? km.NgayKetThuc.Value.Date : (object)DBNull.Value);
+        m.Parameters.AddWithValue("@TT", string.IsNullOrWhiteSpace(km.TrangThai) ? "Hoạt động" : km.TrangThai);
+        m.Parameters.AddWithValue("@Code", string.IsNullOrWhiteSpace(km.MaCode) ? KhuyenMai.TaoMaCodeThucTe(km.TenKM, km.PhanTramGiam, null) : km.MaCode.Trim().ToUpperInvariant());
+        await c.OpenAsync();
+        await m.ExecuteNonQueryAsync();
+    }
+
+    public async Task CapNhatAsync(KhuyenMai km)
+    {
+        const string q = "UPDATE dbo.KhuyenMai SET TenKM=@Ten,PhanTramGiam=@Giam,NgayBatDau=@BD,NgayKetThuc=@KT,TrangThai=@TrangThai,MaCode=@Code WHERE MaKM=@MaKM;";
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        m.Parameters.AddWithValue("@Ten", km.TenKM);
+        m.Parameters.AddWithValue("@Giam", km.PhanTramGiam);
+        m.Parameters.AddWithValue("@BD", km.NgayBatDau.HasValue ? km.NgayBatDau.Value.Date : (object)DBNull.Value);
+        m.Parameters.AddWithValue("@KT", km.NgayKetThuc.HasValue ? km.NgayKetThuc.Value.Date : (object)DBNull.Value);
+        m.Parameters.AddWithValue("@TrangThai", km.TrangThai ?? "Hoạt động");
+        m.Parameters.AddWithValue("@Code", string.IsNullOrWhiteSpace(km.MaCode) ? KhuyenMai.TaoMaCodeThucTe(km.TenKM, km.PhanTramGiam, km.MaKM) : km.MaCode.Trim().ToUpperInvariant());
+        m.Parameters.AddWithValue("@MaKM", km.MaKM ?? 0);
+        await c.OpenAsync();
+        await m.ExecuteNonQueryAsync();
+    }
 }

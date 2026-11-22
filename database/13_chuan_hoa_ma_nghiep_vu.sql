@@ -1,0 +1,336 @@
+/* Phiên 2 - Chuẩn hóa mã nghiệp vụ.
+   Giữ nguyên toàn bộ IDENTITY PK/FK; chỉ thêm mã hiển thị có tiền tố.
+   Script có thể chạy lặp lại, không xóa dữ liệu. Chạy sau migration 12. */
+USE QL_PhongGym;
+GO
+SET NOCOUNT ON;
+SET XACT_ABORT ON;
+GO
+
+/* 1. Bổ sung cột mã nghiệp vụ nếu database đích chưa có.
+   Tách batch để SQL Server compile được các UPDATE ở batch kế tiếp. */
+    IF COL_LENGTH(N'dbo.NhanVien', N'MaNhanVien') IS NULL
+        ALTER TABLE dbo.NhanVien ADD MaNhanVien VARCHAR(16) NULL;
+    IF COL_LENGTH(N'dbo.GoiTap', N'MaGoiTap') IS NULL
+        ALTER TABLE dbo.GoiTap ADD MaGoiTap VARCHAR(16) NULL;
+    IF COL_LENGTH(N'dbo.DangKyGoi', N'MaDangKyGoi') IS NULL
+        ALTER TABLE dbo.DangKyGoi ADD MaDangKyGoi VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.DangKyPT', N'MaDangKyPT') IS NULL
+        ALTER TABLE dbo.DangKyPT ADD MaDangKyPT VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.LopTap', N'MaLopTap') IS NULL
+        ALTER TABLE dbo.LopTap ADD MaLopTap VARCHAR(16) NULL;
+    IF COL_LENGTH(N'dbo.DangKyLop', N'MaDangKyLop') IS NULL
+        ALTER TABLE dbo.DangKyLop ADD MaDangKyLop VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.LichHoc', N'MaBuoiHoc') IS NULL
+        ALTER TABLE dbo.LichHoc ADD MaBuoiHoc VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.HoaDon', N'SoHoaDon') IS NULL
+        ALTER TABLE dbo.HoaDon ADD SoHoaDon VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.ThanhToan', N'SoGiaoDich') IS NULL
+        ALTER TABLE dbo.ThanhToan ADD SoGiaoDich VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.LichSuCheckIn', N'MaPhienCheckIn') IS NULL
+        ALTER TABLE dbo.LichSuCheckIn ADD MaPhienCheckIn VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.PhongTap', N'MaPhongTap') IS NULL
+        ALTER TABLE dbo.PhongTap ADD MaPhongTap VARCHAR(16) NULL;
+    IF COL_LENGTH(N'dbo.PhieuNhapKho', N'SoPhieuNhap') IS NULL
+        ALTER TABLE dbo.PhieuNhapKho ADD SoPhieuNhap VARCHAR(32) NULL;
+    IF COL_LENGTH(N'dbo.KhuyenMai', N'MaCode') IS NULL
+        ALTER TABLE dbo.KhuyenMai ADD MaCode NVARCHAR(30) NULL;
+GO
+
+BEGIN TRY
+    BEGIN TRAN;
+
+    /* 2. Backfill deterministic từ ID hiện tại; không đổi mã đã có. */
+    UPDATE dbo.ThanhVien
+    SET MaThanhVien=CONCAT('TV',CASE WHEN MaTV<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaTV),6) ELSE CONVERT(VARCHAR(20),MaTV) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaThanhVien)),'') IS NULL;
+
+    UPDATE dbo.SanPham
+    SET MaSanPham=CONCAT('SP',CASE WHEN MaSP<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaSP),6) ELSE CONVERT(VARCHAR(20),MaSP) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaSanPham)),'') IS NULL;
+
+    UPDATE dbo.ThietBi
+    SET MaThietBi=CONCAT('TB',CASE WHEN MaTB<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaTB),6) ELSE CONVERT(VARCHAR(20),MaTB) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaThietBi)),'') IS NULL;
+
+    UPDATE dbo.NhanVien
+    SET MaNhanVien=CONCAT('NV',CASE WHEN MaNV<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaNV),6) ELSE CONVERT(VARCHAR(20),MaNV) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaNhanVien)),'') IS NULL;
+
+    UPDATE dbo.GoiTap
+    SET MaGoiTap=CONCAT('GOI',CASE WHEN MaGoi<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaGoi),6) ELSE CONVERT(VARCHAR(20),MaGoi) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaGoiTap)),'') IS NULL;
+
+    UPDATE dbo.DangKyGoi
+    SET MaDangKyGoi=CONCAT('DKG-',CONVERT(CHAR(8),ISNULL(NgayBatDau,'20000101'),112),'-',CASE WHEN MaDKG<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaDKG),6) ELSE CONVERT(VARCHAR(20),MaDKG) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaDangKyGoi)),'') IS NULL;
+
+    UPDATE dbo.DangKyPT
+    SET MaDangKyPT=CONCAT('DPT-',CONVERT(CHAR(8),ISNULL(NgayBatDau,'20000101'),112),'-',CASE WHEN MaDKPT<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaDKPT),6) ELSE CONVERT(VARCHAR(20),MaDKPT) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaDangKyPT)),'') IS NULL;
+
+    UPDATE dbo.LopTap
+    SET MaLopTap=CONCAT('LOP',CASE WHEN MaLop<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaLop),6) ELSE CONVERT(VARCHAR(20),MaLop) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaLopTap)),'') IS NULL;
+
+    UPDATE dbo.DangKyLop
+    SET MaDangKyLop=CONCAT('DKL-',CONVERT(CHAR(8),ISNULL(NgayDangKy,'20000101'),112),'-',CASE WHEN MaDKL<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaDKL),6) ELSE CONVERT(VARCHAR(20),MaDKL) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaDangKyLop)),'') IS NULL;
+
+    UPDATE dbo.LichHoc
+    SET MaBuoiHoc=CONCAT('LH-',CONVERT(CHAR(8),ISNULL(ThoiGianBatDau,'20000101'),112),'-',CASE WHEN MaLichHoc<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaLichHoc),6) ELSE CONVERT(VARCHAR(20),MaLichHoc) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaBuoiHoc)),'') IS NULL;
+
+    UPDATE dbo.HoaDon
+    SET SoHoaDon=CONCAT('HD-',CONVERT(CHAR(8),ISNULL(NgayLap,'20000101'),112),'-',CASE WHEN MaHD<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaHD),6) ELSE CONVERT(VARCHAR(20),MaHD) END)
+    WHERE NULLIF(LTRIM(RTRIM(SoHoaDon)),'') IS NULL;
+
+    UPDATE dbo.ThanhToan
+    SET SoGiaoDich=CONCAT('TT-',CONVERT(CHAR(8),ISNULL(NgayThanhToan,'20000101'),112),'-',CASE WHEN MaTT<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaTT),6) ELSE CONVERT(VARCHAR(20),MaTT) END)
+    WHERE NULLIF(LTRIM(RTRIM(SoGiaoDich)),'') IS NULL;
+
+    UPDATE dbo.LichSuCheckIn
+    SET MaPhienCheckIn=CONCAT('CI-',CONVERT(CHAR(8),ISNULL(ThoiGianVao,'20000101'),112),'-',CASE WHEN MaCheckIn<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaCheckIn),6) ELSE CONVERT(VARCHAR(20),MaCheckIn) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaPhienCheckIn)),'') IS NULL;
+
+    UPDATE dbo.PhongTap
+    SET MaPhongTap=CONCAT('PHG',CASE WHEN MaPhong<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaPhong),6) ELSE CONVERT(VARCHAR(20),MaPhong) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaPhongTap)),'') IS NULL;
+
+    UPDATE dbo.PhieuNhapKho
+    SET SoPhieuNhap=CONCAT('PNK-',CONVERT(CHAR(8),ISNULL(NgayNhap,'20000101'),112),'-',CASE WHEN MaPNK<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),MaPNK),6) ELSE CONVERT(VARCHAR(20),MaPNK) END)
+    WHERE NULLIF(LTRIM(RTRIM(SoPhieuNhap)),'') IS NULL;
+
+    UPDATE dbo.KhuyenMai
+    SET MaCode=CONCAT(N'KM',CASE WHEN MaKM<1000000 THEN RIGHT(N'000000'+CONVERT(NVARCHAR(20),MaKM),6) ELSE CONVERT(NVARCHAR(20),MaKM) END)
+    WHERE NULLIF(LTRIM(RTRIM(MaCode)),N'') IS NULL;
+
+    /* 3. Chặn mã trùng sau khi backfill. */
+    IF EXISTS(SELECT MaThanhVien FROM dbo.ThanhVien WHERE MaThanhVien IS NOT NULL GROUP BY MaThanhVien HAVING COUNT(*)>1)
+        THROW 51301,N'Trùng MaThanhVien sau backfill.',1;
+    IF EXISTS(SELECT MaSanPham FROM dbo.SanPham WHERE MaSanPham IS NOT NULL GROUP BY MaSanPham HAVING COUNT(*)>1)
+        THROW 51302,N'Trùng MaSanPham sau backfill.',1;
+    IF EXISTS(SELECT MaThietBi FROM dbo.ThietBi WHERE MaThietBi IS NOT NULL GROUP BY MaThietBi HAVING COUNT(*)>1)
+        THROW 51303,N'Trùng MaThietBi sau backfill.',1;
+    IF EXISTS(SELECT MaCode FROM dbo.KhuyenMai WHERE MaCode IS NOT NULL GROUP BY MaCode HAVING COUNT(*)>1)
+        THROW 51304,N'Trùng MaCode sau backfill.',1;
+
+    /* 4. Unique index/constraint, chỉ lọc NULL để trigger có thể cấp mã sau INSERT. */
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.NhanVien') AND name=N'UX_NhanVien_MaNhanVien')
+        CREATE UNIQUE INDEX UX_NhanVien_MaNhanVien ON dbo.NhanVien(MaNhanVien) WHERE MaNhanVien IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.GoiTap') AND name=N'UX_GoiTap_MaGoiTap')
+        CREATE UNIQUE INDEX UX_GoiTap_MaGoiTap ON dbo.GoiTap(MaGoiTap) WHERE MaGoiTap IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.DangKyGoi') AND name=N'UX_DangKyGoi_MaDangKyGoi')
+        CREATE UNIQUE INDEX UX_DangKyGoi_MaDangKyGoi ON dbo.DangKyGoi(MaDangKyGoi) WHERE MaDangKyGoi IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.DangKyPT') AND name=N'UX_DangKyPT_MaDangKyPT')
+        CREATE UNIQUE INDEX UX_DangKyPT_MaDangKyPT ON dbo.DangKyPT(MaDangKyPT) WHERE MaDangKyPT IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.LopTap') AND name=N'UX_LopTap_MaLopTap')
+        CREATE UNIQUE INDEX UX_LopTap_MaLopTap ON dbo.LopTap(MaLopTap) WHERE MaLopTap IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.DangKyLop') AND name=N'UX_DangKyLop_MaDangKyLop')
+        CREATE UNIQUE INDEX UX_DangKyLop_MaDangKyLop ON dbo.DangKyLop(MaDangKyLop) WHERE MaDangKyLop IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.LichHoc') AND name=N'UX_LichHoc_MaBuoiHoc')
+        CREATE UNIQUE INDEX UX_LichHoc_MaBuoiHoc ON dbo.LichHoc(MaBuoiHoc) WHERE MaBuoiHoc IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.HoaDon') AND name=N'UX_HoaDon_SoHoaDon')
+        CREATE UNIQUE INDEX UX_HoaDon_SoHoaDon ON dbo.HoaDon(SoHoaDon) WHERE SoHoaDon IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.ThanhToan') AND name=N'UX_ThanhToan_SoGiaoDich')
+        CREATE UNIQUE INDEX UX_ThanhToan_SoGiaoDich ON dbo.ThanhToan(SoGiaoDich) WHERE SoGiaoDich IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.LichSuCheckIn') AND name=N'UX_LichSuCheckIn_MaPhien')
+        CREATE UNIQUE INDEX UX_LichSuCheckIn_MaPhien ON dbo.LichSuCheckIn(MaPhienCheckIn) WHERE MaPhienCheckIn IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.PhongTap') AND name=N'UX_PhongTap_MaPhongTap')
+        CREATE UNIQUE INDEX UX_PhongTap_MaPhongTap ON dbo.PhongTap(MaPhongTap) WHERE MaPhongTap IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.indexes WHERE object_id=OBJECT_ID(N'dbo.PhieuNhapKho') AND name=N'UX_PhieuNhapKho_SoPhieuNhap')
+        CREATE UNIQUE INDEX UX_PhieuNhapKho_SoPhieuNhap ON dbo.PhieuNhapKho(SoPhieuNhap) WHERE SoPhieuNhap IS NOT NULL;
+    IF NOT EXISTS(SELECT 1 FROM sys.key_constraints WHERE parent_object_id=OBJECT_ID(N'dbo.KhuyenMai') AND name=N'UQ_KhuyenMai_MaCode')
+        ALTER TABLE dbo.KhuyenMai ADD CONSTRAINT UQ_KhuyenMai_MaCode UNIQUE(MaCode);
+
+    COMMIT;
+END TRY
+BEGIN CATCH
+    IF XACT_STATE()<>0 ROLLBACK;
+    THROW;
+END CATCH;
+GO
+
+/* 5. Cấp mã tự động cho bản ghi mới nếu caller không truyền mã. */
+CREATE OR ALTER TRIGGER dbo.TR_NhanVien_MaNhanVien ON dbo.NhanVien AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE n SET MaNhanVien=CONCAT('NV',CASE WHEN n.MaNV<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),n.MaNV),6) ELSE CONVERT(VARCHAR(20),n.MaNV) END)
+    FROM dbo.NhanVien n JOIN inserted i ON i.MaNV=n.MaNV
+    WHERE NULLIF(LTRIM(RTRIM(n.MaNhanVien)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_GoiTap_MaGoiTap ON dbo.GoiTap AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE g SET MaGoiTap=CONCAT('GOI',CASE WHEN g.MaGoi<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),g.MaGoi),6) ELSE CONVERT(VARCHAR(20),g.MaGoi) END)
+    FROM dbo.GoiTap g JOIN inserted i ON i.MaGoi=g.MaGoi
+    WHERE NULLIF(LTRIM(RTRIM(g.MaGoiTap)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_DangKyGoi_MaDangKyGoi ON dbo.DangKyGoi AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE d SET MaDangKyGoi=CONCAT('DKG-',CONVERT(CHAR(8),ISNULL(d.NgayBatDau,'20000101'),112),'-',CASE WHEN d.MaDKG<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),d.MaDKG),6) ELSE CONVERT(VARCHAR(20),d.MaDKG) END)
+    FROM dbo.DangKyGoi d JOIN inserted i ON i.MaDKG=d.MaDKG
+    WHERE NULLIF(LTRIM(RTRIM(d.MaDangKyGoi)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_DangKyPT_MaDangKyPT ON dbo.DangKyPT AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE d SET MaDangKyPT=CONCAT('DPT-',CONVERT(CHAR(8),ISNULL(d.NgayBatDau,'20000101'),112),'-',CASE WHEN d.MaDKPT<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),d.MaDKPT),6) ELSE CONVERT(VARCHAR(20),d.MaDKPT) END)
+    FROM dbo.DangKyPT d JOIN inserted i ON i.MaDKPT=d.MaDKPT
+    WHERE NULLIF(LTRIM(RTRIM(d.MaDangKyPT)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_LopTap_MaLopTap ON dbo.LopTap AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE l SET MaLopTap=CONCAT('LOP',CASE WHEN l.MaLop<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),l.MaLop),6) ELSE CONVERT(VARCHAR(20),l.MaLop) END)
+    FROM dbo.LopTap l JOIN inserted i ON i.MaLop=l.MaLop
+    WHERE NULLIF(LTRIM(RTRIM(l.MaLopTap)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_DangKyLop_MaDangKyLop ON dbo.DangKyLop AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE d SET MaDangKyLop=CONCAT('DKL-',CONVERT(CHAR(8),ISNULL(d.NgayDangKy,'20000101'),112),'-',CASE WHEN d.MaDKL<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),d.MaDKL),6) ELSE CONVERT(VARCHAR(20),d.MaDKL) END)
+    FROM dbo.DangKyLop d JOIN inserted i ON i.MaDKL=d.MaDKL
+    WHERE NULLIF(LTRIM(RTRIM(d.MaDangKyLop)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_LichHoc_MaBuoiHoc ON dbo.LichHoc AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE l SET MaBuoiHoc=CONCAT('LH-',CONVERT(CHAR(8),ISNULL(l.ThoiGianBatDau,'20000101'),112),'-',CASE WHEN l.MaLichHoc<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),l.MaLichHoc),6) ELSE CONVERT(VARCHAR(20),l.MaLichHoc) END)
+    FROM dbo.LichHoc l JOIN inserted i ON i.MaLichHoc=l.MaLichHoc
+    WHERE NULLIF(LTRIM(RTRIM(l.MaBuoiHoc)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_HoaDon_SoHoaDon ON dbo.HoaDon AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE h SET SoHoaDon=CONCAT('HD-',CONVERT(CHAR(8),ISNULL(h.NgayLap,'20000101'),112),'-',CASE WHEN h.MaHD<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),h.MaHD),6) ELSE CONVERT(VARCHAR(20),h.MaHD) END)
+    FROM dbo.HoaDon h JOIN inserted i ON i.MaHD=h.MaHD
+    WHERE NULLIF(LTRIM(RTRIM(h.SoHoaDon)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_ThanhToan_SoGiaoDich ON dbo.ThanhToan AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE t SET SoGiaoDich=CONCAT('TT-',CONVERT(CHAR(8),ISNULL(t.NgayThanhToan,'20000101'),112),'-',CASE WHEN t.MaTT<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),t.MaTT),6) ELSE CONVERT(VARCHAR(20),t.MaTT) END)
+    FROM dbo.ThanhToan t JOIN inserted i ON i.MaTT=t.MaTT
+    WHERE NULLIF(LTRIM(RTRIM(t.SoGiaoDich)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_LichSuCheckIn_MaPhien ON dbo.LichSuCheckIn AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE c SET MaPhienCheckIn=CONCAT('CI-',CONVERT(CHAR(8),ISNULL(c.ThoiGianVao,'20000101'),112),'-',CASE WHEN c.MaCheckIn<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),c.MaCheckIn),6) ELSE CONVERT(VARCHAR(20),c.MaCheckIn) END)
+    FROM dbo.LichSuCheckIn c JOIN inserted i ON i.MaCheckIn=c.MaCheckIn
+    WHERE NULLIF(LTRIM(RTRIM(c.MaPhienCheckIn)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_PhongTap_MaPhongTap ON dbo.PhongTap AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE p SET MaPhongTap=CONCAT('PHG',CASE WHEN p.MaPhong<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),p.MaPhong),6) ELSE CONVERT(VARCHAR(20),p.MaPhong) END)
+    FROM dbo.PhongTap p JOIN inserted i ON i.MaPhong=p.MaPhong
+    WHERE NULLIF(LTRIM(RTRIM(p.MaPhongTap)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_PhieuNhapKho_SoPhieuNhap ON dbo.PhieuNhapKho AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE p SET SoPhieuNhap=CONCAT('PNK-',CONVERT(CHAR(8),ISNULL(p.NgayNhap,'20000101'),112),'-',CASE WHEN p.MaPNK<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),p.MaPNK),6) ELSE CONVERT(VARCHAR(20),p.MaPNK) END)
+    FROM dbo.PhieuNhapKho p JOIN inserted i ON i.MaPNK=p.MaPNK
+    WHERE NULLIF(LTRIM(RTRIM(p.SoPhieuNhap)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_KhuyenMai_MaCode ON dbo.KhuyenMai AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE k SET MaCode=CONCAT(N'KM',CASE WHEN k.MaKM<1000000 THEN RIGHT(N'000000'+CONVERT(NVARCHAR(20),k.MaKM),6) ELSE CONVERT(NVARCHAR(20),k.MaKM) END)
+    FROM dbo.KhuyenMai k JOIN inserted i ON i.MaKM=k.MaKM
+    WHERE NULLIF(LTRIM(RTRIM(k.MaCode)),N'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_SanPham_MaSanPham ON dbo.SanPham AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE s SET MaSanPham=CONCAT('SP',CASE WHEN s.MaSP<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),s.MaSP),6) ELSE CONVERT(VARCHAR(20),s.MaSP) END)
+    FROM dbo.SanPham s JOIN inserted i ON i.MaSP=s.MaSP
+    WHERE NULLIF(LTRIM(RTRIM(s.MaSanPham)),'') IS NULL;
+END;
+GO
+CREATE OR ALTER TRIGGER dbo.TR_ThietBi_MaThietBi ON dbo.ThietBi AFTER INSERT AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE t SET MaThietBi=CONCAT('TB',CASE WHEN t.MaTB<1000000 THEN RIGHT('000000'+CONVERT(VARCHAR(20),t.MaTB),6) ELSE CONVERT(VARCHAR(20),t.MaTB) END)
+    FROM dbo.ThietBi t JOIN inserted i ON i.MaTB=t.MaTB
+    WHERE NULLIF(LTRIM(RTRIM(t.MaThietBi)),'') IS NULL;
+END;
+GO
+
+/* 6. Chuẩn hóa SET options cho procedure ghi DangKyLop.
+   Các filtered index yêu cầu QUOTED_IDENTIFIER/ANSI_NULLS đúng khi DML chạy. */
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE OR ALTER PROCEDURE dbo.sp_DangKyLop
+    @MaTV INT,
+    @MaLop INT,
+    @VaoDanhSachCho BIT=1,
+    @MaDKL INT OUTPUT
+AS
+BEGIN TRY
+    SET NOCOUNT ON;
+    SET XACT_ABORT ON;
+    BEGIN TRAN;
+    IF NOT EXISTS(SELECT 1 FROM dbo.ThanhVien WHERE MaTV=@MaTV AND TrangThai=N'Hoạt động' AND DaXoa=0)
+        THROW 50028,N'Thành viên không hoạt động.',1;
+    DECLARE @SucChua INT,@DangKy INT;
+    SELECT @SucChua=SucChua FROM dbo.LopTap WITH(UPDLOCK,HOLDLOCK) WHERE MaLop=@MaLop AND TrangThai=N'Đang mở';
+    IF @SucChua IS NULL THROW 50013,N'Lớp không mở hoặc không tồn tại.',1;
+    IF EXISTS(SELECT 1 FROM dbo.DangKyLop WITH(UPDLOCK,HOLDLOCK) WHERE MaTV=@MaTV AND MaLop=@MaLop AND TrangThai=N'Đang tham gia')
+        THROW 50029,N'Thành viên đã đăng ký lớp này.',1;
+    IF EXISTS(SELECT 1 FROM dbo.DanhSachCho WITH(UPDLOCK,HOLDLOCK) WHERE MaTV=@MaTV AND MaLop=@MaLop AND TrangThai=N'Đang chờ')
+        THROW 50030,N'Thành viên đang ở danh sách chờ của lớp này.',1;
+    SELECT @DangKy=COUNT(*) FROM dbo.DangKyLop WHERE MaLop=@MaLop AND TrangThai=N'Đang tham gia';
+    IF @DangKy>=@SucChua
+    BEGIN
+        IF @VaoDanhSachCho=1
+        BEGIN
+            INSERT dbo.DanhSachCho(MaLop,MaTV) VALUES(@MaLop,@MaTV);
+            SET @MaDKL=NULL;
+            COMMIT;
+            RETURN;
+        END;
+        THROW 50014,N'Lớp đã đủ sức chứa.',1;
+    END;
+    INSERT dbo.DangKyLop(MaTV,MaLop) VALUES(@MaTV,@MaLop);
+    SET @MaDKL=SCOPE_IDENTITY();
+    COMMIT;
+END TRY
+BEGIN CATCH
+    IF XACT_STATE()<>0 ROLLBACK;
+    THROW;
+END CATCH;
+GO
+SET ANSI_NULLS ON;
+GO
+SET QUOTED_IDENTIFIER ON;
+GO
+CREATE OR ALTER PROCEDURE dbo.sp_HuyDangKyLop @MaDKL INT AS
+BEGIN TRY
+    SET NOCOUNT ON;
+    UPDATE dbo.DangKyLop SET TrangThai=N'Đã hủy'
+    WHERE MaDKL=@MaDKL AND TrangThai=N'Đang tham gia';
+    IF @@ROWCOUNT=0 THROW 50015,N'Không thể hủy đăng ký lớp.',1;
+END TRY
+BEGIN CATCH
+    THROW;
+END CATCH;
+GO

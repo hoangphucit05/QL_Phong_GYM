@@ -3,6 +3,7 @@
 public sealed class ThanhVien
 {
     public int MaTV { get; set; }
+    public string MaThanhVien { get; set; } = string.Empty;
     public string HoTen { get; set; } = string.Empty;
     public DateTime NgaySinh { get; set; }
     public string? GioiTinh { get; set; }
@@ -13,4 +14,5 @@ public sealed class ThanhVien
     public int MaLoaiTV { get; set; }
     public string TenLoai { get; set; } = string.Empty;
     public string TrangThai { get; set; } = string.Empty;
+    public string HienThi => string.IsNullOrWhiteSpace(MaThanhVien) ? HoTen : $"{MaThanhVien} - {HoTen}";
 }

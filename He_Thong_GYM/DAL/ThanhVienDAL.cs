@@ -8,10 +8,10 @@ public sealed class ThanhVienDAL
     public async Task<List<ThanhVien>> LayDanhSachAsync(string? tuKhoa = null)
     {
         const string sql = """
-            SELECT tv.MaTV, tv.HoTen, tv.NgaySinh, tv.GioiTinh, tv.SDT, tv.Email, tv.DiaChi, tv.NgayDangKy,
+            SELECT tv.MaTV, tv.MaThanhVien, tv.HoTen, tv.NgaySinh, tv.GioiTinh, tv.SDT, tv.Email, tv.DiaChi, tv.NgayDangKy,
                    tv.MaLoaiTV, ltv.TenLoai, tv.TrangThai
             FROM dbo.ThanhVien tv INNER JOIN dbo.LoaiThanhVien ltv ON ltv.MaLoaiTV = tv.MaLoaiTV
-            WHERE (@TuKhoa IS NULL OR tv.HoTen LIKE N'%' + @TuKhoa + N'%' OR tv.SDT LIKE '%' + @TuKhoa + '%')
+            WHERE (@TuKhoa IS NULL OR tv.MaThanhVien LIKE '%' + @TuKhoa + '%' OR tv.HoTen LIKE N'%' + @TuKhoa + N'%' OR tv.SDT LIKE '%' + @TuKhoa + '%')
             ORDER BY tv.MaTV DESC;
             """;
         var danhSach = new List<ThanhVien>();
@@ -24,10 +24,10 @@ public sealed class ThanhVienDAL
         {
             danhSach.Add(new ThanhVien
             {
-                MaTV = reader.GetInt32(0), HoTen = reader.GetString(1), NgaySinh = reader.GetDateTime(2),
-                GioiTinh = reader.IsDBNull(3) ? null : reader.GetString(3), SDT = reader.GetString(4),
-                Email = reader.IsDBNull(5) ? null : reader.GetString(5), DiaChi = reader.IsDBNull(6) ? null : reader.GetString(6),
-                NgayDangKy = reader.GetDateTime(7), MaLoaiTV = reader.GetInt32(8), TenLoai = reader.GetString(9), TrangThai = reader.GetString(10)
+                MaTV = reader.GetInt32(0), MaThanhVien = reader.GetString(1), HoTen = reader.GetString(2), NgaySinh = reader.GetDateTime(3),
+                GioiTinh = reader.IsDBNull(4) ? null : reader.GetString(4), SDT = reader.GetString(5),
+                Email = reader.IsDBNull(6) ? null : reader.GetString(6), DiaChi = reader.IsDBNull(7) ? null : reader.GetString(7),
+                NgayDangKy = reader.GetDateTime(8), MaLoaiTV = reader.GetInt32(9), TenLoai = reader.GetString(10), TrangThai = reader.GetString(11)
             });
         }
         return danhSach;

@@ -131,8 +131,9 @@ public partial class FrmLogin : Form
         {
             lblThongBao.Text = ex.Message;
         }
-        catch
+        catch (Exception ex)
         {
+            _ = UiErrorMessage.Get(ex);
             lblThongBao.Text = "Không thể kết nối dữ liệu. Kiểm tra appsettings.json và SQL Server.";
         }
         finally

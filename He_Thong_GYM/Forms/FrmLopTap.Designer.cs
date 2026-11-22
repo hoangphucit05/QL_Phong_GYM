@@ -36,6 +36,8 @@ partial class FrmLopTap
         cboTrangThai = new ComboBox();
         flowThaoTac = new FlowLayoutPanel();
         btnThem = new Button();
+        btnSua = new Button();
+        btnDongLop = new Button();
         btnLamMoi = new Button();
         lblTimKiem = new Label();
         txtTimKiem = new TextBox();
@@ -291,6 +293,8 @@ partial class FrmLopTap
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnThem);
+        flowThaoTac.Controls.Add(btnSua);
+        flowThaoTac.Controls.Add(btnDongLop);
         flowThaoTac.Controls.Add(btnLamMoi);
         flowThaoTac.Controls.Add(lblTimKiem);
         flowThaoTac.Controls.Add(txtTimKiem);
@@ -313,11 +317,45 @@ partial class FrmLopTap
         btnThem.Location = new Point(0, 0);
         btnThem.Margin = new Padding(0, 0, 8, 0);
         btnThem.Name = "btnThem";
-        btnThem.Size = new Size(140, 36);
+        btnThem.Size = new Size(110, 36);
         btnThem.TabIndex = 0;
-        btnThem.Text = "Thêm lớp tập mới";
+        btnThem.Text = "Tạo lớp mới";
         btnThem.UseVisualStyleBackColor = false;
         btnThem.Click += btnThem_Click;
+        // 
+        // btnSua
+        // 
+        btnSua.BackColor = Color.FromArgb(16, 185, 129);
+        btnSua.Cursor = Cursors.Hand;
+        btnSua.FlatAppearance.BorderSize = 0;
+        btnSua.FlatStyle = FlatStyle.Flat;
+        btnSua.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnSua.ForeColor = Color.White;
+        btnSua.Location = new Point(118, 0);
+        btnSua.Margin = new Padding(0, 0, 8, 0);
+        btnSua.Name = "btnSua";
+        btnSua.Size = new Size(100, 36);
+        btnSua.TabIndex = 1;
+        btnSua.Text = "Cập nhật";
+        btnSua.UseVisualStyleBackColor = false;
+        btnSua.Click += btnSua_Click;
+        // 
+        // btnDongLop
+        // 
+        btnDongLop.BackColor = Color.FromArgb(239, 68, 68);
+        btnDongLop.Cursor = Cursors.Hand;
+        btnDongLop.FlatAppearance.BorderSize = 0;
+        btnDongLop.FlatStyle = FlatStyle.Flat;
+        btnDongLop.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnDongLop.ForeColor = Color.White;
+        btnDongLop.Location = new Point(226, 0);
+        btnDongLop.Margin = new Padding(0, 0, 8, 0);
+        btnDongLop.Name = "btnDongLop";
+        btnDongLop.Size = new Size(100, 36);
+        btnDongLop.TabIndex = 2;
+        btnDongLop.Text = "Đóng lớp";
+        btnDongLop.UseVisualStyleBackColor = false;
+        btnDongLop.Click += btnDongLop_Click;
         // 
         // btnLamMoi
         // 
@@ -327,11 +365,11 @@ partial class FrmLopTap
         btnLamMoi.FlatStyle = FlatStyle.Flat;
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
-        btnLamMoi.Location = new Point(148, 0);
+        btnLamMoi.Location = new Point(334, 0);
         btnLamMoi.Margin = new Padding(0, 0, 16, 0);
         btnLamMoi.Name = "btnLamMoi";
         btnLamMoi.Size = new Size(90, 36);
-        btnLamMoi.TabIndex = 1;
+        btnLamMoi.TabIndex = 3;
         btnLamMoi.Text = "Làm mới";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
@@ -409,6 +447,7 @@ partial class FrmLopTap
         dgvLop.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvLop.Size = new Size(1052, 380);
         dgvLop.TabIndex = 3;
+        dgvLop.SelectionChanged += dgvLop_SelectionChanged;
         // 
         // FrmLopTap
         // 
@@ -459,6 +498,8 @@ partial class FrmLopTap
     private ComboBox cboTrangThai;
     private FlowLayoutPanel flowThaoTac;
     private Button btnThem;
+    private Button btnSua;
+    private Button btnDongLop;
     private Button btnLamMoi;
     private Label lblTimKiem;
     private TextBox txtTimKiem;

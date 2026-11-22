@@ -64,7 +64,7 @@ public partial class FrmThongKe : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi tải báo cáo thống kê", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải báo cáo thống kê", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {

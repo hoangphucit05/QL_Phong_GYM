@@ -339,7 +339,7 @@ partial class FrmDangKyPT
         // 
         cboLocTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboLocTrangThai.FormattingEnabled = true;
-        cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Còn hạn", "Hết hạn", "Chờ thanh toán" });
+        cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Chờ thanh toán", "Đang học", "Hoàn thành", "Hủy" });
         cboLocTrangThai.Location = new Point(392, 6);
         cboLocTrangThai.Margin = new Padding(3, 6, 12, 3);
         cboLocTrangThai.Name = "cboLocTrangThai";

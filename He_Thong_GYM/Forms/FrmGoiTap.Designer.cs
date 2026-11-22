@@ -376,9 +376,9 @@ partial class FrmGoiTap
         // 
         // colMaGoi
         // 
-        colMaGoi.DataPropertyName = "MaGoi";
-        colMaGoi.FillWeight = 50F;
-        colMaGoi.HeaderText = "Mã gói";
+        colMaGoi.DataPropertyName = "MaGoiTap";
+        colMaGoi.FillWeight = 90F;
+        colMaGoi.HeaderText = "Mã gói tập";
         colMaGoi.Name = "colMaGoi";
         colMaGoi.ReadOnly = true;
         // 

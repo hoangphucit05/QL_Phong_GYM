@@ -5,6 +5,21 @@ namespace He_Thong_GYM.DAL;
 
 public sealed class DashboardDAL
 {
+    public async Task<int> CapNhatGoiHetHanAsync(int? maNV)
+    {
+        await using var connection = DbConnectionFactory.CreateConnection();
+        await using var command = new SqlCommand("dbo.sp_CapNhatGoiHetHan", connection)
+        {
+            CommandType = System.Data.CommandType.StoredProcedure
+        };
+        command.Parameters.Add("@MaNV", System.Data.SqlDbType.Int).Value = (object?)maNV ?? DBNull.Value;
+        var output = command.Parameters.Add("@SoLuongCapNhat", System.Data.SqlDbType.Int);
+        output.Direction = System.Data.ParameterDirection.Output;
+        await connection.OpenAsync();
+        await command.ExecuteNonQueryAsync();
+        return output.Value is DBNull ? 0 : Convert.ToInt32(output.Value);
+    }
+
     public async Task<TongQuanDashboard> LayTongQuanAsync()
     {
         const string sql = """

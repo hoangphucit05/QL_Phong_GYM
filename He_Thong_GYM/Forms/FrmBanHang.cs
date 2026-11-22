@@ -20,17 +20,24 @@ public partial class FrmBanHang : Form
     {
         try
         {
-            cboThanhVien.DataSource = await _dk.LayThanhVienAsync();
-            cboThanhVien.DisplayMember = nameof(ThanhVien.HoTen);
+            var dsThanhVien = await _dk.LayThanhVienAsync();
+            cboThanhVien.DataSource = dsThanhVien;
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
+            cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
+            var khachLe = dsThanhVien.FirstOrDefault(x => x.HoTen.Contains("Khách vãng lai") || x.SDT == "0900000000");
+            if (khachLe != null)
+            {
+                cboThanhVien.SelectedItem = khachLe;
+            }
 
             cboSanPham.DataSource = await _sp.LayAsync();
-            cboSanPham.DisplayMember = nameof(SanPham.TenSP);
+            cboSanPham.DisplayMember = nameof(SanPham.HienThi);
 
             TinhTien();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi tải danh mục", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải danh mục", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -58,13 +65,24 @@ public partial class FrmBanHang : Form
             }
 
             var maHD = await _sp.BanAsync(t.MaTV, SessionManager.NguoiDungHienTai.MaNV, p.MaSP, (int)nudSoLuong.Value);
-            MessageBox.Show($"Đã tạo hóa đơn bán hàng #{maHD} thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            var hoiThanhToan = MessageBox.Show(
+                $"Đã tạo hóa đơn bán hàng #{maHD} thành công!\nBạn có muốn mở màn hình thu tiền ngay bây giờ không?",
+                "Bán hàng thành công",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (hoiThanhToan == DialogResult.Yes)
+            {
+                using var frmTT = new FrmThanhToan(maHD);
+                frmTT.ShowDialog(this);
+            }
+
             DialogResult = DialogResult.OK;
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể bán hàng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể bán hàng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 

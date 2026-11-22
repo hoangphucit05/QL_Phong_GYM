@@ -9,6 +9,7 @@ public partial class FrmLopTap : Form
     private readonly DangKyBLL _dk = new();
     private List<LopTap> _danhSachGoc = new();
     private bool _dangKhoiTao = true;
+    private int? _maLopDangChon;
 
     public FrmLopTap()
     {
@@ -38,7 +39,7 @@ public partial class FrmLopTap : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -52,7 +53,7 @@ public partial class FrmLopTap : Form
         catch (Exception ex)
         {
             lblThongKe.Text = "Lỗi tải dữ liệu";
-            MessageBox.Show(ex.Message, "Lỗi tải danh sách lớp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải danh sách lớp", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -73,6 +74,7 @@ public partial class FrmLopTap : Form
                 (!string.IsNullOrEmpty(l.TenLop) && l.TenLop.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(l.TenLoaiLop) && l.TenLoaiLop.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(l.TenHLV) && l.TenHLV.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(l.MaLopTap) && l.MaLopTap.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 l.MaLop.ToString().Contains(tuKhoa));
         }
 
@@ -99,8 +101,16 @@ public partial class FrmLopTap : Form
 
         if (dgvLop.Columns.Contains(nameof(LopTap.MaLop)))
         {
-            dgvLop.Columns[nameof(LopTap.MaLop)]!.HeaderText = "Mã lớp";
-            dgvLop.Columns[nameof(LopTap.MaLop)]!.Width = 75;
+            dgvLop.Columns[nameof(LopTap.MaLop)]!.Visible = false;
+        }
+        if (dgvLop.Columns.Contains(nameof(LopTap.MaLopTap)))
+        {
+            dgvLop.Columns[nameof(LopTap.MaLopTap)]!.HeaderText = "Mã lớp";
+            dgvLop.Columns[nameof(LopTap.MaLopTap)]!.Width = 95;
+        }
+        if (dgvLop.Columns.Contains(nameof(LopTap.HienThi)))
+        {
+            dgvLop.Columns[nameof(LopTap.HienThi)]!.Visible = false;
         }
         if (dgvLop.Columns.Contains(nameof(LopTap.TenLop)))
         {
@@ -164,6 +174,11 @@ public partial class FrmLopTap : Form
                 throw new InvalidOperationException("Vui lòng nhập tên lớp tập.");
             }
 
+            if (dtpKetThuc.Value.TimeOfDay <= dtpBatDau.Value.TimeOfDay)
+            {
+                throw new InvalidOperationException("Giờ kết thúc phải lớn hơn giờ bắt đầu.");
+            }
+
             await _bll.ThemAsync(new LopTap
             {
                 TenLop = txtTenLop.Text.Trim(),
@@ -176,13 +191,126 @@ public partial class FrmLopTap : Form
             });
 
             await TaiDanhSachAsync();
-            txtTenLop.Clear();
+            DatTrangThaiTaoMoi();
             MessageBox.Show("Đã tạo lớp tập mới thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể lưu lớp tập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể lưu lớp tập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
+    }
+
+    private async void btnSua_Click(object? sender, EventArgs e)
+    {
+        if (_maLopDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn lớp tập cần cập nhật từ danh sách.", "Chưa chọn lớp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        try
+        {
+            if (cboHLV.SelectedItem is not HuanLuyenVien h || cboLoai.SelectedValue is not int loai)
+            {
+                throw new InvalidOperationException("Hãy chọn loại lớp và HLV.");
+            }
+
+            if (string.IsNullOrWhiteSpace(txtTenLop.Text))
+            {
+                throw new InvalidOperationException("Vui lòng nhập tên lớp tập.");
+            }
+
+            if (dtpKetThuc.Value.TimeOfDay <= dtpBatDau.Value.TimeOfDay)
+            {
+                throw new InvalidOperationException("Giờ kết thúc phải lớn hơn giờ bắt đầu.");
+            }
+
+            await _bll.CapNhatAsync(new LopTap
+            {
+                MaLop = _maLopDangChon.Value,
+                TenLop = txtTenLop.Text.Trim(),
+                MaLoaiLop = loai,
+                MaHLV = h.MaHLV,
+                SucChua = (int)nudSucChua.Value,
+                GioBatDau = dtpBatDau.Value.TimeOfDay,
+                GioKetThuc = dtpKetThuc.Value.TimeOfDay,
+                TrangThai = cboTrangThai.Text
+            });
+
+            await TaiDanhSachAsync();
+            MessageBox.Show("Cập nhật thông tin lớp tập thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể cập nhật lớp tập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void btnDongLop_Click(object? sender, EventArgs e)
+    {
+        if (_maLopDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn lớp tập cần đóng.", "Chưa chọn lớp", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (MessageBox.Show($"Bạn có chắc chắn muốn đóng lớp '{txtTenLop.Text}' không?\nLớp đã đóng sẽ không thể mở thêm buổi học mới.", "Xác nhận đóng lớp", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+        {
+            return;
+        }
+
+        try
+        {
+            await _bll.DongLopAsync(_maLopDangChon.Value);
+            await TaiDanhSachAsync();
+            DatTrangThaiTaoMoi();
+            MessageBox.Show("Đã đóng lớp tập thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể đóng lớp tập", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private void dgvLop_SelectionChanged(object? sender, EventArgs e)
+    {
+        if (_dangKhoiTao) return;
+
+        if (dgvLop.CurrentRow?.DataBoundItem is not LopTap lop)
+        {
+            _maLopDangChon = null;
+            btnSua.Enabled = false;
+            btnDongLop.Enabled = false;
+            return;
+        }
+
+        _maLopDangChon = lop.MaLop;
+        btnSua.Enabled = true;
+        btnDongLop.Enabled = !string.Equals(lop.TrangThai, "Đã đóng", StringComparison.OrdinalIgnoreCase);
+
+        txtTenLop.Text = lop.TenLop;
+        if (cboLoai.DataSource != null) cboLoai.SelectedValue = lop.MaLoaiLop;
+        if (cboHLV.DataSource != null) cboHLV.SelectedValue = lop.MaHLV;
+        nudSucChua.Value = Math.Clamp(lop.SucChua, nudSucChua.Minimum, nudSucChua.Maximum);
+        dtpBatDau.Value = DateTime.Today.Add(lop.GioBatDau);
+        dtpKetThuc.Value = DateTime.Today.Add(lop.GioKetThuc);
+        cboTrangThai.SelectedItem = lop.TrangThai;
+    }
+
+    private void DatTrangThaiTaoMoi()
+    {
+        _maLopDangChon = null;
+        txtTenLop.Clear();
+        if (cboLoai.Items.Count > 0) cboLoai.SelectedIndex = 0;
+        if (cboHLV.Items.Count > 0) cboHLV.SelectedIndex = 0;
+        nudSucChua.Value = 20;
+        dtpBatDau.Value = DateTime.Today.AddHours(7);
+        dtpKetThuc.Value = DateTime.Today.AddHours(8);
+        if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
+        btnSua.Enabled = false;
+        btnDongLop.Enabled = false;
+        dgvLop.ClearSelection();
+        txtTenLop.Focus();
     }
 
     private async void btnLamMoi_Click(object? sender, EventArgs e)
@@ -190,5 +318,6 @@ public partial class FrmLopTap : Form
         txtTimKiem.Clear();
         if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
         await TaiDanhSachAsync();
+        DatTrangThaiTaoMoi();
     }
 }

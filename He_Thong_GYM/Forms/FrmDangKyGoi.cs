@@ -21,11 +21,11 @@ public partial class FrmDangKyGoi : Form
         {
             _dangKhoiTao = true;
             cboThanhVien.DataSource = await _bll.LayThanhVienAsync();
-            cboThanhVien.DisplayMember = nameof(ThanhVien.HoTen);
+            cboThanhVien.DisplayMember = nameof(ThanhVien.HienThi);
             cboThanhVien.ValueMember = nameof(ThanhVien.MaTV);
 
             cboGoiTap.DataSource = await _bll.LayGoiTapAsync();
-            cboGoiTap.DisplayMember = nameof(GoiTap.TenGoi);
+            cboGoiTap.DisplayMember = nameof(GoiTap.HienThi);
             cboGoiTap.ValueMember = nameof(GoiTap.MaGoi);
 
             cboKhuyenMai.DataSource = await _bll.LayKhuyenMaiAsync();
@@ -40,7 +40,7 @@ public partial class FrmDangKyGoi : Form
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -54,7 +54,7 @@ public partial class FrmDangKyGoi : Form
         catch (Exception ex)
         {
             lblThongKeLichSu.Text = "Lỗi tải lịch sử";
-            MessageBox.Show(ex.Message, "Lỗi tải lịch sử", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải lịch sử", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -74,6 +74,7 @@ public partial class FrmDangKyGoi : Form
             ketQua = ketQua.Where(x =>
                 (!string.IsNullOrEmpty(x.ThanhVien) && x.ThanhVien.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 (!string.IsNullOrEmpty(x.DichVu) && x.DichVu.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
+                (!string.IsNullOrEmpty(x.MaDangKyHienThi) && x.MaDangKyHienThi.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase)) ||
                 x.MaDangKy.ToString().Contains(tuKhoa));
         }
 
@@ -100,8 +101,16 @@ public partial class FrmDangKyGoi : Form
 
         if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.MaDangKy)))
         {
-            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKy)]!.HeaderText = "Mã ĐK";
-            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKy)]!.Width = 80;
+            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKy)]!.Visible = false;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.MaDangKyHienThi)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKyHienThi)]!.HeaderText = "Mã đăng ký";
+            dgvLichSu.Columns[nameof(LichSuDangKy.MaDangKyHienThi)]!.Width = 155;
+        }
+        if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.HienThi)))
+        {
+            dgvLichSu.Columns[nameof(LichSuDangKy.HienThi)]!.Visible = false;
         }
         if (dgvLichSu.Columns.Contains(nameof(LichSuDangKy.ThanhVien)))
         {
@@ -164,13 +173,26 @@ public partial class FrmDangKyGoi : Form
 
             var km = cboKhuyenMai.SelectedItem as KhuyenMai;
             var kq = await _bll.DangKyGoiAsync(tv.MaTV, g.MaGoi, km?.MaKM, dtpNgayBatDau.Value, SessionManager.NguoiDungHienTai.MaNV);
-
             await TaiLichSuAsync();
-            MessageBox.Show($"Đã đăng ký gói. Hóa đơn #{kq.Item2} đang chờ thanh toán.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            var hoiThanhToan = MessageBox.Show(
+                $"Đã đăng ký gói tập thành công!\nHóa đơn #{kq.MaHD} đang chờ thanh toán.\nBạn có muốn mở màn hình thu tiền ngay bây giờ không?",
+                "Đăng ký thành công",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (hoiThanhToan == DialogResult.Yes)
+            {
+                using var frmTT = new FrmThanhToan(kq.MaHD);
+                if (frmTT.ShowDialog(this) == DialogResult.OK)
+                {
+                    await TaiLichSuAsync();
+                }
+            }
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Không thể đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 

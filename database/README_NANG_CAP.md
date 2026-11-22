@@ -2,7 +2,7 @@
 
 ## Kết quả
 
-`01_upgrade_ql_phonggym_v3.sql` là migration bổ sung chạy một lần: không `DROP` bảng, không xóa dữ liệu và không đổi tên bảng/cột cũ. Chạy sau file gốc `htql_gym_v2.sql`. `02_seed_v3.sql` thêm dữ liệu tối thiểu; `03_test_v3.sql` là smoke test chạy trong transaction rồi rollback.
+`01_upgrade_ql_phonggym_v3.sql` là migration bổ sung chạy một lần: không `DROP` bảng, không xóa dữ liệu và không đổi tên bảng/cột cũ. Chạy sau file gốc `htql_gym_v2.sql`. `02_seed_v3.sql` thêm dữ liệu tối thiểu; `03_test_v3.sql` là smoke test chạy trong transaction rồi rollback. Sau migration mã nghiệp vụ `13_chuan_hoa_ma_nghiep_vu.sql`, chạy `14_sua_checkin_va_hoan_kho.sql`, `15_danh_dau_diem_danh_legacy.sql`, `16_dong_bo_ma_code_khuyen_mai.sql` và `17_bo_sung_du_lieu_demo_lich_diemdanh.sql`; các migration này lần lượt sửa check-in/kho, đánh dấu điểm danh cũ, đồng bộ mã khuyến mãi và hoàn thiện dữ liệu mẫu demo. Các script `14_test_checkin_va_hoan_kho.sql`, `15_test_lich_diemdanh_succhua.sql`, `16_test_ma_code_va_bao_cao_kho.sql` và `17_test_du_lieu_demo.sql` là kiểm thử mục tiêu.
 
 ## Đánh giá database gốc
 
@@ -35,10 +35,14 @@ NhaCungCap ─< ThietBi ─< BaoTriThietBi
 ## Quy tắc triển khai
 
 1. Sao lưu database và phục hồi bản sao để thử migration.
-2. Tạo database bằng `htql_gym_v2.sql` (hoặc dùng bản production tương thích), rồi chạy `01`, `02`, `03` theo thứ tự trong SSMS với SQLCMD tắt.
-3. Kiểm tra `03_test_v3.sql` trả về `PASS`; transaction luôn rollback. Chạy `DBCC CHECKCONSTRAINTS` và backup sau migration.
+2. Tạo database bằng `htql_gym_v2.sql` (hoặc dùng bản production tương thích), rồi chạy `01`, `02`, `03`, `13`, `14`, `15`, `16`, `17`, `18`, `19`, `20` theo thứ tự trong SSMS với SQLCMD tắt.
+3. Kiểm tra `03_test_v3.sql`, các script test 14–17, `19_test_phien_11.sql` và `20_test_phien_12.sql` trả về `PASS`; các transaction kiểm thử luôn rollback. Chạy `DBCC CHECKCONSTRAINTS` và backup sau migration.
 4. Cập nhật ứng dụng chỉ gọi `sp_*` cho nghiệp vụ ghi, đặc biệt là thanh toán, bán hàng và kho. Không INSERT trực tiếp vào các bảng mapping hóa đơn.
 5. `PhieuBanHang`/`ChiTietPhieuBanHang` là dữ liệu legacy cần đối soát trước khi chuyển đổi, nên migration cố ý không tự tạo hóa đơn từ chúng (tránh nhân đôi doanh thu). Bán hàng mới dùng `sp_BanSanPham` + `HoaDon`.
+
+6. Migration `18_phan_quyen_nghiep_vu.sql` tạo hàm/trigger guard cho hóa đơn, thanh toán, kho, bảo trì và lịch sử gói. Ứng dụng vẫn phải kiểm tra quyền ở UI/BLL; trigger là lớp bảo vệ cuối cho các bảng có `MaNV`.
+7. Migration `19_sua_nghiep_vu_phien_11.sql` sửa hoàn tiền toàn bộ phải vô hiệu hóa gói/PT, chặn check-in phòng không hoạt động, giới hạn bảo lưu trong thời hạn gói và chuyển PT từ `Chờ thanh toán` sang `Đang học` chỉ sau khi thanh toán đủ. Chạy `19_test_phien_11.sql` để xác minh; các mutation trong test đều rollback.
+8. Migration `20_sua_bao_mat_validation_phien_12.sql` bắt buộc actor ở các procedure check-in/lớp/lịch/điểm danh, thêm validation liên hệ ở database và audit/lockout đăng nhập. Chạy `20_test_phien_12.sql`; các mutation validation và lockout đều rollback.
 
 ## Bảo mật và vận hành
 

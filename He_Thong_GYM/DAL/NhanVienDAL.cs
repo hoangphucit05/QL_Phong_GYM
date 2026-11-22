@@ -7,17 +7,17 @@ public sealed class NhanVienDAL
 {
     public async Task<List<NhanVien>> LayNhanVienDangLamAsync()
     {
-        const string sql="SELECT MaNV,HoTen,NgaySinh,GioiTinh,SDT,Email,DiaChi,ChucVu,Luong,TrangThai FROM dbo.NhanVien WHERE TrangThai=N'Đang làm' ORDER BY HoTen;";
+        const string sql="SELECT MaNV,MaNhanVien,HoTen,NgaySinh,GioiTinh,SDT,Email,DiaChi,ChucVu,Luong,TrangThai FROM dbo.NhanVien WHERE TrangThai=N'Đang làm' ORDER BY HoTen;";
         var danhSach=new List<NhanVien>(); await using var cn=DbConnectionFactory.CreateConnection();await using var cmd=new SqlCommand(sql,cn);await cn.OpenAsync();await using var rd=await cmd.ExecuteReaderAsync();
-        while(await rd.ReadAsync())danhSach.Add(new NhanVien{MaNV=rd.GetInt32(0),HoTen=rd.GetString(1),NgaySinh=rd.GetDateTime(2),GioiTinh=rd.IsDBNull(3)?null:rd.GetString(3),SDT=rd.GetString(4),Email=rd.IsDBNull(5)?null:rd.GetString(5),DiaChi=rd.IsDBNull(6)?null:rd.GetString(6),ChucVu=rd.GetString(7),Luong=rd.IsDBNull(8)?null:rd.GetDecimal(8),TrangThai=rd.GetString(9)});
+        while(await rd.ReadAsync())danhSach.Add(new NhanVien{MaNV=rd.GetInt32(0),MaNhanVien=rd.GetString(1),HoTen=rd.GetString(2),NgaySinh=rd.GetDateTime(3),GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),SDT=rd.GetString(5),Email=rd.IsDBNull(6)?null:rd.GetString(6),DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),ChucVu=rd.GetString(8),Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),TrangThai=rd.GetString(10)});
         return danhSach;
     }
     public async Task<List<NhanVien>> LayDanhSachAsync(string? tuKhoa = null)
     {
         const string sql = """
-            SELECT MaNV,HoTen,NgaySinh,GioiTinh,SDT,Email,DiaChi,ChucVu,Luong,TrangThai
+            SELECT MaNV,MaNhanVien,HoTen,NgaySinh,GioiTinh,SDT,Email,DiaChi,ChucVu,Luong,TrangThai
             FROM dbo.NhanVien
-            WHERE @TuKhoa IS NULL OR HoTen LIKE N'%' + @TuKhoa + N'%' OR SDT LIKE '%' + @TuKhoa + '%'
+            WHERE @TuKhoa IS NULL OR MaNhanVien LIKE '%' + @TuKhoa + '%' OR HoTen LIKE N'%' + @TuKhoa + N'%' OR SDT LIKE '%' + @TuKhoa + '%'
             ORDER BY MaNV DESC;
             """;
         var danhSach = new List<NhanVien>();
@@ -26,7 +26,7 @@ public sealed class NhanVienDAL
         cmd.Parameters.Add("@TuKhoa", System.Data.SqlDbType.NVarChar, 100).Value = string.IsNullOrWhiteSpace(tuKhoa) ? DBNull.Value : tuKhoa.Trim();
         await cn.OpenAsync(); await using var rd = await cmd.ExecuteReaderAsync();
         while (await rd.ReadAsync())
-            danhSach.Add(new NhanVien { MaNV=rd.GetInt32(0),HoTen=rd.GetString(1),NgaySinh=rd.GetDateTime(2),GioiTinh=rd.IsDBNull(3)?null:rd.GetString(3),SDT=rd.GetString(4),Email=rd.IsDBNull(5)?null:rd.GetString(5),DiaChi=rd.IsDBNull(6)?null:rd.GetString(6),ChucVu=rd.GetString(7),Luong=rd.IsDBNull(8)?null:rd.GetDecimal(8),TrangThai=rd.GetString(9) });
+            danhSach.Add(new NhanVien { MaNV=rd.GetInt32(0),MaNhanVien=rd.GetString(1),HoTen=rd.GetString(2),NgaySinh=rd.GetDateTime(3),GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),SDT=rd.GetString(5),Email=rd.IsDBNull(6)?null:rd.GetString(6),DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),ChucVu=rd.GetString(8),Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),TrangThai=rd.GetString(10) });
         return danhSach;
     }
 
