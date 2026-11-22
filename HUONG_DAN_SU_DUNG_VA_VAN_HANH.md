@@ -33,12 +33,19 @@ Mật khẩu mặc định của tất cả các tài khoản demo trong hệ th
    - Bấm **Đăng ký gói**: Sau khi đăng ký thành công, phần mềm tự động hỏi: *"Bạn có muốn mở màn hình thu tiền ngay bây giờ không?"*.
    - Bấm **Yes**: Màn hình **Thu tiền** (`FrmThanhToan`) mở ra với đúng mã hóa đơn và số tiền cần thanh toán -> Chọn phương thức (Tiền mặt / Chuyển khoản) -> Bấm **Xác nhận thanh toán**.
 
-### 2.2. Luồng Check-in / Check-out Quầy (Nguyên tắc FIFO)
+### 2.2. Luồng Check-in / Check-out Quầy (Theo quyền gói)
 1. Mở menu **Vận hành gói / Check-in** (`FrmVanHanhGoi`):
-   - Chọn phòng tập (Hệ thống chặn không cho chọn phòng đang bảo trì/tạm ngưng).
-   - Quét mã thẻ hoặc chọn Hội viên -> Bấm **Check-in**.
-   - **Cơ chế FIFO:** Hệ thống tự động kiểm tra và ưu tiên trừ lượt/hạn của gói tập sắp hết hạn sớm nhất trước, tránh thiệt thòi cho hội viên có nhiều gói.
-2. Khi hội viên tập xong: Bấm **Check-out** để kết thúc lượt tập, giải phóng trạng thái mở.
+   - Chọn Hội viên. Bảng bên dưới hiển thị toàn bộ đăng ký gói và cột **Dịch vụ được cấp quyền**.
+   - Chọn đúng đăng ký gói muốn sử dụng. Danh sách **Phòng tập** chỉ còn các phòng được cấp quyền của gói đó; phòng bảo trì/đóng không xuất hiện.
+   - Bấm **Check-in**. Hệ thống kiểm tra lại thanh toán, thời hạn, số lượt, khung giờ, quyền dịch vụ và quyền phòng ở database.
+   - Nếu không chọn gói, chọn gói hết hạn hoặc phòng không thuộc gói, nút Check-in ở trạng thái nghỉ. Khi gọi trực tiếp database, thủ tục cũng từ chối.
+   - Khi hội viên có nhiều gói hợp lệ, nhân viên chủ động chọn gói phù hợp; nếu không truyền mã gói từ luồng cũ, database vẫn giữ cơ chế FIFO theo ngày hết hạn sớm nhất.
+   - Sau khi Check-in thành công, màn hình tự chuyển sang tab **Đang tập / Chờ Check-out** và làm mới danh sách toàn bộ hội viên đang có phiên mở.
+2. Khi hội viên tập xong:
+   - Mở tab **Đang tập / Chờ Check-out**.
+   - Chọn đúng dòng hội viên; hệ thống tự điền hội viên và phòng lên khu vực thao tác.
+   - Bấm **Check-out** để kết thúc lượt tập, giải phóng trạng thái mở.
+   - Dùng **Làm mới danh sách đang tập** để kiểm tra lại danh sách khi có nhiều nhân viên cùng vận hành quầy.
 
 ### 2.3. Luồng Bán lẻ Nhanh cho Khách vãng lai & Hủy hóa đơn
 1. Mở menu **Sản phẩm và bán hàng** (`FrmSanPham`):

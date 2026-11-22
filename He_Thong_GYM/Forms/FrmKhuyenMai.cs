@@ -82,8 +82,7 @@ public partial class FrmKhuyenMai : Form
         }
 
         var list = ketQua.ToList();
-        dgvKhuyenMai.DataSource = null;
-        dgvKhuyenMai.DataSource = list;
+        UiGridHelper.DatNguon(dgvKhuyenMai, list);
         DinhDangLuoi();
         UiGridHelper.BoChon(dgvKhuyenMai);
 

@@ -41,9 +41,12 @@ public partial class FrmHoaDon : Form
         var hoaDon = dgvHoaDon.CurrentRow?.DataBoundItem as HoaDonView;
         bool coChon = hoaDon != null;
         bool chuaHuy = coChon && !string.Equals(hoaDon!.TrangThai, "Hủy", StringComparison.OrdinalIgnoreCase);
+        bool coTheThuHoacHoan = coChon && chuaHuy &&
+            (hoaDon!.ConNo > 0 || hoaDon.DaThanhToan > 0);
+        bool coTheHuy = coChon && chuaHuy && hoaDon!.DaThanhToan <= 0;
 
-        UiButtonHelper.SetTrangThai(btnThanhToan, coChon, Color.FromArgb(5, 150, 105));
-        UiButtonHelper.SetTrangThai(btnHuyHoaDon, chuaHuy, Color.FromArgb(220, 38, 38));
+        UiButtonHelper.SetTrangThai(btnThanhToan, coTheThuHoacHoan, Color.FromArgb(5, 150, 105));
+        UiButtonHelper.SetTrangThai(btnHuyHoaDon, coTheHuy, Color.FromArgb(220, 38, 38));
     }
 
     private async Task TaiDanhSachAsync()
@@ -84,17 +87,33 @@ public partial class FrmHoaDon : Form
             var trangThaiChon = cboTrangThai.SelectedItem?.ToString();
             if (!string.IsNullOrEmpty(trangThaiChon))
             {
-                ketQua = ketQua.Where(h => string.Equals(h.TrangThai, trangThaiChon, StringComparison.OrdinalIgnoreCase));
+                if (string.Equals(trangThaiChon, "Chưa thanh toán", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(trangThaiChon, "Chưa thanh toán / còn nợ", StringComparison.OrdinalIgnoreCase))
+                {
+                    // "Chưa thanh toán" mang nghĩa chưa thu đủ: bao gồm cả hóa đơn đã trả trước một phần.
+                    ketQua = ketQua.Where(CoConNo);
+                }
+                else
+                {
+                    ketQua = ketQua.Where(h => string.Equals(h.TrangThai, trangThaiChon, StringComparison.OrdinalIgnoreCase));
+                }
             }
         }
 
         var list = ketQua.ToList();
-        dgvHoaDon.DataSource = null;
-        dgvHoaDon.DataSource = list;
+        UiGridHelper.DatNguon(dgvHoaDon, list);
         DinhDangLuoi();
         UiGridHelper.BoChon(dgvHoaDon);
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} hóa đơn";
+    }
+
+    private static bool CoConNo(HoaDonView hoaDon)
+    {
+        return hoaDon.ConNo > 0 &&
+               !string.Equals(hoaDon.TrangThai, "Đã thanh toán", StringComparison.OrdinalIgnoreCase) &&
+               !string.Equals(hoaDon.TrangThai, "Đã hoàn tiền", StringComparison.OrdinalIgnoreCase) &&
+               !string.Equals(hoaDon.TrangThai, "Hủy", StringComparison.OrdinalIgnoreCase);
     }
 
     private void DinhDangLuoi()

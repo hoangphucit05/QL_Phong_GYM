@@ -1187,3 +1187,108 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
   - `UiInspector`: PASS 21/21 Form.
   - Regression SQL: PASS 100% (12/12 luồng).
 - **Kết luận**: Giao diện phần mềm trở nên trực quan, hiện đại, dẫn dắt người dùng rõ ràng theo từng bước và triệt tiêu hoàn toàn khả năng thao tác nhầm lẫn.
+---
+
+## Phiên hiện tại — Khắc phục Check-in/Check-out và đồng bộ ngữ cảnh CodexLB
+
+- **Ngày:** 23/11/2026.
+- **Phát hiện:** Các nút Check-in/Check-out đã gọi đúng stored procedure. Log cho thấy `TV000003 - Lê Thu Hà` Check-in thành công lúc `02:03:21` với mã `CI-20261123-000053`, sau đó Check-out thành công lúc `02:03:25`. Các lỗi ngay trước đó là lỗi nghiệp vụ hợp lệ: Check-out khi chưa có phiên mở (`50012`) và Check-in lần hai khi phiên còn mở (`50010`).
+- **Thay đổi mã:**
+  - `VanHanhDAL.CoPhienCheckInMoAsync` đọc trạng thái phiên mở.
+  - `FrmVanHanhGoi` chỉ bật Check-out khi thành viên có phiên mở; Check-in bị khóa trong thời gian đó.
+  - `UiErrorMessage` ánh xạ lỗi `50010`, `50011`, `50012`, `50044`, `50045`, `50046`, `52106`, `52107` thành thông báo nghiệp vụ cụ thể.
+  - Bổ sung `dbo.sp_MoLaiBaoLuuGoiTap` qua migration `database/25_bo_sung_mo_lai_bao_luu.sql`.
+- **Database/UI:** Procedure mở lại bảo lưu đã được áp dụng trên database local. Khi chạy bản mã mới cần đóng/mở lại app vì executable cũ đang chạy sẽ giữ DLL cũ.
+- **Kiểm thử:** Query xác nhận không còn phiên Check-in mở cho `MaTV=3`; procedure `sp_CheckIn`, `sp_CheckOut`, `sp_MoLaiBaoLuuGoiTap` đều tồn tại.
+- **Trạng thái:** Đã sửa mã; cần restart ứng dụng rồi build lại để xác nhận trực tiếp trạng thái nút trên UI.
+
+## Phiên xử lý lỗi build — Duplicate Assembly Attributes
+
+- **Nguyên nhân:** thư mục tạm `He_Thong_GYM/artifacts/obj-check` nằm trong project và chứa `.NETCoreApp,Version=v10.0.AssemblyAttributes.cs` cùng `He_Thong_GYM.AssemblyInfo.cs`; SDK project quét chúng như source lần nữa.
+- **Biện pháp:** chuyển `artifacts/build-check` và `artifacts/obj-check` ra ngoài workspace; không xóa hay thay đổi mã nguồn nghiệp vụ.
+- **Xác nhận:** build với output/intermediate ngoài repository đạt **0 warning, 0 error**.
+- **Quy tắc cho phiên sau:** khi cần build tạm, dùng thư mục ngoài workspace, ví dụ `%LOCALAPPDATA%\Temp\GymPro-build-check-*`, hoặc cấu hình exclude rõ ràng; không tạo `obj-*` bên trong thư mục project.
+
+## Cập nhật nghiệp vụ — Mở lại bảo lưu sớm
+
+- Cho phép mở lại gói khi chưa tới `DenNgay`, phù hợp trường hợp hội viên hoàn thành việc sớm và quay lại tập.
+- Procedure tính số ngày tạm dừng thực tế: từ `TuNgay` đến ngày mở lại, tối đa bằng khoảng bảo lưu đã đăng ký.
+- Chỉ số ngày thực tế được cộng vào `NgayKetThuc`; `TongSoNgayBaoLuu` được điều chỉnh lại để không tính phần ngày chưa sử dụng.
+- Đã áp dụng lại `database/25_bo_sung_mo_lai_bao_luu.sql` trên database local và kiểm thử với `MaDKG=3` trong transaction rollback; dữ liệu sau rollback vẫn là `Tạm dừng`, bảo lưu `Đang bảo lưu`.
+
+## Cập nhật UX — Danh sách đang tập và Check-out tập trung
+
+- Thêm tab **Đang tập / Chờ Check-out** vào `FrmVanHanhGoi` để hiển thị tất cả phiên có `ThoiGianRa IS NULL`.
+- Sau Check-in thành công, form tự tải lại danh sách và chuyển sang tab này.
+- Chọn một dòng đang tập sẽ tự điền thành viên và phòng vào khu vực thao tác; nhân viên không cần dò từng tên trong ComboBox.
+- Thêm nút **Làm mới danh sách đang tập** để kiểm tra nhanh trạng thái quầy.
+- Cập nhật tài liệu vận hành `HUONG_DAN_SU_DUNG_VA_VAN_HANH.md`.
+- Build kiểm tra sau thay đổi: PASS, 0 warning, 0 error.
+
+## Cập nhật màu nút và trạng thái tương tác
+
+- `UiButtonHelper` bổ sung màu khi rê chuột và nhấn nút cho toàn bộ nút nghiệp vụ.
+- Màu chức năng: Check-in xanh lá, Check-out xanh dương, gia hạn xanh ngọc, bảo lưu tím, mở lại xanh cyan, làm mới slate.
+- Nút disabled vẫn dùng nền xám nhạt và không nhận màu hover/pressed.
+- Build kiểm tra: PASS, 0 warning, 0 error.
+
+## Phiên UX - Bổ sung tìm kiếm và sắp xếp danh sách
+
+- **Ngày:** 23/11/2026.
+- **Yêu cầu:** giúp nhân viên tra cứu nhanh và sắp xếp các bảng dữ liệu trong những form thường dùng.
+- **Thực hiện:**
+  - Tạo `SortableBindingList<T>` trong `UiGridHelper`; các cột có `DataPropertyName` được bật `SortMode = Automatic`.
+  - Chuyển nguồn dữ liệu của các lưới danh sách chính sang `UiGridHelper.DatNguon(...)`, nhờ đó nhấn tiêu đề cột sẽ sắp xếp dữ liệu thật theo kiểu số, ngày, giờ hoặc chuỗi.
+  - Giữ nguyên các bộ lọc hiện có ở Thành viên, Gói tập, HLV, Hóa đơn, Bảo trì, Đăng ký, Sản phẩm, Lớp tập, Khuyến mãi, Phòng tập và Thiết bị.
+  - Bổ sung tìm kiếm thời gian thực cho `FrmTaiKhoan` theo mã tài khoản, tên đăng nhập, nhân viên, vai trò và trạng thái; thêm nút `Làm mới / Bỏ lọc`.
+  - Sau khi lọc hoặc thay nguồn, lưới được bỏ chọn để tránh vô tình thao tác trên dòng đầu tiên; các nút phụ thuộc dòng chọn được cập nhật về trạng thái phù hợp.
+- **Kiểm thử:** build ngoài workspace thành công, `0 Warning, 0 Error`; không tạo thêm thư mục build trong project.
+- **Trạng thái:** hoàn tất phần code và build kiểm tra; cần mở ứng dụng để kiểm tra trực quan thao tác nhấn tiêu đề cột và ô tìm kiếm trên máy demo.
+
+## Phiên UX - Tăng tương phản tab Check-in/Check-out
+
+## Phiên nghiệp vụ - Chuyển phòng trong cùng phiên tập
+
+- **Ngày:** 23/11/2026.
+- **Mục tiêu:** hội viên có thể đổi khu vực tập mà không phải Check-out rồi Check-in lại và không bị tính thêm lượt.
+- **Thực hiện:** thêm migration `database/26_bo_sung_chuyen_phong_checkin.sql`, procedure `dbo.sp_ChuyenPhongCheckIn`, nút `Chuyển phòng` trên `FrmVanHanhGoi`, cùng DAL/BLL và kiểm tra quyền, phòng hoạt động, sức chứa.
+- Procedure chỉ cập nhật phòng trên phiên Check-in đang mở, không tạo lượt mới và không tăng lượt gói; thao tác được ghi audit.
+- **Kiểm thử:** migration áp dụng thành công trên database local; build ngoài workspace PASS, 0 warning, 0 error.
+
+## Khắc phục lỗi SQL khi chuyển phòng
+
+- Log ứng dụng xác định lỗi `1934`: procedure được tạo khi `QUOTED_IDENTIFIER` tắt, trong khi `LichSuCheckIn` có filtered index.
+- Đã tạo lại migration với đầy đủ SET option chuẩn; metadata procedure xác nhận `uses_quoted_identifier=1`.
+- Đã chạy thử chuyển phòng trong transaction rollback thành công, không để lại dữ liệu test.
+
+- `FrmVanHanhGoi` dùng tab tự vẽ màu để phân biệt rõ tab `Gói tập` và `Đang tập / Chờ Check-out`.
+- Tab đang chọn có màu nổi bật (xanh dương hoặc xanh teal), tab chưa chọn dùng nền slate sáng và chữ tối.
+- Nút `Làm mới danh sách đang tập` dùng màu teal, nền thanh công cụ slate sáng để dễ nhận biết.
+
+## Phiên nghiệp vụ — Phân quyền dịch vụ theo gói
+
+- **Ngày:** 23/11/2026.
+- **Mục tiêu:** khi Check-in, nhân viên chọn gói đăng ký nào thì hệ thống chỉ hiển thị và cho phép sử dụng đúng dịch vụ/phòng mà gói đó được cấp.
+- **Nguyên nhân cũ:** `sp_CheckIn` tự chọn gói theo FIFO; `FrmVanHanhGoi` không truyền `MaDKG` được chọn và ComboBox phòng nạp toàn bộ phòng hoạt động.
+- **Thực hiện:** thêm `database/27_phan_quyen_dich_vu_theo_goi.sql`; tạo `GoiTapDichVu`, `GoiTapPhong`; seed quyền cho 15 gói demo; cập nhật `sp_CheckIn` nhận `@MaDKG` và kiểm tra quyền; cập nhật `sp_ChuyenPhongCheckIn` để không chuyển sang phòng ngoài quyền gói.
+- **UI:** `DangKyGoiView` hiển thị cột `Dịch vụ được cấp quyền`; chọn dòng gói sẽ nạp lại ComboBox chỉ với phòng được cấp cho `MaDKG`; Check-in yêu cầu chọn gói hợp lệ và truyền đúng mã đăng ký.
+- **Phân loại demo:** Basic/Sinh viên/Family → Gym Tổng Hợp; Premium → Gym/Cardio/Đa Năng/Gym Nâng Cao + lớp nhóm; VIP → toàn bộ phòng + dịch vụ VIP; Yoga/Cardio/PT Combo → phòng/dịch vụ chuyên môn tương ứng.
+- **Database:** migration đã áp dụng thành công trên `QL_PhongGym`; truy vấn xác nhận quyền dịch vụ/phòng của 15 gói; procedure `sp_CheckIn` có thêm `@MaDKG`.
+- **Kiểm thử:** `dotnet build He_Thong_GYM\\He_Thong_GYM.csproj --no-restore` PASS, 0 warning, 0 error.
+- **Luồng demo:** chọn hội viên → chọn gói → xem cột dịch vụ → chọn phòng trong danh sách lọc → Check-in. Không chọn gói hoặc chọn phòng ngoài quyền sẽ bị khóa/từ chối.
+
+## Phiên nghiệp vụ — Lọc hóa đơn đã trả trước một phần
+
+- **Ngày:** 23/11/2026.
+- **Vấn đề:** bộ lọc `Chưa thanh toán` trước đây so sánh đúng chuỗi `TrangThai=N'Chưa thanh toán'`, nên hóa đơn có `Đã thanh toán một phần` không xuất hiện dù vẫn còn công nợ.
+- **Sửa:** `FrmHoaDon.ApDungLoc()` dùng `HoaDonView.ConNo > 0` cho lựa chọn `Chưa thanh toán`, đồng thời loại trừ hóa đơn đã thanh toán đủ, đã hoàn tiền và đã hủy.
+- **Kết quả:** hóa đơn đã trả trước một khoản vẫn hiện khi lọc `Chưa thanh toán`; người dùng có thể chọn hóa đơn và tiếp tục thu phần còn thiếu. Lựa chọn `Đã thanh toán một phần` riêng vẫn hoạt động.
+- **Kiểm thử:** build lại PASS, 0 warning, 0 error.
+
+## Phiên rà soát luồng nút — Lỗi CurrentCell và trạng thái sau thao tác
+
+- **Ngày:** 23/11/2026.
+- **Lỗi từ ảnh:** `FrmVanHanhGoi` đặt `dgvGoi.CurrentCell = row.Cells[0]` trong khi cột `MaDKG` đã ẩn, gây lỗi `Current cell cannot be set to an invisible cell` khi chọn phiên đang tập.
+- **Đã sửa:** tìm cột đang hiển thị rồi mới đặt `CurrentCell`; không còn thao tác trên cột ẩn.
+- **Rà soát luồng nút:** `FrmDiemDanh` đã thay việc bật cứng nút trong `finally` bằng tính lại trạng thái theo quyền/lớp/học viên; hóa đơn đã thanh toán/đã hủy không còn hiện nút thao tác không hợp lệ; gói đã ngừng áp dụng và nhân viên đã nghỉ việc không còn nút chuyển trạng thái tương ứng.
+- **Kiểm thử build:** PASS, 0 warning, 0 error.

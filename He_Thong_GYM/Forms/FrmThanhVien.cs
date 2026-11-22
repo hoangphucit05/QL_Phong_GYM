@@ -274,7 +274,7 @@ public partial class FrmThanhVien : Form
     {
         try
         {
-            dgvThanhVien.DataSource = await _thanhVienBLL.LayDanhSachAsync(tuKhoa);
+            UiGridHelper.DatNguon(dgvThanhVien, await _thanhVienBLL.LayDanhSachAsync(tuKhoa));
             lblTrangThaiTimKiem.Text = string.IsNullOrWhiteSpace(tuKhoa)
                 ? "Hiển thị toàn bộ danh sách thành viên."
                 : $"Đã lọc theo từ khóa: {tuKhoa.Trim()}";

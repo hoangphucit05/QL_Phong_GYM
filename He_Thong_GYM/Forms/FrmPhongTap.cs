@@ -92,8 +92,7 @@ public partial class FrmPhongTap : Form
         }
 
         var list = ketQua.ToList();
-        dgv.DataSource = null;
-        dgv.DataSource = list;
+        UiGridHelper.DatNguon(dgv, list);
         DinhDangLuoi();
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} phòng tập";

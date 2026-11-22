@@ -32,6 +32,10 @@ partial class FrmTaiKhoan
         btnLuu = new Button();
         btnDatLaiMatKhau = new Button();
         btnKhoaMo = new Button();
+        panelTimKiem = new Panel();
+        lblTimKiem = new Label();
+        txtTimKiem = new TextBox();
+        btnLamMoi = new Button();
         dgvTaiKhoan = new DataGridView();
         colMaTK = new DataGridViewTextBoxColumn();
         colTenDangNhap = new DataGridViewTextBoxColumn();
@@ -284,8 +288,57 @@ partial class FrmTaiKhoan
         btnKhoaMo.UseVisualStyleBackColor = false;
         btnKhoaMo.Click += btnKhoaMo_Click;
         // 
+        // panelTimKiem
+        //
+        panelTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        panelTimKiem.BackColor = Color.White;
+        panelTimKiem.Controls.Add(btnLamMoi);
+        panelTimKiem.Controls.Add(txtTimKiem);
+        panelTimKiem.Controls.Add(lblTimKiem);
+        panelTimKiem.Location = new Point(24, 280);
+        panelTimKiem.Name = "panelTimKiem";
+        panelTimKiem.Size = new Size(1152, 40);
+        panelTimKiem.TabIndex = 3;
+        //
+        // lblTimKiem
+        //
+        lblTimKiem.AutoSize = true;
+        lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblTimKiem.Location = new Point(10, 12);
+        lblTimKiem.Name = "lblTimKiem";
+        lblTimKiem.Size = new Size(67, 15);
+        lblTimKiem.TabIndex = 0;
+        lblTimKiem.Text = "Tìm kiếm:";
+        //
+        // txtTimKiem
+        //
+        txtTimKiem.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        txtTimKiem.Location = new Point(88, 7);
+        txtTimKiem.Name = "txtTimKiem";
+        txtTimKiem.PlaceholderText = "Tên đăng nhập, nhân viên, vai trò hoặc trạng thái...";
+        txtTimKiem.Size = new Size(870, 23);
+        txtTimKiem.TabIndex = 1;
+        txtTimKiem.TextChanged += BoLocThayDoi;
+        //
+        // btnLamMoi
+        //
+        btnLamMoi.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        btnLamMoi.BackColor = Color.FromArgb(71, 85, 105);
+        btnLamMoi.Cursor = Cursors.Hand;
+        btnLamMoi.FlatAppearance.BorderSize = 0;
+        btnLamMoi.FlatStyle = FlatStyle.Flat;
+        btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnLamMoi.ForeColor = Color.White;
+        btnLamMoi.Location = new Point(970, 4);
+        btnLamMoi.Name = "btnLamMoi";
+        btnLamMoi.Size = new Size(170, 32);
+        btnLamMoi.TabIndex = 2;
+        btnLamMoi.Text = "Làm mới / Bỏ lọc";
+        btnLamMoi.UseVisualStyleBackColor = false;
+        btnLamMoi.Click += btnLamMoi_Click;
+        //
         // dgvTaiKhoan
-        // 
+        //
         dgvTaiKhoan.AllowUserToAddRows = false;
         dgvTaiKhoan.AllowUserToDeleteRows = false;
         dgvTaiKhoan.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -296,14 +349,14 @@ partial class FrmTaiKhoan
         dgvTaiKhoan.ColumnHeadersHeight = 38;
         dgvTaiKhoan.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
         dgvTaiKhoan.Columns.AddRange(new DataGridViewColumn[] { colMaTK, colTenDangNhap, colNhanVien, colVaiTro, colTrangThai });
-        dgvTaiKhoan.Location = new Point(24, 292);
+        dgvTaiKhoan.Location = new Point(24, 334);
         dgvTaiKhoan.Name = "dgvTaiKhoan";
         dgvTaiKhoan.ReadOnly = true;
         dgvTaiKhoan.RowHeadersVisible = false;
         dgvTaiKhoan.RowTemplate.Height = 32;
         dgvTaiKhoan.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        dgvTaiKhoan.Size = new Size(1152, 407);
-        dgvTaiKhoan.TabIndex = 3;
+        dgvTaiKhoan.Size = new Size(1152, 365);
+        dgvTaiKhoan.TabIndex = 4;
         dgvTaiKhoan.SelectionChanged += dgvTaiKhoan_SelectionChanged;
         // 
         // colMaTK
@@ -374,6 +427,7 @@ partial class FrmTaiKhoan
         ClientSize = new Size(1200, 760);
         Controls.Add(panelTrangThai);
         Controls.Add(dgvTaiKhoan);
+        Controls.Add(panelTimKiem);
         Controls.Add(flowThaoTac);
         Controls.Add(groupThongTin);
         Controls.Add(panelTieuDe);
@@ -390,6 +444,8 @@ partial class FrmTaiKhoan
         tableThongTin.PerformLayout();
         flowThaoTac.ResumeLayout(false);
         ((System.ComponentModel.ISupportInitialize)dgvTaiKhoan).EndInit();
+        panelTimKiem.ResumeLayout(false);
+        panelTimKiem.PerformLayout();
         panelTrangThai.ResumeLayout(false);
         panelTrangThai.PerformLayout();
         ResumeLayout(false);
@@ -417,6 +473,10 @@ partial class FrmTaiKhoan
     private Button btnLuu;
     private Button btnDatLaiMatKhau;
     private Button btnKhoaMo;
+    private Panel panelTimKiem;
+    private Label lblTimKiem;
+    private TextBox txtTimKiem;
+    private Button btnLamMoi;
     private DataGridView dgvTaiKhoan;
     private DataGridViewTextBoxColumn colMaTK;
     private DataGridViewTextBoxColumn colTenDangNhap;

@@ -70,8 +70,7 @@ public partial class FrmSanPham : Form
         }
 
         var list = ketQua.ToList();
-        dgvSanPham.DataSource = null;
-        dgvSanPham.DataSource = list;
+        UiGridHelper.DatNguon(dgvSanPham, list);
         DinhDangLuoi();
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} sản phẩm";

@@ -9,6 +9,7 @@ public partial class FrmTaiKhoan : Form
 {
     private readonly DangNhapBLL _bll = new();
     private readonly NhanVienBLL _nhanVienBLL = new();
+    private List<TaiKhoan> _danhSachGoc = new();
     private TaiKhoan? _chon;
 
     public FrmTaiKhoan()
@@ -62,7 +63,43 @@ public partial class FrmTaiKhoan : Form
 
     private async Task TaiAsync()
     {
-        dgvTaiKhoan.DataSource = await _bll.LayDanhSachTaiKhoanAsync();
+        _danhSachGoc = await _bll.LayDanhSachTaiKhoanAsync();
+        ApDungLoc();
+    }
+
+    private void BoLocThayDoi(object? sender, EventArgs e)
+    {
+        ApDungLoc();
+    }
+
+    private void ApDungLoc()
+    {
+        var tuKhoa = txtTimKiem.Text.Trim();
+        var ketQua = _danhSachGoc.AsEnumerable();
+
+        if (!string.IsNullOrWhiteSpace(tuKhoa))
+        {
+            ketQua = ketQua.Where(x =>
+                x.TenDangNhap.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.HoTenNhanVien.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.VaiTro.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.TrangThai.Contains(tuKhoa, StringComparison.OrdinalIgnoreCase) ||
+                x.MaTK.ToString().Contains(tuKhoa, StringComparison.OrdinalIgnoreCase));
+        }
+
+        var list = ketQua.ToList();
+        UiGridHelper.DatNguon(dgvTaiKhoan, list);
+        UiGridHelper.BoChon(dgvTaiKhoan);
+        _chon = null;
+        CapNhatTrangThaiNut();
+        lblTrangThai.Text = string.IsNullOrWhiteSpace(tuKhoa)
+            ? $"Hiển thị {list.Count} tài khoản. Nhấn tiêu đề cột để sắp xếp."
+            : $"Hiển thị {list.Count} / {_danhSachGoc.Count} tài khoản theo từ khóa: {tuKhoa}";
+    }
+
+    private void btnLamMoi_Click(object? sender, EventArgs e)
+    {
+        txtTimKiem.Clear();
     }
 
     private void dgvTaiKhoan_SelectionChanged(object? s, EventArgs e)

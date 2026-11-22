@@ -35,7 +35,7 @@ NhaCungCap ─< ThietBi ─< BaoTriThietBi
 ## Quy tắc triển khai
 
 1. Sao lưu database và phục hồi bản sao để thử migration.
-2. Tạo database bằng `htql_gym_v2.sql` (hoặc dùng bản production tương thích), rồi chạy `01`, `02`, `03`, `13`, `14`, `15`, `16`, `17`, `18`, `19`, `20` theo thứ tự trong SSMS với SQLCMD tắt.
+2. Tạo database bằng `htql_gym_v2.sql` (hoặc dùng bản production tương thích), rồi chạy các migration theo thứ tự, bao gồm `25_bo_sung_mo_lai_bao_luu.sql`, `26_bo_sung_chuyen_phong_checkin.sql` và `27_phan_quyen_dich_vu_theo_goi.sql` để bổ sung mở lại bảo lưu, chuyển phòng và phân quyền dịch vụ/phòng theo gói.
 3. Kiểm tra `03_test_v3.sql`, các script test 14–17, `19_test_phien_11.sql` và `20_test_phien_12.sql` trả về `PASS`; các transaction kiểm thử luôn rollback. Chạy `DBCC CHECKCONSTRAINTS` và backup sau migration.
 4. Cập nhật ứng dụng chỉ gọi `sp_*` cho nghiệp vụ ghi, đặc biệt là thanh toán, bán hàng và kho. Không INSERT trực tiếp vào các bảng mapping hóa đơn.
 5. `PhieuBanHang`/`ChiTietPhieuBanHang` là dữ liệu legacy cần đối soát trước khi chuyển đổi, nên migration cố ý không tự tạo hóa đơn từ chúng (tránh nhân đôi doanh thu). Bán hàng mới dùng `sp_BanSanPham` + `HoaDon`.
@@ -43,6 +43,12 @@ NhaCungCap ─< ThietBi ─< BaoTriThietBi
 6. Migration `18_phan_quyen_nghiep_vu.sql` tạo hàm/trigger guard cho hóa đơn, thanh toán, kho, bảo trì và lịch sử gói. Ứng dụng vẫn phải kiểm tra quyền ở UI/BLL; trigger là lớp bảo vệ cuối cho các bảng có `MaNV`.
 7. Migration `19_sua_nghiep_vu_phien_11.sql` sửa hoàn tiền toàn bộ phải vô hiệu hóa gói/PT, chặn check-in phòng không hoạt động, giới hạn bảo lưu trong thời hạn gói và chuyển PT từ `Chờ thanh toán` sang `Đang học` chỉ sau khi thanh toán đủ. Chạy `19_test_phien_11.sql` để xác minh; các mutation trong test đều rollback.
 8. Migration `20_sua_bao_mat_validation_phien_12.sql` bắt buộc actor ở các procedure check-in/lớp/lịch/điểm danh, thêm validation liên hệ ở database và audit/lockout đăng nhập. Chạy `20_test_phien_12.sql`; các mutation validation và lockout đều rollback.
+9. Migration `25_bo_sung_mo_lai_bao_luu.sql` thêm luồng kết thúc bảo lưu: cập nhật lần bảo lưu thành `Đã kết thúc`, cộng lại số ngày bảo lưu vào ngày hết hạn và ghi lịch sử thao tác.
+10. Migration `26_bo_sung_chuyen_phong_checkin.sql` thêm luồng chuyển phòng trong phiên Check-in đang mở: chỉ cập nhật `LichSuCheckIn.MaPhong`, không tạo lượt mới, không tăng lượt gói; có kiểm tra quyền, phòng hoạt động và sức chứa.
+   - Migration cũng đặt đầy đủ SET option cần thiết cho filtered index của `LichSuCheckIn`, tránh lỗi SQL Server 1934 khi cập nhật phòng.
+11. Migration `27_phan_quyen_dich_vu_theo_goi.sql` tạo `GoiTapDichVu` và `GoiTapPhong`, seed quyền cho các gói demo và cập nhật `sp_CheckIn`/`sp_ChuyenPhongCheckIn`.
+   - Màn hình `FrmVanHanhGoi` hiển thị dịch vụ của từng gói, chỉ nạp các phòng được cấp quyền và truyền đúng `MaDKG` đã chọn vào Check-in.
+   - Database vẫn kiểm tra lại gói, thanh toán, thời hạn, lượt, quyền phòng và quyền nhân viên; không thể bypass bằng cách gọi procedure với phòng ngoài quyền.
 
 ## Bảo mật và vận hành
 

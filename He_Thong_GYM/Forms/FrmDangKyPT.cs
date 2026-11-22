@@ -94,8 +94,7 @@ public partial class FrmDangKyPT : Form
         }
 
         var list = ketQua.ToList();
-        dgvLichSu.DataSource = null;
-        dgvLichSu.DataSource = list;
+        UiGridHelper.DatNguon(dgvLichSu, list);
         DinhDangLuoiLichSu();
 
         lblThongKeLichSu.Text = $"Hiển thị: {list.Count} / {_lichSuGoc.Count} lượt";

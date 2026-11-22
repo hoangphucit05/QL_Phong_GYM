@@ -74,7 +74,7 @@ public partial class FrmHLV : Form
     {
         try
         {
-            dgvHLV.DataSource = await _hlvBLL.LayDanhSachAsync(k);
+            UiGridHelper.DatNguon(dgvHLV, await _hlvBLL.LayDanhSachAsync(k));
             lblTrangThai.Text = string.IsNullOrWhiteSpace(k) ? "Hiển thị toàn bộ huấn luyện viên." : $"Đã lọc: {k}";
         }
         catch (Exception ex)

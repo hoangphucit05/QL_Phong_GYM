@@ -34,12 +34,16 @@ public static class UiButtonHelper
             {
                 btn.BackColor = mauNenKichHoat.Value;
             }
+            btn.FlatAppearance.MouseOverBackColor = ControlPaint.Light(btn.BackColor, 0.16f);
+            btn.FlatAppearance.MouseDownBackColor = ControlPaint.Dark(btn.BackColor, 0.16f);
             btn.ForeColor = mauChuKichHoat ?? Color.White;
             btn.Cursor = Cursors.Hand;
         }
         else
         {
             btn.BackColor = MauNghiNen;
+            btn.FlatAppearance.MouseOverBackColor = MauNghiNen;
+            btn.FlatAppearance.MouseDownBackColor = MauNghiNen;
             btn.ForeColor = MauNghiChu;
             btn.Cursor = Cursors.Default;
         }

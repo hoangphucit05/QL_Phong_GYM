@@ -16,6 +16,7 @@ public partial class FrmGoiTap : Form
         InitializeComponent();
         txtTenGoi.PlaceholderText = "Nhập tên gói tập...";
         txtMoTa.PlaceholderText = "Nhập mô tả gói tập (không bắt buộc)...";
+        cboTrangThai.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
     }
 
     private async void FrmGoiTap_Load(object? s, EventArgs e)
@@ -45,10 +46,11 @@ public partial class FrmGoiTap : Form
     {
         bool coChon = _maGoi.HasValue;
         bool coQuyenLuu = coChon || _dangThemMoi;
+        bool dangApDung = !string.Equals(cboTrangThai.Text, "Ngừng áp dụng", StringComparison.OrdinalIgnoreCase);
 
         UiButtonHelper.SetTrangThai(btnThem, !_dangThemMoi, UiButtonHelper.MauThemMoi);
         UiButtonHelper.SetTrangThai(btnLuu, coQuyenLuu, UiButtonHelper.MauLuu);
-        UiButtonHelper.SetTrangThai(btnNgungApDung, coChon && !_dangThemMoi, UiButtonHelper.MauXoa);
+        UiButtonHelper.SetTrangThai(btnNgungApDung, coChon && !_dangThemMoi && dangApDung, UiButtonHelper.MauXoa);
     }
 
     private void DatTrangThaiNghi()
@@ -69,7 +71,7 @@ public partial class FrmGoiTap : Form
     {
         try
         {
-            dgvGoiTap.DataSource = await _bll.LayDanhSachAsync(k);
+            UiGridHelper.DatNguon(dgvGoiTap, await _bll.LayDanhSachAsync(k));
             lblTrangThai.Text = string.IsNullOrWhiteSpace(k) ? "Hiển thị toàn bộ gói tập." : $"Đã lọc: {k}";
         }
         catch (Exception ex)

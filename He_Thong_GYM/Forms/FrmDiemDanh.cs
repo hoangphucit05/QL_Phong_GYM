@@ -143,7 +143,7 @@ public partial class FrmDiemDanh : Form
         {
             MessageBox.Show(UiErrorMessage.Get(ex), "Không thể đăng ký", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-        finally { btnDangKy.Enabled = true; }
+        finally { CapNhatQuyenThaoTac(); }
     }
 
     private async void btnDiemDanh_Click(object? sender, EventArgs e)
@@ -168,7 +168,7 @@ public partial class FrmDiemDanh : Form
         {
             MessageBox.Show(UiErrorMessage.Get(ex), "Không thể điểm danh", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-        finally { btnDiemDanh.Enabled = true; }
+        finally { CapNhatQuyenThaoTac(); }
     }
 
     private void dgvHocVien_SelectionChanged(object? sender, EventArgs e)
@@ -197,7 +197,7 @@ public partial class FrmDiemDanh : Form
         }
         finally
         {
-            btnTaoBuoi.Enabled = true;
+            CapNhatQuyenThaoTac();
         }
     }
 
@@ -250,8 +250,7 @@ public partial class FrmDiemDanh : Form
             _ => ketQua.OrderBy(x => x.HoTen)
         };
 
-        dgvHocVien.DataSource = null;
-        dgvHocVien.DataSource = ketQua.ToList();
+        UiGridHelper.DatNguon(dgvHocVien, ketQua.ToList());
         DinhDangLuoiHocVien();
         UiGridHelper.BoChon(dgvHocVien);
     }

@@ -214,8 +214,7 @@ public partial class FrmThietBi : Form
             }
 
             var danhSachDaLoc = ketQua.ToList();
-            dgv.DataSource = null;
-            dgv.DataSource = danhSachDaLoc;
+            UiGridHelper.DatNguon(dgv, danhSachDaLoc);
             DinhDangLuoi();
 
             lblThongKe.Text = $"Đang hiển thị: {danhSachDaLoc.Count} / {_danhSachGoc.Count} thiết bị";

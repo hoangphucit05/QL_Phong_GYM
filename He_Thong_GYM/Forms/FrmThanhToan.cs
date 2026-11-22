@@ -46,8 +46,10 @@ public partial class FrmThanhToan : Form
             lblCongNo.Text = $"Tổng tiền: {h.TongTien:N0} đ | Đã trả: {h.DaThanhToan:N0} đ | Còn nợ: {h.ConNo:N0} đ";
             lblCongNo.ForeColor = h.ConNo > 0 ? Color.FromArgb(185, 28, 28) : Color.FromArgb(5, 150, 105);
             nudSoTien.Value = h.ConNo > 0 ? h.ConNo : 0;
-            UiButtonHelper.SetTrangThai(btnThanhToan, h.ConNo > 0, UiButtonHelper.MauLuu);
-            UiButtonHelper.SetTrangThai(btnHoanTien, h.DaThanhToan > 0, UiButtonHelper.MauXoa);
+            bool chuaKetThuc = !string.Equals(h.TrangThai, "Hủy", StringComparison.OrdinalIgnoreCase) &&
+                               !string.Equals(h.TrangThai, "Đã hoàn tiền", StringComparison.OrdinalIgnoreCase);
+            UiButtonHelper.SetTrangThai(btnThanhToan, chuaKetThuc && h.ConNo > 0, UiButtonHelper.MauLuu);
+            UiButtonHelper.SetTrangThai(btnHoanTien, chuaKetThuc && h.DaThanhToan > 0, UiButtonHelper.MauXoa);
         }
         else
         {

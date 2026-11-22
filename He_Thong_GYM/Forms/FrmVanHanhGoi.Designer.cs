@@ -26,6 +26,7 @@ partial class FrmVanHanhGoi
         cboPhong = new ComboBox();
         btnCheckIn = new Button();
         btnCheckOut = new Button();
+        btnChuyenPhong = new Button();
         dgvGoi = new DataGridView();
         groupGoi = new GroupBox();
         tableBaoLuu = new TableLayoutPanel();
@@ -36,6 +37,7 @@ partial class FrmVanHanhGoi
         lblLyDo = new Label();
         txtLyDo = new TextBox();
         btnBaoLuu = new Button();
+        btnMoLaiBaoLuu = new Button();
         flowGiaHan = new FlowLayoutPanel();
         lblNgay = new Label();
         nudSoNgay = new NumericUpDown();
@@ -53,9 +55,9 @@ partial class FrmVanHanhGoi
         ((System.ComponentModel.ISupportInitialize)nudSoNgay).BeginInit();
         panelTrangThai.SuspendLayout();
         SuspendLayout();
-        // 
+        //
         // panelTieuDe
-        // 
+        //
         panelTieuDe.BackColor = Color.White;
         panelTieuDe.Controls.Add(lblMoTa);
         panelTieuDe.Controls.Add(lblTieuDe);
@@ -65,9 +67,9 @@ partial class FrmVanHanhGoi
         panelTieuDe.Padding = new Padding(24, 16, 24, 16);
         panelTieuDe.Size = new Size(1100, 80);
         panelTieuDe.TabIndex = 0;
-        // 
+        //
         // lblTieuDe
-        // 
+        //
         lblTieuDe.AutoSize = true;
         lblTieuDe.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
@@ -104,11 +106,12 @@ partial class FrmVanHanhGoi
         // 
         // tableCheckIn
         // 
-        tableCheckIn.ColumnCount = 6;
+        tableCheckIn.ColumnCount = 7;
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+        tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
         tableCheckIn.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
         tableCheckIn.Controls.Add(lblTV, 0, 0);
@@ -117,6 +120,7 @@ partial class FrmVanHanhGoi
         tableCheckIn.Controls.Add(cboPhong, 3, 0);
         tableCheckIn.Controls.Add(btnCheckIn, 4, 0);
         tableCheckIn.Controls.Add(btnCheckOut, 5, 0);
+        tableCheckIn.Controls.Add(btnChuyenPhong, 6, 0);
         tableCheckIn.Dock = DockStyle.Fill;
         tableCheckIn.Font = new Font("Segoe UI", 9F);
         tableCheckIn.Location = new Point(16, 28);
@@ -205,6 +209,23 @@ partial class FrmVanHanhGoi
         btnCheckOut.Text = "Check-out";
         btnCheckOut.UseVisualStyleBackColor = false;
         // 
+        // btnChuyenPhong
+        //
+        btnChuyenPhong.BackColor = Color.FromArgb(13, 148, 136);
+        btnChuyenPhong.Cursor = Cursors.Hand;
+        btnChuyenPhong.Dock = DockStyle.Fill;
+        btnChuyenPhong.FlatAppearance.BorderSize = 0;
+        btnChuyenPhong.FlatStyle = FlatStyle.Flat;
+        btnChuyenPhong.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnChuyenPhong.ForeColor = Color.White;
+        btnChuyenPhong.Location = new Point(923, 3);
+        btnChuyenPhong.Margin = new Padding(3, 3, 3, 3);
+        btnChuyenPhong.Name = "btnChuyenPhong";
+        btnChuyenPhong.Size = new Size(119, 31);
+        btnChuyenPhong.TabIndex = 6;
+        btnChuyenPhong.Text = "Chuyển phòng";
+        btnChuyenPhong.UseVisualStyleBackColor = false;
+        //
         // dgvGoi
         // 
         dgvGoi.AllowUserToAddRows = false;
@@ -242,13 +263,14 @@ partial class FrmVanHanhGoi
         // 
         // tableBaoLuu
         // 
-        tableBaoLuu.ColumnCount = 7;
+        tableBaoLuu.ColumnCount = 8;
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
         tableBaoLuu.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
         tableBaoLuu.Controls.Add(lblTu, 0, 0);
         tableBaoLuu.Controls.Add(dtpTuNgay, 1, 0);
@@ -257,6 +279,7 @@ partial class FrmVanHanhGoi
         tableBaoLuu.Controls.Add(lblLyDo, 4, 0);
         tableBaoLuu.Controls.Add(txtLyDo, 5, 0);
         tableBaoLuu.Controls.Add(btnBaoLuu, 6, 0);
+        tableBaoLuu.Controls.Add(btnMoLaiBaoLuu, 7, 0);
         tableBaoLuu.Dock = DockStyle.Bottom;
         tableBaoLuu.Font = new Font("Segoe UI", 9F);
         tableBaoLuu.Location = new Point(16, 75);
@@ -349,8 +372,25 @@ partial class FrmVanHanhGoi
         btnBaoLuu.Text = "Bảo lưu";
         btnBaoLuu.UseVisualStyleBackColor = false;
         // 
-        // flowGiaHan
+        // btnMoLaiBaoLuu
+        //
+        btnMoLaiBaoLuu.BackColor = Color.FromArgb(14, 116, 144);
+        btnMoLaiBaoLuu.Cursor = Cursors.Hand;
+        btnMoLaiBaoLuu.Dock = DockStyle.Fill;
+        btnMoLaiBaoLuu.FlatAppearance.BorderSize = 0;
+        btnMoLaiBaoLuu.FlatStyle = FlatStyle.Flat;
+        btnMoLaiBaoLuu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnMoLaiBaoLuu.ForeColor = Color.White;
+        btnMoLaiBaoLuu.Location = new Point(1023, 7);
+        btnMoLaiBaoLuu.Margin = new Padding(3, 7, 3, 7);
+        btnMoLaiBaoLuu.Name = "btnMoLaiBaoLuu";
+        btnMoLaiBaoLuu.Size = new Size(119, 31);
+        btnMoLaiBaoLuu.TabIndex = 7;
+        btnMoLaiBaoLuu.Text = "M\u1edf l\u1ea1i b\u1ea3o l\u01b0u";
+        btnMoLaiBaoLuu.UseVisualStyleBackColor = false;
         // 
+        // flowGiaHan
+        //
         flowGiaHan.Controls.Add(lblNgay);
         flowGiaHan.Controls.Add(nudSoNgay);
         flowGiaHan.Controls.Add(lblDonViNgay);
@@ -478,6 +518,7 @@ partial class FrmVanHanhGoi
     private ComboBox cboPhong;
     private Button btnCheckIn;
     private Button btnCheckOut;
+    private Button btnChuyenPhong;
     private DataGridView dgvGoi;
     private GroupBox groupGoi;
     private FlowLayoutPanel flowGiaHan;
@@ -493,6 +534,7 @@ partial class FrmVanHanhGoi
     private Label lblLyDo;
     private TextBox txtLyDo;
     private Button btnBaoLuu;
+    private Button btnMoLaiBaoLuu;
     private Panel panelTrangThai;
     private Label lblTrangThai;
 }

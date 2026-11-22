@@ -19,6 +19,7 @@ public partial class FrmNhanVien : Form
         txtEmail.PlaceholderText = "Nhập email (không bắt buộc)...";
         txtDiaChi.PlaceholderText = "Nhập địa chỉ (không bắt buộc)...";
         txtChucVu.PlaceholderText = "Nhập chức vụ...";
+        cboTrangThai.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
     }
 
     private async void FrmNhanVien_Load(object? s, EventArgs e)
@@ -56,10 +57,11 @@ public partial class FrmNhanVien : Form
     {
         bool coChon = _maNV.HasValue;
         bool coQuyenLuu = coChon || _dangThemMoi;
+        bool dangLamViec = !string.Equals(cboTrangThai.Text, "Nghỉ việc", StringComparison.OrdinalIgnoreCase);
 
         UiButtonHelper.SetTrangThai(btnThem, !_dangThemMoi, UiButtonHelper.MauThemMoi);
         UiButtonHelper.SetTrangThai(btnLuu, coQuyenLuu, UiButtonHelper.MauLuu);
-        UiButtonHelper.SetTrangThai(btnNghiViec, coChon && !_dangThemMoi, UiButtonHelper.MauXoa);
+        UiButtonHelper.SetTrangThai(btnNghiViec, coChon && !_dangThemMoi && dangLamViec, UiButtonHelper.MauXoa);
     }
 
     private void DatTrangThaiNghi()
@@ -84,7 +86,7 @@ public partial class FrmNhanVien : Form
     {
         try
         {
-            dgvNhanVien.DataSource = await _bll.LayDanhSachAsync(k);
+            UiGridHelper.DatNguon(dgvNhanVien, await _bll.LayDanhSachAsync(k));
             DinhDangLuoi();
             lblTrangThaiTimKiem.Text = string.IsNullOrWhiteSpace(k) ? "Hiển thị toàn bộ nhân viên." : $"Đã lọc theo mã, tên hoặc số điện thoại: {k}";
         }

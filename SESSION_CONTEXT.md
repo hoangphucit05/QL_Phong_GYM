@@ -31,7 +31,7 @@ Database chính: `QL_PhongGym`, khởi tạo từ `database/htql_gym_v2.sql`, sa
 - Audit/phân quyền: `NhatKyHeThong`, `LichSuDangNhap`, `VaiTro`, `TaiKhoanVaiTro`.
 - Ràng buộc quan trọng: khóa ngoại giữa thành viên–đăng ký–hóa đơn, hóa đơn–chi tiết–thanh toán; chống nhiều lượt check-in mở; kiểm tra sức chứa phòng/lớp; chống trùng lịch PT/phòng/HLV; kiểm soát tồn kho; mapping chi tiết hóa đơn theo từng loại dịch vụ.
 - Stored procedure nghiệp vụ chính gồm `sp_DangKyGoiTap`, `sp_DangKyPT`, `sp_DangKyLop`, `sp_DiemDanhLop`, `sp_TaoLichHoc`, `sp_ThanhToanHoaDon`, `sp_HoanTien`, `sp_BanSanPham`, `sp_BaoTriThietBi`, `sp_CapNhatGoiHetHan`.
-- Migration gần nhất: `database/20_sua_bao_mat_validation_phien_12.sql`; các migration 14–20 xử lý check-in/kho, điểm danh legacy, mã khuyến mãi, nghiệp vụ Phiên 11 và bảo mật/validation/audit Phiên 12. `database/11_kiem_tra_san_sang_van_hanh.sql` là script đối soát chỉ đọc.
+- Migration gần nhất: `database/25_bo_sung_mo_lai_bao_luu.sql`; các migration 14–25 xử lý check-in/kho, điểm danh legacy, mã khuyến mãi, nghiệp vụ Phiên 11–16, bảo mật/validation/audit và mở lại bảo lưu. `database/11_kiem_tra_san_sang_van_hanh.sql` là script đối soát chỉ đọc.
 
 ## 4. Business Rules
 
@@ -940,4 +940,80 @@ Thực hiện theo lộ trình đã chốt:
 
 
 
+
+## Current Session Update — Check-in/Check-out and BaoLuu
+
+- Current date used by the local demo: `2026-11-23`; database: `QL_PhongGym`; SQL Server: `localhost`; Windows Authentication.
+- The active implementation is `FrmVanHanhGoi -> VanHanhBLL -> VanHanhDAL -> dbo.sp_CheckIn/sp_CheckOut`.
+- Check-in requires: selected active member, selected active room, paid valid package, package date range, allowed time window, available package usage, and no existing open session.
+- Check-out closes the selected member's open row in `dbo.LichSuCheckIn`; it is not the same as class attendance.
+- UI state now checks `dbo.LichSuCheckIn` before enabling buttons: Check-in is disabled while a session is open; Check-out is enabled only while a session is open.
+- SQL errors `50010`, `50011`, and `50012` are mapped to actionable Vietnamese messages instead of the generic database error.
+- For the latest manual verification, member `TV000003 - Lê Thu Hà` had a paid valid package. Session `CI-20261123-000053` was checked in at `02:03:21` and checked out at `02:03:25`; no open session remained afterward.
+- A previous Check-out error was expected because there was no open session; a previous Check-in error was expected because a session was already open. Restart the app after rebuilding so the new button-state logic is loaded.
+- Migration `database/25_bo_sung_mo_lai_bao_luu.sql` adds `dbo.sp_MoLaiBaoLuuGoiTap`; the local database already has this procedure.
+- Early resume rule: the user may reopen a package before `DenNgay`. The procedure counts only the actual calendar days from `TuNgay` through today (capped at `DenNgay`), adjusts `TongSoNgayBaoLuu`, extends `NgayKetThuc` by that actual count, and marks the pause record `Đã kết thúc`.
+- Check-in control UI: `FrmVanHanhGoi` now has tabs `Gói tập` and `Đang tập / Chờ Check-out`. After a successful Check-in it refreshes all open sessions and switches to the active-session tab; selecting a row fills the member/room selectors for Check-out. `VanHanhDAL.LayPhienCheckInMoAsync` reads rows where `ThoiGianRa IS NULL`.
+- Button color rule: `UiButtonHelper` now adds hover/pressed colors while preserving the disabled slate color. Semantic colors remain green for Check-in, blue for Check-out, emerald for renewal, purple for pause, cyan for resume, and slate for refresh.
+- Build note: do not place custom `OutputPath` or `IntermediateOutputPath` folders such as `artifacts/obj-check` inside the project unless they are excluded from SDK globs; generated `AssemblyInfo.cs` there causes duplicate assembly attributes. Temporary build output is now kept outside the repository.
+
+## UX Update - Search and Sort Lists
+
+- Standardized `Helpers/UiGridHelper.cs` with `SortableBindingList<T>` and `DatNguon(...)`.
+- Main list grids now support real ascending/descending sorting by clicking column headers: members, employees, trainers, packages, invoices, maintenance, registrations, products, classes, promotions, rooms, equipment, attendance and package operations.
+- Existing filters continue to work in memory and reload through a sortable data source; filtering does not auto-select the first row.
+- `FrmTaiKhoan` now has keyword search by account ID, login name, employee, role and status, plus a `Lam moi / Bo loc` button.
+- When there are no matches, the grid keeps its columns and selection-dependent buttons return to the idle state.
+- Verification build passed with `0 Warning, 0 Error`. Temporary output stayed outside the workspace to avoid duplicate assembly attributes.
+
+## Cập nhật nghiệp vụ — Chuyển phòng trong phiên Check-in
+
+- Bổ sung `database/26_bo_sung_chuyen_phong_checkin.sql` với procedure `dbo.sp_ChuyenPhongCheckIn`.
+- Khi hội viên đang có phiên Check-in mở, nút `Chuyển phòng` cho phép chọn phòng hoạt động khác và cập nhật `LichSuCheckIn.MaPhong` ngay trong phiên hiện tại.
+- Chức năng không tạo lượt Check-in mới và không tăng `SoLuotDaDung` của gói.
+- Procedure kiểm tra quyền nhân viên, phiên Check-in đang mở, phòng mới đang hoạt động và sức chứa phòng; thao tác có transaction và ghi nhật ký hệ thống.
+- `FrmVanHanhGoi` chỉ bật nút khi đã chọn hội viên đang tập và phòng mới khác phòng hiện tại. Các lỗi nghiệp vụ `50047`, `50048`, `52110` đã được ánh xạ thông báo tiếng Việt.
+- Migration đã được áp dụng trên database local `QL_PhongGym`; build kiểm tra sau thay đổi: PASS, 0 warning, 0 error.
+
+## Khắc phục lỗi chuyển phòng SQL 1934
+
+- Log ứng dụng xác định lỗi thật: `UPDATE failed ... SET options ... QUOTED_IDENTIFIER` khi procedure cập nhật `LichSuCheckIn`, do bảng có filtered index `UX_CheckIn_Mo`.
+- Procedure `dbo.sp_ChuyenPhongCheckIn` đã được tạo lại với các SET option chuẩn (`ANSI_NULLS`, `QUOTED_IDENTIFIER`, `ANSI_WARNINGS`, `ARITHABORT` và các option liên quan đều bật đúng).
+- Đã xác nhận metadata procedure có `uses_quoted_identifier=1` và chạy thử chuyển phòng trong transaction rollback thành công.
+
+## UX Update - Contrast for Check-in Tabs
+
+- `FrmVanHanhGoi` now draws the `Gói tập` and `Đang tập / Chờ Check-out` tabs with clear selected/unselected colors.
+- The selected package tab uses blue and the active-session tab uses teal; unselected tabs use a light slate background with dark text.
+- The `Làm mới danh sách đang tập` button uses teal with a light-slate toolbar background for stronger contrast.
+
+## Phiên hiện tại — Phân quyền dịch vụ theo gói (23/11/2026)
+
+- Đã xác định lỗi nghiệp vụ: trước đây `FrmVanHanhGoi` chỉ hiển thị danh sách gói nhưng `sp_CheckIn` tự chọn gói FIFO; lựa chọn gói của nhân viên không được truyền xuống database và phòng chưa bị giới hạn theo gói.
+- Bổ sung migration `database/27_phan_quyen_dich_vu_theo_goi.sql`, đã áp dụng thành công trên database local `QL_PhongGym`.
+- Bổ sung bảng `dbo.GoiTapDichVu` (quyền như phòng tập, lớp nhóm, Yoga, Cardio, PT) và `dbo.GoiTapPhong` (danh sách phòng cụ thể được sử dụng bởi từng gói). Dữ liệu demo hiện có đã được seed quyền phù hợp:
+  - Basic/Sinh viên/Family: Phòng Gym Tổng Hợp.
+  - Premium: Gym, Cardio, Đa Năng và Gym Nâng Cao; có thêm dịch vụ Lớp nhóm.
+  - VIP: toàn bộ phòng hoạt động; có Lớp nhóm, Khu vực VIP và ưu tiên đặt lịch PT.
+  - Yoga: các phòng Yoga; Cardio: phòng Cardio; PT Combo: Gym/Cardio/Gym Nâng Cao và dịch vụ PT.
+- `DangKyGoiView` nay có `MaGoi` và `QuyenDichVu`; lưới gói hiển thị cột “Dịch vụ được cấp quyền”. Khi chọn một đăng ký gói, ComboBox phòng chỉ nạp các phòng được cấp quyền của chính `MaDKG` đó.
+- `sp_CheckIn` nhận thêm `@MaDKG` tùy chọn. Luồng giao diện truyền đúng gói được chọn; procedure kiểm tra lại hội viên, thanh toán, thời hạn, lượt, khung giờ, dịch vụ phòng và `GoiTapPhong` trước khi ghi nhận.
+- `sp_ChuyenPhongCheckIn` cũng kiểm tra quyền phòng mới theo gói đang dùng, tránh bypass phân quyền sau khi đã Check-in.
+- Build sau thay đổi: `dotnet build He_Thong_GYM\\He_Thong_GYM.csproj --no-restore` PASS, 0 warning, 0 error. Migration kiểm tra trực tiếp trên SQL Server PASS; các gói demo có quyền phòng tương ứng.
+- Khi demo: chọn hội viên → chọn đúng dòng đăng ký gói → kiểm tra cột dịch vụ → chọn phòng trong danh sách đã lọc → Check-in. Nếu chọn gói hết hạn/tạm dừng hoặc phòng ngoài quyền, nút sẽ nghỉ và database vẫn từ chối.
+
+## Phiên hiện tại — Lọc hóa đơn còn công nợ
+
+- **Vấn đề:** bộ lọc `Chưa thanh toán` so sánh chuỗi trạng thái tuyệt đối nên loại bỏ hóa đơn `Đã thanh toán một phần`, dù hóa đơn vẫn còn nợ sau khi khách trả trước.
+- **Đã sửa:** `FrmHoaDon.ApDungLoc()` nay hiểu `Chưa thanh toán` là chưa thu đủ; lọc theo `HoaDonView.ConNo > 0` và loại trừ `Đã thanh toán`, `Đã hoàn tiền`, `Hủy`. Hóa đơn trả trước một phần vẫn xuất hiện trong danh sách và có thể mở lại màn hình thu phần còn thiếu.
+- **Không thay đổi:** trạng thái riêng `Đã thanh toán một phần` vẫn có thể lọc độc lập; quy tắc database `sp_ThanhToanHoaDon` vẫn chặn thanh toán vượt số tiền còn nợ.
+- **Kiểm thử:** build lại sau thay đổi PASS, 0 warning, 0 error.
+
+## Phiên hiện tại — Rà soát luồng nút và lỗi DataGridView
+
+- Lỗi runtime trong ảnh được xác định tại `FrmVanHanhGoi.dgvPhienMo_SelectionChanged`: code đặt `dgvGoi.CurrentCell` vào `Cells[0]`, trong khi cột đầu tiên `MaDKG` đã được ẩn.
+- Đã sửa bằng cách tìm cột đang hiển thị trước khi đặt `CurrentCell`; không còn trỏ vào cột ẩn.
+- `FrmDiemDanh` không còn bật cứng các nút `Đăng ký`, `Điểm danh`, `Tạo buổi` trong `finally`; sau thao tác sẽ tính lại quyền/trạng thái để nút không sáng sai khi chưa có lớp, học viên hoặc phiên học.
+- Rà soát thêm: nút hủy hóa đơn chỉ bật khi chưa phát sinh thanh toán; nút thu/hoàn tiền chỉ bật khi hóa đơn còn thao tác hợp lệ; nút nghỉ việc/ngừng áp dụng bị khóa khi bản ghi đã ở trạng thái cuối.
+- Build sau sửa: PASS, 0 warning, 0 error.
 

@@ -90,8 +90,7 @@ public partial class FrmLopTap : Form
         }
 
         var list = ketQua.ToList();
-        dgvLop.DataSource = null;
-        dgvLop.DataSource = list;
+        UiGridHelper.DatNguon(dgvLop, list);
         DinhDangLuoi();
 
         lblThongKe.Text = $"Hiển thị: {list.Count} / {_danhSachGoc.Count} lớp";
