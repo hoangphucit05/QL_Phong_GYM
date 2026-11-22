@@ -1102,3 +1102,10 @@ Thực hiện theo lộ trình đã chốt:
 - Đã thêm `Helpers/DashboardDonutPanel.cs` phục vụ vẽ biểu đồ donut trạng thái hội viên bằng GDI+ thuần.
 - Đã nâng cấp `Form1.cs`: Dải 8 thẻ KPI có icon nhận diện và chỉ số phụ chi tiết; bổ sung hàng 3 biểu đồ trực quan (Doanh thu theo ngày, Donut trạng thái hội viên, Phân bổ trạng thái); nâng cấp giao diện lưới dữ liệu với hàng xen kẽ và cảnh báo màu sắc rõ ràng.
 - Kiểm thử: Build giải pháp đạt 0 warning, 0 error; UI Inspector đạt 21/21 form không có lỗi đè/tràn/cắt chữ/tiếng Việt.
+
+
+## Phiên chuyển đổi Dashboard thành Form độc lập FrmTongQuan (23/11/2026)
+
+- Đã tách Dashboard thành `Forms/FrmTongQuan` (đầy đủ `.cs`, `.Designer.cs`, `.resx`).
+- Refactor `Form1.cs` trở thành container thuần túy, loại bỏ các hàm dựng dynamic controls.
+- UI Inspector kiểm thử thành công 22/22 form (bao gồm FrmTongQuan mới), 0 lỗi đè/tràn/cắt chữ.

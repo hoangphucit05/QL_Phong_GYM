@@ -1384,3 +1384,15 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Kiểm thử:**
   - Build .NET: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
   - UI Inspector: `21/21 forms` đạt chuẩn 100% (0 overlap, 0 tràn biên, 0 mất chữ, 0 lỗi UTF-8).
+
+
+## Phiên chuyển đổi Dashboard thành Form độc lập FrmTongQuan (23/11/2026)
+
+- **Mục tiêu:** Chuyển đổi toàn bộ khu vực Dashboard từ cơ chế dựng dynamic controls lồng trong `Form1.cs` thành Form độc lập `FrmTongQuan` (gồm `FrmTongQuan.cs`, `FrmTongQuan.Designer.cs`, `FrmTongQuan.resx`), chuẩn hóa kiến trúc điều hướng form con.
+- **Thực hiện:**
+  - Tạo `FrmTongQuan`: Form độc lập hoàn chỉnh chứa thanh bộ lọc (preset thời gian + tùy chọn khoảng ngày), 8 thẻ KPI có icon và phụ đề chi tiết, hàng 3 biểu đồ (Doanh thu cột, Donut cơ cấu hội viên, Thanh phân bổ trạng thái), 4 bảng dữ liệu (Gói sắp hết hạn có cảnh báo màu sắc, Công nợ, Hoạt động gần đây, Gói bán chạy) và tóm tắt vận hành.
+  - Hỗ trợ sự kiện `YeuCauMoForm` với thuộc tính `[Browsable(false)]` và `[DesignerSerializationVisibility(Hidden)]` để liên kết mở nhanh `FrmVanHanhGoi` hoặc `FrmHoaDon` khi nhấp đúp vào lưới mà không gây lỗi WFO1000.
+  - Refactor `Form1.cs`: Loại bỏ hoàn toàn hơn 360 dòng mã tạo control động, đưa `Form1.cs` về đúng vai trò khung điều hướng chính (Main Shell). Khi chọn "Tổng quan", Form1 chỉ việc gọi `HienThiFormCon(new FrmTongQuan())`.
+- **Kiểm thử:**
+  - Build: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
+  - UI Inspector: Đã quét và thông qua toàn diện **22/22 forms** (0 overlap, 0 out of bounds, 0 text truncated, 0 encoding issues).
