@@ -1109,3 +1109,11 @@ Thực hiện theo lộ trình đã chốt:
 - Đã tách Dashboard thành `Forms/FrmTongQuan` (đầy đủ `.cs`, `.Designer.cs`, `.resx`).
 - Refactor `Form1.cs` trở thành container thuần túy, loại bỏ các hàm dựng dynamic controls.
 - UI Inspector kiểm thử thành công 22/22 form (bao gồm FrmTongQuan mới), 0 lỗi đè/tràn/cắt chữ.
+
+
+## Phiên tối ưu hóa UI/UX và Form Layout FrmTongQuan (23/11/2026)
+
+- Đã tối ưu layout `panelBoLoc`: Dải viền trang trí tràn viền trên, canh lề chuẩn.
+- Đã nâng cấp `DashboardDonutPanel` & `DashboardBarPanel`: Tỷ lệ cân đối, rút gọn số tiền thông minh (`M`, `K`).
+- Chuẩn hóa DataGridView: Bật cột dãn `Fill`, căn phải số tiền, căn giữa ngày tháng và thêm con trỏ chuột bàn tay.
+- Build và UI Inspector đạt 100% chuẩn (22/22 form PASS).

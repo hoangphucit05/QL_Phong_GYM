@@ -131,17 +131,16 @@ partial class FrmTongQuan
         panelBoLoc.Location = new Point(3, 3);
         panelBoLoc.Margin = new Padding(3, 3, 3, 10);
         panelBoLoc.Name = "panelBoLoc";
-        panelBoLoc.Padding = new Padding(20);
-        panelBoLoc.Size = new Size(1054, 118);
+        panelBoLoc.Size = new Size(1054, 114);
         panelBoLoc.TabIndex = 0;
         // 
         // panelVachTrangTri
         // 
         panelVachTrangTri.BackColor = Color.FromArgb(37, 99, 235);
         panelVachTrangTri.Dock = DockStyle.Top;
-        panelVachTrangTri.Location = new Point(20, 20);
+        panelVachTrangTri.Location = new Point(0, 0);
         panelVachTrangTri.Name = "panelVachTrangTri";
-        panelVachTrangTri.Size = new Size(1014, 4);
+        panelVachTrangTri.Size = new Size(1054, 4);
         panelVachTrangTri.TabIndex = 0;
         // 
         // lblTieuDe
@@ -149,7 +148,7 @@ partial class FrmTongQuan
         lblTieuDe.AutoSize = true;
         lblTieuDe.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
-        lblTieuDe.Location = new Point(20, 18);
+        lblTieuDe.Location = new Point(20, 14);
         lblTieuDe.Name = "lblTieuDe";
         lblTieuDe.Size = new Size(310, 30);
         lblTieuDe.TabIndex = 1;
@@ -160,7 +159,7 @@ partial class FrmTongQuan
         lblMoTa.AutoSize = true;
         lblMoTa.Font = new Font("Segoe UI", 9F);
         lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
-        lblMoTa.Location = new Point(22, 52);
+        lblMoTa.Location = new Point(22, 47);
         lblMoTa.Name = "lblMoTa";
         lblMoTa.Size = new Size(450, 15);
         lblMoTa.TabIndex = 2;
@@ -171,7 +170,7 @@ partial class FrmTongQuan
         lblKhoangThoiGian.AutoSize = true;
         lblKhoangThoiGian.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblKhoangThoiGian.ForeColor = Color.FromArgb(51, 65, 85);
-        lblKhoangThoiGian.Location = new Point(22, 82);
+        lblKhoangThoiGian.Location = new Point(22, 77);
         lblKhoangThoiGian.Name = "lblKhoangThoiGian";
         lblKhoangThoiGian.Size = new Size(104, 15);
         lblKhoangThoiGian.TabIndex = 3;
@@ -183,7 +182,7 @@ partial class FrmTongQuan
         cboKhoang.Font = new Font("Segoe UI", 9F);
         cboKhoang.FormattingEnabled = true;
         cboKhoang.Items.AddRange(new object[] { "Hôm nay", "Hôm qua", "7 ngày qua", "Tháng này", "Tháng trước", "Quý này", "Năm nay", "Tùy chọn" });
-        cboKhoang.Location = new Point(135, 78);
+        cboKhoang.Location = new Point(135, 73);
         cboKhoang.Name = "cboKhoang";
         cboKhoang.Size = new Size(145, 23);
         cboKhoang.TabIndex = 4;
@@ -194,7 +193,7 @@ partial class FrmTongQuan
         dtpTuNgay.CustomFormat = "dd/MM/yyyy";
         dtpTuNgay.Font = new Font("Segoe UI", 9F);
         dtpTuNgay.Format = DateTimePickerFormat.Custom;
-        dtpTuNgay.Location = new Point(298, 78);
+        dtpTuNgay.Location = new Point(295, 73);
         dtpTuNgay.Name = "dtpTuNgay";
         dtpTuNgay.Size = new Size(105, 23);
         dtpTuNgay.TabIndex = 5;
@@ -205,7 +204,7 @@ partial class FrmTongQuan
         dtpDenNgay.CustomFormat = "dd/MM/yyyy";
         dtpDenNgay.Font = new Font("Segoe UI", 9F);
         dtpDenNgay.Format = DateTimePickerFormat.Custom;
-        dtpDenNgay.Location = new Point(414, 78);
+        dtpDenNgay.Location = new Point(410, 73);
         dtpDenNgay.Name = "dtpDenNgay";
         dtpDenNgay.Size = new Size(105, 23);
         dtpDenNgay.TabIndex = 6;
@@ -219,7 +218,7 @@ partial class FrmTongQuan
         btnApDung.FlatStyle = FlatStyle.Flat;
         btnApDung.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnApDung.ForeColor = Color.White;
-        btnApDung.Location = new Point(530, 75);
+        btnApDung.Location = new Point(526, 70);
         btnApDung.Name = "btnApDung";
         btnApDung.Size = new Size(88, 30);
         btnApDung.TabIndex = 7;
@@ -235,7 +234,7 @@ partial class FrmTongQuan
         btnLamMoi.FlatStyle = FlatStyle.Flat;
         btnLamMoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoi.ForeColor = Color.White;
-        btnLamMoi.Location = new Point(626, 75);
+        btnLamMoi.Location = new Point(622, 70);
         btnLamMoi.Name = "btnLamMoi";
         btnLamMoi.Size = new Size(88, 30);
         btnLamMoi.TabIndex = 8;
@@ -405,11 +404,11 @@ partial class FrmTongQuan
         // 
         // colGoiTen
         // 
+        colGoiTen.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         colGoiTen.DataPropertyName = "TenGoi";
         colGoiTen.HeaderText = "Gói tập";
         colGoiTen.Name = "colGoiTen";
         colGoiTen.ReadOnly = true;
-        colGoiTen.Width = 100;
         // 
         // colGoiHetHan
         // 
@@ -417,7 +416,7 @@ partial class FrmTongQuan
         colGoiHetHan.HeaderText = "Hết hạn";
         colGoiHetHan.Name = "colGoiHetHan";
         colGoiHetHan.ReadOnly = true;
-        colGoiHetHan.Width = 80;
+        colGoiHetHan.Width = 85;
         // 
         // colGoiConNgay
         // 
@@ -425,7 +424,7 @@ partial class FrmTongQuan
         colGoiConNgay.HeaderText = "Còn ngày";
         colGoiConNgay.Name = "colGoiConNgay";
         colGoiConNgay.ReadOnly = true;
-        colGoiConNgay.Width = 65;
+        colGoiConNgay.Width = 70;
         // 
         // colGoiTrangThai
         // 
@@ -433,7 +432,7 @@ partial class FrmTongQuan
         colGoiTrangThai.HeaderText = "Trạng thái";
         colGoiTrangThai.Name = "colGoiTrangThai";
         colGoiTrangThai.ReadOnly = true;
-        colGoiTrangThai.Width = 77;
+        colGoiTrangThai.Width = 85;
         // 
         // boxCongNo
         // 
@@ -485,11 +484,11 @@ partial class FrmTongQuan
         // 
         // colCNHoTen
         // 
+        colCNHoTen.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
         colCNHoTen.DataPropertyName = "HoTen";
         colCNHoTen.HeaderText = "Hội viên";
         colCNHoTen.Name = "colCNHoTen";
         colCNHoTen.ReadOnly = true;
-        colCNHoTen.Width = 110;
         // 
         // colCNTongTien
         // 
@@ -497,7 +496,7 @@ partial class FrmTongQuan
         colCNTongTien.HeaderText = "Tổng";
         colCNTongTien.Name = "colCNTongTien";
         colCNTongTien.ReadOnly = true;
-        colCNTongTien.Width = 75;
+        colCNTongTien.Width = 80;
         // 
         // colCNDaThu
         // 
@@ -505,7 +504,7 @@ partial class FrmTongQuan
         colCNDaThu.HeaderText = "Đã thu";
         colCNDaThu.Name = "colCNDaThu";
         colCNDaThu.ReadOnly = true;
-        colCNDaThu.Width = 70;
+        colCNDaThu.Width = 75;
         // 
         // colCNConNo
         // 
@@ -513,7 +512,7 @@ partial class FrmTongQuan
         colCNConNo.HeaderText = "Còn nợ";
         colCNConNo.Name = "colCNConNo";
         colCNConNo.ReadOnly = true;
-        colCNConNo.Width = 70;
+        colCNConNo.Width = 75;
         // 
         // tableHoatDong
         // 

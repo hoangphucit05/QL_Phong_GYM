@@ -36,13 +36,29 @@ public partial class FrmTongQuan : Form
         DinhDangBang(dgvHoatDong);
         DinhDangBang(dgvGoiBanChay);
 
+        // Định dạng và căn lề kế toán
         colGoiHetHan.DefaultCellStyle.Format = "dd/MM/yyyy";
+        colGoiHetHan.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colGoiConNgay.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+        colGoiTrangThai.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
         colCNTongTien.DefaultCellStyle.Format = "N0";
+        colCNTongTien.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         colCNDaThu.DefaultCellStyle.Format = "N0";
+        colCNDaThu.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         colCNConNo.DefaultCellStyle.Format = "N0";
+        colCNConNo.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
         colHDThoiGian.DefaultCellStyle.Format = "dd/MM HH:mm";
+
         colBCSoLuong.DefaultCellStyle.Format = "N0";
+        colBCSoLuong.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
         colBCDoanhThu.DefaultCellStyle.Format = "N0";
+        colBCDoanhThu.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+        // Trỏ chuột dạng bàn tay cho bảng có hành động nhấn đúp
+        dgvGoiSapHetHan.Cursor = Cursors.Hand;
+        dgvCongNo.Cursor = Cursors.Hand;
     }
 
     private static void DinhDangBang(DataGridView dgv)

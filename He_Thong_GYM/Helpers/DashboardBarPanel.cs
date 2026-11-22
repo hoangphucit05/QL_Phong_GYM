@@ -50,8 +50,18 @@ public sealed class DashboardBarPanel : Panel
             if (currentWidth > 0)
                 e.Graphics.FillRoundedRectangle(foreground, new Rectangle(barLeft, y + 5, Math.Max(8, currentWidth), 13), 6);
 
-            TextRenderer.DrawText(e.Graphics, item.Value.ToString("N0"), Font,
-                new Rectangle(barLeft + barWidth + 8, y, 58, 22), Color.FromArgb(15, 23, 42), TextFormatFlags.VerticalCenter);
+            string valStr;
+            if (item.Value >= 1_000_000_000m)
+                valStr = $"{item.Value / 1_000_000_000m:0.##}B";
+            else if (item.Value >= 1_000_000m)
+                valStr = $"{item.Value / 1_000_000m:0.##}M";
+            else if (item.Value >= 100_000m)
+                valStr = $"{item.Value / 1_000m:0.#}K";
+            else
+                valStr = item.Value.ToString("N0");
+
+            TextRenderer.DrawText(e.Graphics, valStr, Font,
+                new Rectangle(barLeft + barWidth + 6, y, 64, 22), Color.FromArgb(15, 23, 42), TextFormatFlags.Left | TextFormatFlags.VerticalCenter);
         }
     }
 }

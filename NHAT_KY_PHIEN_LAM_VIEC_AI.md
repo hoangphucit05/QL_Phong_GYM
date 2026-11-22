@@ -1396,3 +1396,16 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Kiểm thử:**
   - Build: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
   - UI Inspector: Đã quét và thông qua toàn diện **22/22 forms** (0 overlap, 0 out of bounds, 0 text truncated, 0 encoding issues).
+
+
+## Phiên tối ưu hóa UI/UX và Form Layout FrmTongQuan (23/11/2026)
+
+- **Mục tiêu:** Kiểm tra và tinh chỉnh toàn diện Layout & UI/UX trên form mới `FrmTongQuan`.
+- **Thực hiện:**
+  - `panelBoLoc`: Dời dải viền trang trí xanh lam lên sát mép trên cùng (`Y=0`, `Dock = Top`) tràn toàn bộ chiều ngang card; chuẩn hóa khoảng cách giữa tiêu đề, mô tả và hàng controls bộ lọc.
+  - `tableBieuDo`: Tinh chỉnh `DashboardDonutPanel.cs` với kích thước donut tỷ lệ vàng (`90..135px`), khoảng trống rộng rãi cho chú thích bên dưới để không bị cắt xén bất kể số lượng trạng thái; cập nhật `DashboardBarPanel.cs` với rút gọn thông minh số lớn (`M`, `K`, `B`), tránh tràn số tiền lớn ở trục giá trị.
+  - DataGridView: Bật `AutoSizeMode = Fill` cho cột `TenGoi` (Gói sắp hết hạn) và `HoTen` (Công nợ), loại bỏ khoảng trắng thừa ở cạnh phải lưới; căn giữa các cột ngày tháng / số ngày còn lại / trạng thái; căn phải kế toán (`MiddleRight`) cho các cột tiền tệ và số lượng.
+  - Tương tác: Gán con trỏ chuột dạng bàn tay (`Cursors.Hand`) trên hai lưới có tính năng nhấp đúp điều hướng (`dgvGoiSapHetHan` và `dgvCongNo`).
+- **Kiểm thử:**
+  - Build: `0 warning, 0 error`.
+  - UI Inspector: `22/22 forms` PASS 100% (0 overlap, 0 out of bounds, 0 text truncated, 0 UTF-8 issues).
