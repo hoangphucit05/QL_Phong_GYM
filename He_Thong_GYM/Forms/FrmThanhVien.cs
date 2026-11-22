@@ -1,13 +1,22 @@
-
+using System.Drawing;
 using He_Thong_GYM.BLL;
+using He_Thong_GYM.Helpers;
 using He_Thong_GYM.Models;
 
 namespace He_Thong_GYM.Forms;
 
 public partial class FrmThanhVien : Form
 {
+    private enum CheDoThaoTac
+    {
+        Xem,       // Chế độ xem: các ô nhập chỉ đọc, nút Sửa/Xóa/Lưu ở trạng thái nghỉ trừ khi có dòng được chọn
+        DangThem,  // Đang thêm mới: các ô nhập mở khóa, nút Lưu sáng, các nút khác ở trạng thái nghỉ
+        DangSua    // Đang sửa: các ô nhập mở khóa, nút Lưu sáng, các nút khác ở trạng thái nghỉ
+    }
+
     private readonly ThanhVienBLL _thanhVienBLL = new();
     private int? _maTVDangChon;
+    private CheDoThaoTac _cheDo = CheDoThaoTac.Xem;
 
     public FrmThanhVien()
     {
@@ -19,16 +28,68 @@ public partial class FrmThanhVien : Form
         cboGioiTinh.SelectedIndex = 0;
         cboTrangThai.SelectedIndex = 0;
         dgvThanhVien.AutoGenerateColumns = false;
+        KhoaOThongTin(true);
+        CapNhatTrangThaiNut();
+
         await TaiDuLieuAsync();
+        DatTrangThaiNghiBanDau();
     }
 
-    private void btnLamMoi_Click(object? sender, EventArgs e)
+    private void KhoaOThongTin(bool khoa)
     {
-        DatTrangThaiTaoMoi();
+        txtHoTen.ReadOnly = khoa;
+        txtSoDienThoai.ReadOnly = khoa;
+        txtEmail.ReadOnly = khoa;
+        txtDiaChi.ReadOnly = khoa;
+        dtpNgaySinh.Enabled = !khoa;
+        cboGioiTinh.Enabled = !khoa;
+        cboLoaiThanhVien.Enabled = !khoa;
+        cboTrangThai.Enabled = !khoa;
+
+        Color mauNen = khoa ? Color.FromArgb(248, 250, 252) : Color.White;
+        txtHoTen.BackColor = mauNen;
+        txtSoDienThoai.BackColor = mauNen;
+        txtEmail.BackColor = mauNen;
+        txtDiaChi.BackColor = mauNen;
     }
 
-    private void DatTrangThaiTaoMoi()
+    private void CapNhatTrangThaiNut()
     {
+        switch (_cheDo)
+        {
+            case CheDoThaoTac.Xem:
+                bool coChon = _maTVDangChon.HasValue;
+                UiButtonHelper.SetTrangThai(btnThem, true, UiButtonHelper.MauThemMoi);
+                UiButtonHelper.SetTrangThai(btnSua, coChon, UiButtonHelper.MauChinhSua);
+                UiButtonHelper.SetTrangThai(btnLuu, false, UiButtonHelper.MauLuu); // Ở trạng thái nghỉ khi chưa thao tác
+                UiButtonHelper.SetTrangThai(btnXoa, coChon, UiButtonHelper.MauXoa);
+                UiButtonHelper.SetTrangThai(btnLamMoi, true, UiButtonHelper.MauLamMoi);
+                btnLamMoi.Text = "Làm mới";
+                break;
+
+            case CheDoThaoTac.DangThem:
+                UiButtonHelper.SetTrangThai(btnThem, false, UiButtonHelper.MauThemMoi);
+                UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+                UiButtonHelper.SetTrangThai(btnLuu, true, UiButtonHelper.MauLuu); // Kích hoạt sáng để lưu bản ghi mới
+                UiButtonHelper.SetTrangThai(btnXoa, false, UiButtonHelper.MauXoa);
+                UiButtonHelper.SetTrangThai(btnLamMoi, true, UiButtonHelper.MauLamMoi);
+                btnLamMoi.Text = "Hủy bỏ";
+                break;
+
+            case CheDoThaoTac.DangSua:
+                UiButtonHelper.SetTrangThai(btnThem, false, UiButtonHelper.MauThemMoi);
+                UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+                UiButtonHelper.SetTrangThai(btnLuu, true, UiButtonHelper.MauLuu); // Kích hoạt sáng để lưu thông tin sửa
+                UiButtonHelper.SetTrangThai(btnXoa, false, UiButtonHelper.MauXoa);
+                UiButtonHelper.SetTrangThai(btnLamMoi, true, UiButtonHelper.MauLamMoi);
+                btnLamMoi.Text = "Hủy bỏ";
+                break;
+        }
+    }
+
+    private void DatTrangThaiNghiBanDau()
+    {
+        _cheDo = CheDoThaoTac.Xem;
         _maTVDangChon = null;
         txtHoTen.Clear();
         txtSoDienThoai.Clear();
@@ -40,21 +101,30 @@ public partial class FrmThanhVien : Form
         cboTrangThai.SelectedIndex = 0;
         if (cboLoaiThanhVien.Items.Count > 0) cboLoaiThanhVien.SelectedIndex = 0;
         dgvThanhVien.ClearSelection();
-        txtHoTen.Focus();
+        KhoaOThongTin(true);
+        CapNhatTrangThaiNut();
+    }
+
+    private void btnLamMoi_Click(object? sender, EventArgs e)
+    {
+        DatTrangThaiNghiBanDau();
     }
 
     private async void btnTimKiem_Click(object? sender, EventArgs e)
     {
         await TaiDanhSachAsync(txtTimKiem.Text);
+        DatTrangThaiNghiBanDau();
     }
 
     private void dgvThanhVien_SelectionChanged(object? sender, EventArgs e)
     {
-        btnSua.Enabled = dgvThanhVien.SelectedRows.Count > 0;
-        btnXoa.Enabled = dgvThanhVien.SelectedRows.Count > 0;
-
         if (dgvThanhVien.CurrentRow?.DataBoundItem is not ThanhVien thanhVien)
         {
+            _maTVDangChon = null;
+            if (_cheDo == CheDoThaoTac.Xem)
+            {
+                CapNhatTrangThaiNut();
+            }
             return;
         }
 
@@ -63,13 +133,33 @@ public partial class FrmThanhVien : Form
         dtpNgaySinh.Value = thanhVien.NgaySinh;
         cboGioiTinh.SelectedItem = thanhVien.GioiTinh ?? "Khác";
         txtSoDienThoai.Text = thanhVien.SDT;
-        txtEmail.Text = thanhVien.Email;
-        txtDiaChi.Text = thanhVien.DiaChi;
+        txtEmail.Text = thanhVien.Email ?? string.Empty;
+        txtDiaChi.Text = thanhVien.DiaChi ?? string.Empty;
         cboLoaiThanhVien.SelectedValue = thanhVien.MaLoaiTV;
         cboTrangThai.SelectedItem = thanhVien.TrangThai;
+
+        _cheDo = CheDoThaoTac.Xem;
+        KhoaOThongTin(true);
+        CapNhatTrangThaiNut();
     }
 
-    private void btnThem_Click(object? sender, EventArgs e) => DatTrangThaiTaoMoi();
+    private void btnThem_Click(object? sender, EventArgs e)
+    {
+        _cheDo = CheDoThaoTac.DangThem;
+        _maTVDangChon = null;
+        txtHoTen.Clear();
+        txtSoDienThoai.Clear();
+        txtEmail.Clear();
+        txtDiaChi.Clear();
+        dtpNgaySinh.Value = DateTime.Today.AddYears(-18);
+        cboGioiTinh.SelectedIndex = 0;
+        cboTrangThai.SelectedIndex = 0;
+        if (cboLoaiThanhVien.Items.Count > 0) cboLoaiThanhVien.SelectedIndex = 0;
+        dgvThanhVien.ClearSelection();
+        KhoaOThongTin(false);
+        CapNhatTrangThaiNut();
+        txtHoTen.Focus();
+    }
 
     private void btnSua_Click(object? sender, EventArgs e)
     {
@@ -78,19 +168,33 @@ public partial class FrmThanhVien : Form
             MessageBox.Show("Hãy chọn một thành viên từ danh sách cần cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
+
+        _cheDo = CheDoThaoTac.DangSua;
+        KhoaOThongTin(false);
+        CapNhatTrangThaiNut();
         txtHoTen.Focus();
         txtHoTen.SelectAll();
     }
 
     private async void btnLuu_Click(object? sender, EventArgs e)
     {
+        if (_cheDo == CheDoThaoTac.Xem)
+        {
+            MessageBox.Show("Vui lòng chọn thao tác 'Thêm mới' hoặc 'Chỉnh sửa' trước khi lưu.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
         try
         {
             var thanhVien = DocDuLieuForm();
             var maTV = await _thanhVienBLL.LuuAsync(thanhVien);
+            MessageBox.Show("Đã lưu thông tin thành viên thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            _cheDo = CheDoThaoTac.Xem;
+            KhoaOThongTin(true);
             await TaiDanhSachAsync(txtTimKiem.Text);
             _maTVDangChon = maTV;
-            MessageBox.Show("Đã lưu thông tin thành viên.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CapNhatTrangThaiNut();
         }
         catch (Microsoft.Data.SqlClient.SqlException sqlEx) when (sqlEx.Number is 2601 or 2627)
         {
@@ -122,13 +226,21 @@ public partial class FrmThanhVien : Form
 
     private async void btnXoa_Click(object? sender, EventArgs e)
     {
-        if (_maTVDangChon is null) return;
-        if (MessageBox.Show("Ngừng sử dụng thành viên này? Dữ liệu lịch sử sẽ được giữ lại.", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+        if (_maTVDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn một thành viên từ danh sách để ngừng sử dụng.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (MessageBox.Show("Ngừng sử dụng thành viên này? Dữ liệu lịch sử sẽ được giữ lại.", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+        {
+            return;
+        }
 
         try
         {
             await _thanhVienBLL.NgungSuDungAsync(_maTVDangChon.Value);
-            DatTrangThaiTaoMoi();
+            DatTrangThaiNghiBanDau();
             await TaiDanhSachAsync(txtTimKiem.Text);
         }
         catch (Exception ex)

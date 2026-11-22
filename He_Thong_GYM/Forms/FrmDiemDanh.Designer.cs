@@ -120,7 +120,7 @@ partial class FrmDiemDanh
         tableThaoTac.RowCount = 2;
         tableThaoTac.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
         tableThaoTac.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableThaoTac.Size = new Size(920, 73);
+        tableThaoTac.Size = new Size(920, 103);
         tableThaoTac.TabIndex = 0;
         // 
         // lblLop
@@ -130,7 +130,7 @@ partial class FrmDiemDanh
         lblLop.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblLop.Location = new Point(3, 0);
         lblLop.Name = "lblLop";
-        lblLop.Size = new Size(84, 36);
+        lblLop.Size = new Size(84, 51);
         lblLop.TabIndex = 0;
         lblLop.Text = "Lớp tập:";
         lblLop.TextAlign = ContentAlignment.MiddleLeft;
@@ -152,7 +152,7 @@ partial class FrmDiemDanh
         lblThanhVien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblThanhVien.Location = new Point(358, 0);
         lblThanhVien.Name = "lblThanhVien";
-        lblThanhVien.Size = new Size(94, 36);
+        lblThanhVien.Size = new Size(94, 51);
         lblThanhVien.TabIndex = 2;
         lblThanhVien.Text = "Thành viên:";
         lblThanhVien.TextAlign = ContentAlignment.MiddleLeft;
@@ -178,7 +178,7 @@ partial class FrmDiemDanh
         btnDangKy.ForeColor = Color.White;
         btnDangKy.Location = new Point(782, 3);
         btnDangKy.Name = "btnDangKy";
-        btnDangKy.Size = new Size(135, 30);
+        btnDangKy.Size = new Size(135, 45);
         btnDangKy.TabIndex = 4;
         btnDangKy.Text = "Đăng ký lớp";
         btnDangKy.UseVisualStyleBackColor = false;
@@ -188,9 +188,9 @@ partial class FrmDiemDanh
         lblNgay.AutoSize = true;
         lblNgay.Dock = DockStyle.Fill;
         lblNgay.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblNgay.Location = new Point(3, 36);
+        lblNgay.Location = new Point(3, 51);
         lblNgay.Name = "lblNgay";
-        lblNgay.Size = new Size(84, 37);
+        lblNgay.Size = new Size(84, 52);
         lblNgay.TabIndex = 5;
         lblNgay.Text = "Ngày tập:";
         lblNgay.TextAlign = ContentAlignment.MiddleLeft;
@@ -199,7 +199,7 @@ partial class FrmDiemDanh
         // 
         dtpNgay.Dock = DockStyle.Fill;
         dtpNgay.Format = DateTimePickerFormat.Short;
-        dtpNgay.Location = new Point(93, 39);
+        dtpNgay.Location = new Point(93, 54);
         dtpNgay.Name = "dtpNgay";
         dtpNgay.Size = new Size(259, 23);
         dtpNgay.TabIndex = 6;
@@ -209,9 +209,9 @@ partial class FrmDiemDanh
         lblTrangThai.AutoSize = true;
         lblTrangThai.Dock = DockStyle.Fill;
         lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-        lblTrangThai.Location = new Point(358, 36);
+        lblTrangThai.Location = new Point(358, 51);
         lblTrangThai.Name = "lblTrangThai";
-        lblTrangThai.Size = new Size(94, 37);
+        lblTrangThai.Size = new Size(94, 52);
         lblTrangThai.TabIndex = 7;
         lblTrangThai.Text = "Điểm danh:";
         lblTrangThai.TextAlign = ContentAlignment.MiddleLeft;
@@ -222,7 +222,7 @@ partial class FrmDiemDanh
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.FormattingEnabled = true;
         cboTrangThai.Items.AddRange(new object[] { "Có mặt", "Vắng mặt" });
-        cboTrangThai.Location = new Point(458, 39);
+        cboTrangThai.Location = new Point(458, 54);
         cboTrangThai.Name = "cboTrangThai";
         cboTrangThai.Size = new Size(318, 23);
         cboTrangThai.TabIndex = 8;
@@ -236,15 +236,15 @@ partial class FrmDiemDanh
         btnDiemDanh.FlatStyle = FlatStyle.Flat;
         btnDiemDanh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnDiemDanh.ForeColor = Color.White;
-        btnDiemDanh.Location = new Point(782, 39);
+        btnDiemDanh.Location = new Point(782, 54);
         btnDiemDanh.Name = "btnDiemDanh";
-        btnDiemDanh.Size = new Size(135, 31);
+        btnDiemDanh.Size = new Size(135, 46);
         btnDiemDanh.TabIndex = 9;
         btnDiemDanh.Text = "Lưu điểm danh";
         btnDiemDanh.UseVisualStyleBackColor = false;
-        //
+        // 
         // btnTaoBuoi
-        //
+        // 
         btnTaoBuoi.BackColor = Color.FromArgb(100, 116, 139);
         btnTaoBuoi.Cursor = Cursors.Hand;
         btnTaoBuoi.FlatAppearance.BorderSize = 0;
@@ -257,28 +257,28 @@ partial class FrmDiemDanh
         btnTaoBuoi.TabIndex = 10;
         btnTaoBuoi.Text = "Tạo buổi học";
         btnTaoBuoi.UseVisualStyleBackColor = false;
-        //
-        // lblTrangThaiBuoi
-        //
+        // 
+        // lblBuoiHoc
+        // 
         lblBuoiHoc.AutoSize = true;
         lblBuoiHoc.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblBuoiHoc.Location = new Point(184, 254);
         lblBuoiHoc.Name = "lblBuoiHoc";
-        lblBuoiHoc.Size = new Size(56, 15);
+        lblBuoiHoc.Size = new Size(58, 15);
         lblBuoiHoc.TabIndex = 11;
         lblBuoiHoc.Text = "Buổi học:";
-        //
+        // 
         // cboBuoiHoc
-        //
+        // 
         cboBuoiHoc.DropDownStyle = ComboBoxStyle.DropDownList;
         cboBuoiHoc.FormattingEnabled = true;
         cboBuoiHoc.Location = new Point(245, 250);
         cboBuoiHoc.Name = "cboBuoiHoc";
         cboBuoiHoc.Size = new Size(329, 23);
         cboBuoiHoc.TabIndex = 12;
-        //
+        // 
         // lblTrangThaiBuoi
-        //
+        // 
         lblTrangThaiBuoi.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblTrangThaiBuoi.ForeColor = Color.FromArgb(71, 85, 105);
         lblTrangThaiBuoi.Location = new Point(584, 250);
@@ -287,20 +287,20 @@ partial class FrmDiemDanh
         lblTrangThaiBuoi.TabIndex = 11;
         lblTrangThaiBuoi.Text = "Chọn lớp và ngày học để xem buổi học.";
         lblTrangThaiBuoi.TextAlign = ContentAlignment.MiddleLeft;
-        //
+        // 
         // lblLocDiemDanh
-        //
+        // 
         lblLocDiemDanh.AutoSize = true;
         lblLocDiemDanh.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblLocDiemDanh.ForeColor = Color.FromArgb(30, 41, 59);
         lblLocDiemDanh.Location = new Point(24, 286);
         lblLocDiemDanh.Name = "lblLocDiemDanh";
-        lblLocDiemDanh.Size = new Size(82, 15);
+        lblLocDiemDanh.Size = new Size(91, 15);
         lblLocDiemDanh.TabIndex = 12;
         lblLocDiemDanh.Text = "Lọc điểm danh:";
-        //
+        // 
         // cboLocDiemDanh
-        //
+        // 
         cboLocDiemDanh.DropDownStyle = ComboBoxStyle.DropDownList;
         cboLocDiemDanh.FormattingEnabled = true;
         cboLocDiemDanh.Items.AddRange(new object[] { "-- Tất cả --", "Chưa điểm danh", "Có mặt", "Vắng mặt" });
@@ -308,20 +308,20 @@ partial class FrmDiemDanh
         cboLocDiemDanh.Name = "cboLocDiemDanh";
         cboLocDiemDanh.Size = new Size(150, 23);
         cboLocDiemDanh.TabIndex = 13;
-        //
+        // 
         // lblSapXep
-        //
+        // 
         lblSapXep.AutoSize = true;
         lblSapXep.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblSapXep.ForeColor = Color.FromArgb(30, 41, 59);
         lblSapXep.Location = new Point(278, 286);
         lblSapXep.Name = "lblSapXep";
-        lblSapXep.Size = new Size(53, 15);
+        lblSapXep.Size = new Size(54, 15);
         lblSapXep.TabIndex = 14;
         lblSapXep.Text = "Sắp xếp:";
-        //
+        // 
         // cboSapXep
-        //
+        // 
         cboSapXep.DropDownStyle = ComboBoxStyle.DropDownList;
         cboSapXep.FormattingEnabled = true;
         cboSapXep.Items.AddRange(new object[] { "Họ tên (A-Z)", "Họ tên (Z-A)", "Mã hội viên tăng", "Mã hội viên giảm", "Trạng thái điểm danh" });
@@ -329,9 +329,9 @@ partial class FrmDiemDanh
         cboSapXep.Name = "cboSapXep";
         cboSapXep.Size = new Size(180, 23);
         cboSapXep.TabIndex = 15;
-        //
+        // 
         // btnBoLoc
-        //
+        // 
         btnBoLoc.BackColor = Color.FromArgb(71, 85, 105);
         btnBoLoc.Cursor = Cursors.Hand;
         btnBoLoc.FlatAppearance.BorderSize = 0;
@@ -344,9 +344,9 @@ partial class FrmDiemDanh
         btnBoLoc.TabIndex = 16;
         btnBoLoc.Text = "Bỏ lọc";
         btnBoLoc.UseVisualStyleBackColor = false;
-        //
+        // 
         // lblQuyenThaoTac
-        //
+        // 
         lblQuyenThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         lblQuyenThaoTac.ForeColor = Color.FromArgb(100, 116, 139);
         lblQuyenThaoTac.Location = new Point(625, 282);
@@ -354,7 +354,7 @@ partial class FrmDiemDanh
         lblQuyenThaoTac.Size = new Size(351, 24);
         lblQuyenThaoTac.TabIndex = 17;
         lblQuyenThaoTac.TextAlign = ContentAlignment.MiddleRight;
-        //
+        // 
         // dgvHocVien
         // 
         dgvHocVien.AllowUserToAddRows = false;
@@ -406,6 +406,7 @@ partial class FrmDiemDanh
         tableThaoTac.PerformLayout();
         ((System.ComponentModel.ISupportInitialize)dgvHocVien).EndInit();
         ResumeLayout(false);
+        PerformLayout();
     }
 
     private Panel panelTieuDe;

@@ -21,6 +21,7 @@ public partial class FrmBaoTri : Form
         try
         {
             _dangKhoiTao = true;
+            dgv.SelectionChanged += dgv_SelectionChanged;
             _tb = await _bll.LayThietBiAsync();
             cboThietBi.DataSource = _tb;
             cboThietBi.DisplayMember = nameof(ThietBi.HienThi);
@@ -30,13 +31,31 @@ public partial class FrmBaoTri : Form
 
             if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
 
+            CapNhatTrangThaiNut();
             await TaiDanhSachAsync();
+            CapNhatTrangThaiNut();
             _dangKhoiTao = false;
         }
         catch (Exception ex)
         {
             MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi tải dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    private void dgv_SelectionChanged(object? sender, EventArgs e)
+    {
+        CapNhatTrangThaiNut();
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        var baoTri = dgv.CurrentRow?.DataBoundItem as BaoTri;
+        bool coChon = baoTri != null;
+        bool chuaHoanThanh = coChon && !string.Equals(baoTri!.TrangThai, "Hoàn thành", StringComparison.OrdinalIgnoreCase);
+
+        UiButtonHelper.SetTrangThai(btnTao, true, UiButtonHelper.MauThemMoi);
+        UiButtonHelper.SetTrangThai(btnHoanTat, chuaHoanThanh, UiButtonHelper.MauLuu);
+        UiButtonHelper.SetTrangThai(btnLamMoi, true, UiButtonHelper.MauLamMoi);
     }
 
     private async Task TaiDanhSachAsync()

@@ -18,9 +18,27 @@ public partial class FrmHoaDon : Form
     private async void FrmHoaDon_Load(object? sender, EventArgs e)
     {
         _dangKhoiTao = true;
+        dgvHoaDon.SelectionChanged += dgvHoaDon_SelectionChanged;
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
+        CapNhatTrangThaiNut();
         await TaiDanhSachAsync();
+        CapNhatTrangThaiNut();
         _dangKhoiTao = false;
+    }
+
+    private void dgvHoaDon_SelectionChanged(object? sender, EventArgs e)
+    {
+        CapNhatTrangThaiNut();
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        var hoaDon = dgvHoaDon.CurrentRow?.DataBoundItem as HoaDonView;
+        bool coChon = hoaDon != null;
+        bool chuaHuy = coChon && !string.Equals(hoaDon!.TrangThai, "Hủy", StringComparison.OrdinalIgnoreCase);
+
+        UiButtonHelper.SetTrangThai(btnThanhToan, coChon, Color.FromArgb(5, 150, 105));
+        UiButtonHelper.SetTrangThai(btnHuyHoaDon, chuaHuy, Color.FromArgb(220, 38, 38));
     }
 
     private async Task TaiDanhSachAsync()

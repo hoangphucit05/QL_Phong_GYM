@@ -20,7 +20,11 @@ public partial class FrmKhuyenMai : Form
     {
         _dangKhoiTao = true;
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         await TaiDanhSachAsync();
+        _khuyenMaiDangChon = null;
+        dgvKhuyenMai.ClearSelection();
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         _dangKhoiTao = false;
     }
 
@@ -150,7 +154,7 @@ public partial class FrmKhuyenMai : Form
     {
         if (_dangKhoiTao) return;
         _khuyenMaiDangChon = dgvKhuyenMai.CurrentRow?.DataBoundItem as KhuyenMai;
-        btnSua.Enabled = _khuyenMaiDangChon != null;
+        UiButtonHelper.SetTrangThai(btnSua, _khuyenMaiDangChon != null, UiButtonHelper.MauChinhSua);
     }
 
     private async void btnThem_Click(object? sender, EventArgs e)

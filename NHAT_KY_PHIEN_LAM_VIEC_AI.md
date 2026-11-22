@@ -1152,3 +1152,38 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
      - Tạo mới `HUONG_DAN_SU_DUNG_VA_VAN_HANH.md`: Danh mục tài khoản theo 5 nhóm vai trò, quy trình 7 luồng công việc thực tế, xử lý sự cố thường gặp.
      - Cập nhật `QA_REPORT.md`: Bổ sung mục 16, nâng đánh giá chất lượng lên **🟢 ĐẠT CHUẨN — SẴN SÀNG BÀN GIAO & VẬN HÀNH THỰC TẾ**.
 - **Kết luận**: Hệ thống Quản lý Phòng Gym `QL_PhongGym` đã trải qua toàn bộ 16 phiên làm việc với tiêu chuẩn khắt khe nhất, khắc phục triệt để mọi lỗi logic và giao diện, kiểm thử hồi quy 100% thành công và chính thức sẵn sàng bàn giao cho người dùng đưa vào vận hành thực tế.
+
+---
+
+## Phiên Nâng Cấp UX — Chuẩn hóa Trạng thái Nghỉ (Idle/Disabled State) và Điều khiển Trực quan
+
+- **Ngày**: 22/11/2026
+- **Mục tiêu**: Giải quyết góp ý của người dùng về việc các nút thao tác (Thêm mới, Chỉnh sửa, Lưu, Xóa) luôn ở trạng thái sáng và bấm được ngay cả khi chưa chọn thao tác nào (đặc biệt là nút Lưu sáng khi chưa thêm/sửa gây bấm nhầm).
+- **Thực hiện**:
+  1. Tạo `UiButtonHelper.cs`: Đổi màu trực quan cho nút phẳng trong WinForms:
+     - Kích hoạt: Màu nhận diện (Xanh dương, Cam, Xanh lục, Đỏ, Xám đậm), chữ trắng, con trỏ bàn tay.
+     - Nghỉ: Nền xám nhạt hiện đại (`#E2E8F0`), chữ xám mờ (`#94A3B8`), con trỏ mặc định.
+  2. Nâng cấp luồng thao tác trên `FrmThanhVien.cs`:
+     - Ban đầu / Làm mới: Các ô nhập khóa chỉ đọc (`ReadOnly = true`, nền `#F8FAFC`). Nút `Chỉnh sửa`, `Lưu`, `Xóa` ở trạng thái nghỉ. Chỉ có `Thêm mới` và `Làm mới` sáng.
+     - Chọn dòng trên bảng: Ô nhập hiển thị thông tin chỉ đọc. Nút `Chỉnh sửa` và `Xóa` bật sáng. Nút `Lưu` vẫn nghỉ.
+     - Bấm `Thêm mới` hoặc `Chỉnh sửa`: Ô nhập mở khóa (`ReadOnly = false`, nền trắng), focus vào ô Họ tên. Nút `Lưu` bật sáng xanh lục rực rỡ. Các nút `Thêm mới`, `Chỉnh sửa`, `Xóa` chuyển sang trạng thái nghỉ. Nút `Làm mới` đóng vai trò `Hủy bỏ`.
+     - Bấm `Lưu` thành công: Dữ liệu được ghi, khóa lại các ô nhập, nút `Lưu` trở về trạng thái nghỉ.
+  3. Áp dụng đồng bộ cho toàn bộ các form:
+     - `FrmGoiTap`: Khóa ô thông tin ở chế độ xem; nút Lưu và Ngừng áp dụng ở trạng thái nghỉ khi chưa chọn gói tập.
+     - `FrmNhanVien`: Khóa ô thông tin ở chế độ xem; nút Lưu và Nghỉ việc ở trạng thái nghỉ khi chưa chọn nhân viên.
+     - `FrmHLV`: Khóa ô thông tin; nút Lưu ở trạng thái nghỉ khi chưa chọn/thêm HLV.
+     - `FrmVanHanhGoi`: Nút Check-in, Check-out nghỉ khi chưa chọn hội viên; nút Gia hạn, Bảo lưu nghỉ khi chưa chọn gói tập trên lưới.
+     - `FrmTaiKhoan`: Nút Đặt lại mật khẩu, Khóa/Mở khóa nghỉ khi chưa chọn tài khoản; nút Lưu nghỉ khi đang chọn tài khoản để tránh lỗi.
+     - `FrmHoaDon`: Nút Thanh toán nghỉ khi chưa chọn hóa đơn; nút Hủy hóa đơn nghỉ khi chưa chọn hoặc đã hủy.
+     - `FrmBaoTri`: Nút Hoàn tất nghỉ khi chưa chọn phiếu bảo trì hoặc phiếu đã Hoàn thành.
+     - `FrmDiemDanh`: Nút Điểm danh nghỉ khi chưa chọn học viên trên lưới lớp học.
+     - `FrmSanPham`: Nút Chỉnh sửa, Nhập kho nghỉ khi chưa chọn sản phẩm.
+     - `FrmLopTap`: Nút Chỉnh sửa, Đóng lớp nghỉ khi chưa chọn lớp.
+     - `FrmKhuyenMai`: Nút Cập nhật nghỉ khi chưa chọn chương trình khuyến mãi.
+     - `FrmThietBi`: Nút Cập nhật nghỉ khi chưa chọn thiết bị.
+     - `FrmPhongTap`: Nút Cập nhật nghỉ khi chưa chọn phòng.
+- **Kiểm thử**:
+  - `dotnet build He_Thong_GYM.slnx`: PASS (0 Warning, 0 Error).
+  - `UiInspector`: PASS 21/21 Form.
+  - Regression SQL: PASS 100% (12/12 luồng).
+- **Kết luận**: Giao diện phần mềm trở nên trực quan, hiện đại, dẫn dắt người dùng rõ ràng theo từng bước và triệt tiêu hoàn toàn khả năng thao tác nhầm lẫn.

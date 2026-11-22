@@ -1,14 +1,170 @@
-﻿using He_Thong_GYM.BLL;using He_Thong_GYM.Models;
+using System.Drawing;
+using He_Thong_GYM.BLL;
+using He_Thong_GYM.Helpers;
+using He_Thong_GYM.Models;
+
 namespace He_Thong_GYM.Forms;
-public partial class FrmTaiKhoan:Form
+
+public partial class FrmTaiKhoan : Form
 {
- private readonly DangNhapBLL _bll=new();private readonly NhanVienBLL _nhanVienBLL=new();private TaiKhoan? _chon;
- public FrmTaiKhoan(){InitializeComponent();}
- private async void FrmTaiKhoan_Load(object? s,EventArgs e){try{cboNhanVien.DataSource=await _nhanVienBLL.LayNhanVienDangLamAsync();cboNhanVien.DisplayMember=nameof(NhanVien.HienThi);cboNhanVien.ValueMember=nameof(NhanVien.MaNV);cboVaiTro.DataSource=await _bll.LayVaiTroAsync();await TaiAsync();}catch(Exception ex){MessageBox.Show(UiErrorMessage.Get(ex),"Lỗi dữ liệu",MessageBoxButtons.OK,MessageBoxIcon.Error);}}
- private async Task TaiAsync(){dgvTaiKhoan.DataSource=await _bll.LayDanhSachTaiKhoanAsync();}
- private void dgvTaiKhoan_SelectionChanged(object? s,EventArgs e){if(dgvTaiKhoan.CurrentRow?.DataBoundItem is not TaiKhoan t)return;_chon=t;txtTenDangNhap.Text=t.TenDangNhap;cboNhanVien.SelectedValue=t.MaNV;cboVaiTro.SelectedItem=t.VaiTro;lblTrangThai.Text=$"Tài khoản đang chọn: {t.TenDangNhap} - {t.TrangThai}";}
- private void btnTaoMoi_Click(object? s,EventArgs e){_chon=null;txtTenDangNhap.Clear();txtMatKhau.Clear();if(cboNhanVien.Items.Count>0)cboNhanVien.SelectedIndex=0;if(cboVaiTro.Items.Count>0)cboVaiTro.SelectedIndex=0;lblTrangThai.Text="Nhập thông tin để tạo tài khoản mới.";}
- private async void btnLuu_Click(object? s,EventArgs e){try{if(_chon is not null)throw new InvalidOperationException("Chỉ tạo mới tài khoản tại màn hình này. Dùng nút đặt lại mật khẩu hoặc khóa/mở khóa cho tài khoản đã có.");await _bll.TaoTaiKhoanAsync(new TaiKhoan{TenDangNhap=txtTenDangNhap.Text.Trim(),MaNV=cboNhanVien.SelectedValue is int maNV?maNV:0,VaiTro=cboVaiTro.Text},txtMatKhau.Text);await TaiAsync();MessageBox.Show("Đã tạo tài khoản với mật khẩu hash.","Thành công",MessageBoxButtons.OK,MessageBoxIcon.Information);}catch(Exception ex){MessageBox.Show(UiErrorMessage.Get(ex),"Không thể lưu",MessageBoxButtons.OK,MessageBoxIcon.Warning);}}
- private async void btnKhoaMo_Click(object? s,EventArgs e){if(_chon is null)return;var next=_chon.TrangThai=="Hoạt động"?"Khóa":"Hoạt động";try{await _bll.CapNhatTrangThaiTaiKhoanAsync(_chon.MaTK,next);await TaiAsync();}catch(Exception ex){MessageBox.Show(UiErrorMessage.Get(ex),"Lỗi",MessageBoxButtons.OK,MessageBoxIcon.Error);}}
- private async void btnDatLaiMatKhau_Click(object? s,EventArgs e){if(_chon is null){MessageBox.Show("Hãy chọn tài khoản.");return;}if(txtMatKhau.Text.Length<8){MessageBox.Show("Nhập mật khẩu mới tối thiểu 8 ký tự vào ô Mật khẩu.");return;}try{var n=new NguoiDung{MaTK=_chon.MaTK};await _bll.DoiMatKhauAsync(n,txtMatKhau.Text);txtMatKhau.Clear();MessageBox.Show("Đã đặt lại mật khẩu.","Thành công",MessageBoxButtons.OK,MessageBoxIcon.Information);}catch(Exception ex){MessageBox.Show(UiErrorMessage.Get(ex),"Lỗi",MessageBoxButtons.OK,MessageBoxIcon.Warning);}}
+    private readonly DangNhapBLL _bll = new();
+    private readonly NhanVienBLL _nhanVienBLL = new();
+    private TaiKhoan? _chon;
+
+    public FrmTaiKhoan()
+    {
+        InitializeComponent();
+    }
+
+    private async void FrmTaiKhoan_Load(object? s, EventArgs e)
+    {
+        try
+        {
+            cboNhanVien.DataSource = await _nhanVienBLL.LayNhanVienDangLamAsync();
+            cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
+            cboNhanVien.ValueMember = nameof(NhanVien.MaNV);
+            cboVaiTro.DataSource = await _bll.LayVaiTroAsync();
+            CapNhatTrangThaiNut();
+            await TaiAsync();
+            DatTrangThaiTaoMoi();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void CapNhatTrangThaiNut()
+    {
+        bool coChon = _chon != null;
+
+        UiButtonHelper.SetTrangThai(btnTaoMoi, true, UiButtonHelper.MauThemMoi);
+        UiButtonHelper.SetTrangThai(btnLuu, !coChon, UiButtonHelper.MauLuu); // Chỉ kích hoạt khi đang ở chế độ tạo mới
+        UiButtonHelper.SetTrangThai(btnDatLaiMatKhau, coChon, UiButtonHelper.MauChinhSua);
+        UiButtonHelper.SetTrangThai(btnKhoaMo, coChon, UiButtonHelper.MauXoa);
+    }
+
+    private void DatTrangThaiTaoMoi()
+    {
+        _chon = null;
+        txtTenDangNhap.Clear();
+        txtMatKhau.Clear();
+        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = 0;
+        if (cboVaiTro.Items.Count > 0) cboVaiTro.SelectedIndex = 0;
+        dgvTaiKhoan.ClearSelection();
+        lblTrangThai.Text = "Nhập thông tin để tạo tài khoản mới.";
+        CapNhatTrangThaiNut();
+        txtTenDangNhap.Focus();
+    }
+
+    private async Task TaiAsync()
+    {
+        dgvTaiKhoan.DataSource = await _bll.LayDanhSachTaiKhoanAsync();
+    }
+
+    private void dgvTaiKhoan_SelectionChanged(object? s, EventArgs e)
+    {
+        if (dgvTaiKhoan.CurrentRow?.DataBoundItem is not TaiKhoan t)
+        {
+            _chon = null;
+            CapNhatTrangThaiNut();
+            return;
+        }
+
+        _chon = t;
+        txtTenDangNhap.Text = t.TenDangNhap;
+        cboNhanVien.SelectedValue = t.MaNV;
+        cboVaiTro.SelectedItem = t.VaiTro;
+        lblTrangThai.Text = $"Tài khoản đang chọn: {t.TenDangNhap} - {t.TrangThai}";
+        CapNhatTrangThaiNut();
+    }
+
+    private void btnTaoMoi_Click(object? s, EventArgs e)
+    {
+        DatTrangThaiTaoMoi();
+    }
+
+    private async void btnLuu_Click(object? s, EventArgs e)
+    {
+        if (_chon is not null)
+        {
+            MessageBox.Show("Chỉ tạo mới tài khoản tại màn hình này. Dùng nút 'Đặt lại mật khẩu' hoặc 'Khóa / mở khóa' cho tài khoản đã có.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(txtTenDangNhap.Text))
+            {
+                throw new InvalidOperationException("Vui lòng nhập tên đăng nhập.");
+            }
+            if (string.IsNullOrWhiteSpace(txtMatKhau.Text) || txtMatKhau.Text.Length < 8)
+            {
+                throw new InvalidOperationException("Mật khẩu khởi tạo phải có tối thiểu 8 ký tự.");
+            }
+
+            await _bll.TaoTaiKhoanAsync(new TaiKhoan
+            {
+                TenDangNhap = txtTenDangNhap.Text.Trim(),
+                MaNV = cboNhanVien.SelectedValue is int maNV ? maNV : 0,
+                VaiTro = cboVaiTro.Text
+            }, txtMatKhau.Text);
+
+            await TaiAsync();
+            DatTrangThaiTaoMoi();
+            MessageBox.Show("Đã tạo tài khoản với mật khẩu hash bảo mật thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Không thể lưu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void btnKhoaMo_Click(object? s, EventArgs e)
+    {
+        if (_chon is null)
+        {
+            MessageBox.Show("Vui lòng chọn tài khoản cần thay đổi trạng thái từ danh sách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var next = _chon.TrangThai == "Hoạt động" ? "Khóa" : "Hoạt động";
+        try
+        {
+            await _bll.CapNhatTrangThaiTaiKhoanAsync(_chon.MaTK, next);
+            await TaiAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private async void btnDatLaiMatKhau_Click(object? s, EventArgs e)
+    {
+        if (_chon is null)
+        {
+            MessageBox.Show("Vui lòng chọn tài khoản cần đặt lại mật khẩu từ danh sách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        if (txtMatKhau.Text.Length < 8)
+        {
+            MessageBox.Show("Nhập mật khẩu mới tối thiểu 8 ký tự vào ô Mật khẩu.", "Yêu cầu mật khẩu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            txtMatKhau.Focus();
+            return;
+        }
+
+        try
+        {
+            var n = new NguoiDung { MaTK = _chon.MaTK };
+            await _bll.DoiMatKhauAsync(n, txtMatKhau.Text);
+            txtMatKhau.Clear();
+            MessageBox.Show("Đã đặt lại mật khẩu thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
 }

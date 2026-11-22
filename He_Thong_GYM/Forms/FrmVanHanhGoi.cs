@@ -1,3 +1,4 @@
+using System.Drawing;
 using He_Thong_GYM.BLL;
 using He_Thong_GYM.Helpers;
 using He_Thong_GYM.Models;
@@ -14,6 +15,7 @@ public partial class FrmVanHanhGoi : Form
     {
         InitializeComponent();
         cboThanhVien.SelectedIndexChanged += cboThanhVien_SelectedIndexChanged;
+        dgvGoi.SelectionChanged += (s, e) => CapNhatTrangThaiNut();
         btnCheckIn.Click += btnCheckIn_Click;
         btnCheckOut.Click += btnCheckOut_Click;
         btnGiaHan.Click += btnGiaHan_Click;
@@ -38,11 +40,29 @@ public partial class FrmVanHanhGoi : Form
         catch (Exception ex) { HienThiLoi(ex); }
     }
 
+    private void CapNhatTrangThaiNut()
+    {
+        bool coThanhVien = cboThanhVien.SelectedItem is ThanhVien;
+        bool coGoiChon = dgvGoi.CurrentRow?.DataBoundItem is DangKyGoiView;
+
+        UiButtonHelper.SetTrangThai(btnCheckIn, coThanhVien, Color.FromArgb(5, 150, 105));
+        UiButtonHelper.SetTrangThai(btnCheckOut, coThanhVien, Color.FromArgb(30, 64, 175));
+        UiButtonHelper.SetTrangThai(btnGiaHan, coGoiChon, Color.FromArgb(16, 185, 129));
+        UiButtonHelper.SetTrangThai(btnBaoLuu, coGoiChon, Color.FromArgb(124, 58, 237));
+    }
+
     private async Task TaiGoiAsync()
     {
-        if (cboThanhVien.SelectedItem is not ThanhVien thanhVien) return;
+        if (cboThanhVien.SelectedItem is not ThanhVien thanhVien)
+        {
+            dgvGoi.DataSource = null;
+            CapNhatTrangThaiNut();
+            return;
+        }
+
         dgvGoi.DataSource = await _vanHanhBLL.LayGoiThanhVienAsync(thanhVien.MaTV);
         DinhDangLuoiGoi();
+        CapNhatTrangThaiNut();
     }
 
     private void DinhDangLuoiGoi()
@@ -103,10 +123,16 @@ public partial class FrmVanHanhGoi : Form
         {
             if (dgvGoi.CurrentRow?.DataBoundItem is not DangKyGoiView goi) throw new InvalidOperationException("Hãy chọn một gói đã đăng ký.");
             await _vanHanhBLL.BaoLuuAsync(goi.MaDKG, dtpTuNgay.Value, dtpDenNgay.Value, txtLyDo.Text, SessionManager.NguoiDungHienTai?.MaNV);
-            await TaiGoiAsync(); lblTrangThai.Text = "Đã bảo lưu gói tập.";
+            await TaiGoiAsync();
+            lblTrangThai.Text = "Đã bảo lưu gói tập.";
         }
         catch (Exception ex) { HienThiLoi(ex); }
     }
 
-    private void HienThiLoi(Exception ex) { var message = UiErrorMessage.Get(ex); lblTrangThai.Text = message; MessageBox.Show(message, "Không thể thực hiện", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+    private void HienThiLoi(Exception ex)
+    {
+        var message = UiErrorMessage.Get(ex);
+        lblTrangThai.Text = message;
+        MessageBox.Show(message, "Không thể thực hiện", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+    }
 }

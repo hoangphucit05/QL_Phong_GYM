@@ -93,6 +93,9 @@ public partial class FrmThietBi : Form
             _dangKhoiTao = false;
             ApDungLoc();
             DinhDangLuoi();
+            _thietBiDangChon = null;
+            dgv.ClearSelection();
+            UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         }
         catch (Exception ex)
         {
@@ -221,7 +224,7 @@ public partial class FrmThietBi : Form
     {
         if (_dangKhoiTao) return;
         _thietBiDangChon = dgv.CurrentRow?.DataBoundItem as ThietBi;
-        btnSua.Enabled = _thietBiDangChon != null;
+        UiButtonHelper.SetTrangThai(btnSua, _thietBiDangChon != null, UiButtonHelper.MauChinhSua);
     }
 
     private async void btnSua_Click(object? sender, EventArgs e)

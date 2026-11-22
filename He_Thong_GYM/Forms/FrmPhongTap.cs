@@ -18,9 +18,13 @@ public partial class FrmPhongTap : Form
     private async void FrmPhongTap_Load(object? sender, EventArgs e)
     {
         _dangKhoiTao = true;
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         if (cboLoai.Items.Count > 0) cboLoai.SelectedIndex = 0;
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
         await TaiDanhSachAsync();
+        _phongDangChon = null;
+        dgv.ClearSelection();
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         _dangKhoiTao = false;
     }
 
@@ -146,7 +150,7 @@ public partial class FrmPhongTap : Form
     {
         if (_dangKhoiTao) return;
         _phongDangChon = dgv.CurrentRow?.DataBoundItem as PhongTapModel;
-        btnSua.Enabled = _phongDangChon != null;
+        UiButtonHelper.SetTrangThai(btnSua, _phongDangChon != null, UiButtonHelper.MauChinhSua);
     }
 
     private async void btnSua_Click(object? sender, EventArgs e)

@@ -25,6 +25,7 @@ public partial class FrmDiemDanh : Form
         cboLocDiemDanh.SelectedIndexChanged += BoLocHoacSapXepThayDoi;
         cboSapXep.SelectedIndexChanged += BoLocHoacSapXepThayDoi;
         btnBoLoc.Click += btnBoLoc_Click;
+        dgvHocVien.SelectionChanged += (s, e) => CapNhatTrangThaiDiemDanh();
     }
 
     private async void FrmDiemDanh_Load(object? sender, EventArgs e)
@@ -248,13 +249,21 @@ public partial class FrmDiemDanh : Form
         var coQuyenDangKy = SessionManager.CoVaiTro("Admin", "Quản lý", "Lễ tân", "Nhân viên");
         var coQuyenDiemDanh = SessionManager.CoVaiTro("Admin", "Quản lý", "Lễ tân", "HLV", "Huấn luyện viên");
 
-        btnDangKy.Enabled = coQuyenDangKy;
-        btnTaoBuoi.Enabled = coQuyenDiemDanh;
-        btnDiemDanh.Enabled = coQuyenDiemDanh;
+        UiButtonHelper.SetTrangThai(btnDangKy, coQuyenDangKy, UiButtonHelper.MauThemMoi);
+        UiButtonHelper.SetTrangThai(btnTaoBuoi, coQuyenDiemDanh, UiButtonHelper.MauChinhSua);
         cboTrangThai.Enabled = coQuyenDiemDanh;
+
+        CapNhatTrangThaiDiemDanh();
 
         if (!coQuyenDangKy || !coQuyenDiemDanh)
             lblQuyenThaoTac.Text = "Bạn chỉ có thể thực hiện các thao tác được cấp quyền; bộ lọc và sắp xếp luôn khả dụng.";
+    }
+
+    private void CapNhatTrangThaiDiemDanh()
+    {
+        var coQuyenDiemDanh = SessionManager.CoVaiTro("Admin", "Quản lý", "Lễ tân", "HLV", "Huấn luyện viên");
+        bool coHocVien = dgvHocVien.CurrentRow?.DataBoundItem is HocVienLop;
+        UiButtonHelper.SetTrangThai(btnDiemDanh, coQuyenDiemDanh && coHocVien, Color.FromArgb(5, 150, 105));
     }
 
     private static void KiemTraQuyenDangKy()

@@ -906,5 +906,38 @@ Thực hiện theo lộ trình đã chốt:
 - **Chất lượng mã nguồn:** Sạch sẽ, không warning, không error, phân tầng UI - BLL - DAL chuẩn hóa.
 - **Toàn vẹn CSDL:** 100% ràng buộc khóa ngoại, trigger, stored procedure đồng bộ và an toàn.
 
+## 28. Phiên Nâng Cấp UX — Chuẩn hóa Trạng thái Nghỉ (Idle/Disabled State) và Điều khiển Trực quan
+
+- **Thời điểm:** 22/11/2026.
+- **Vấn đề giải quyết:** Theo phản hồi người dùng (kèm ảnh chụp Form Quản lý thành viên), khi chưa chọn thao tác nào (hoặc mới mở form / chưa chọn bản ghi), tất cả các nút Thêm mới, Chỉnh sửa, Lưu, Xóa đều sáng màu và có thể bấm được; đặc biệt nút "Lưu" sáng rực rỡ khi chưa thao tác gì dễ gây bấm nhầm và báo lỗi. Các nút phẳng khi bị disabled trong WinForms không tự đổi màu nền khiến người dùng không phân biệt được nút nào đang nghỉ, nút nào đang cho phép thao tác.
+- **Giải pháp hoàn tất:**
+  1. Tạo mới [UiButtonHelper.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Helpers/UiButtonHelper.cs):
+     - Khi nút ở trạng thái nghỉ (`Enabled = false`): tự động chuyển sang màu xám nhạt hiện đại (Slate-200 `#E2E8F0`), chữ xám mờ (Slate-400 `#94A3B8`), con trỏ mặc định (`Cursors.Default`).
+     - Khi nút kích hoạt (`Enabled = true`): hiển thị đúng màu nhận diện chức năng (Thêm mới: Xanh dương, Chỉnh sửa: Cam, Lưu: Xanh lục, Xóa: Đỏ, Hủy/Làm mới: Xám đậm), chữ trắng, con trỏ bàn tay (`Cursors.Hand`).
+  2. Áp dụng State Machine quản lý thao tác tại [FrmThanhVien.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmThanhVien.cs):
+     - **Chế độ Xem (Mới mở form / Làm mới):** Các ô nhập khóa chỉ đọc (`ReadOnly = true`, nền xám nhạt `#F8FAFC`). Nút `Chỉnh sửa`, `Lưu`, `Xóa` đều ở TRẠNG THÁI NGHỈ (màu xám). Chỉ có `Thêm mới` và `Làm mới` sáng.
+     - **Khi chọn 1 dòng trên Grid:** Dữ liệu hiển thị lên ô nhập (chỉ đọc). Nút `Chỉnh sửa` và `Xóa` bật sáng. Nút `Lưu` vẫn ở trạng thái nghỉ.
+     - **Khi bấm `Thêm mới` hoặc `Chỉnh sửa`:** Các ô nhập mở khóa cho phép gõ (`ReadOnly = false`, nền trắng), focus vào ô đầu tiên. Nút `Lưu` bật sáng màu xanh lục rực rỡ. Các nút `Thêm mới`, `Chỉnh sửa`, `Xóa` chuyển sang trạng thái nghỉ. Nút `Làm mới` chuyển vai trò thành `Hủy bỏ`.
+     - **Sau khi Lưu thành công:** Khóa lại các ô nhập, nút `Lưu` quay về trạng thái nghỉ.
+  3. Áp dụng đồng bộ cho toàn bộ các màn hình còn lại:
+     - [FrmGoiTap.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmGoiTap.cs): Khóa ô thông tin ở chế độ xem; `btnLuu` và `btnNgungApDung` ở trạng thái nghỉ khi chưa chọn gói tập.
+     - [FrmNhanVien.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmNhanVien.cs): Khóa ô thông tin ở chế độ xem; `btnLuu` và `btnNghiViec` ở trạng thái nghỉ khi chưa chọn nhân viên.
+     - [FrmHLV.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmHLV.cs): Khóa ô thông tin ở chế độ xem; `btnLuu` ở trạng thái nghỉ khi chưa chọn / thêm HLV.
+     - [FrmVanHanhGoi.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmVanHanhGoi.cs): `btnCheckIn`, `btnCheckOut` nghỉ khi chưa chọn hội viên; `btnGiaHan`, `btnBaoLuu` nghỉ khi chưa chọn gói tập trên lưới.
+     - [FrmTaiKhoan.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmTaiKhoan.cs): `btnDatLaiMatKhau`, `btnKhoaMo` nghỉ khi chưa chọn tài khoản; `btnLuu` nghỉ khi đang chọn tài khoản (tránh báo lỗi do màn hình chỉ dùng tạo mới).
+     - [FrmHoaDon.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmHoaDon.cs): `btnThanhToan` nghỉ khi chưa chọn hóa đơn; `btnHuyHoaDon` nghỉ khi chưa chọn hoặc hóa đơn đã ở trạng thái hủy.
+     - [FrmBaoTri.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmBaoTri.cs): `btnHoanTat` nghỉ khi chưa chọn phiếu bảo trì hoặc phiếu đã ở trạng thái "Hoàn thành".
+     - [FrmDiemDanh.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmDiemDanh.cs): `btnDiemDanh` nghỉ khi chưa chọn học viên trên lưới lớp học.
+     - [FrmSanPham.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmSanPham.cs): `btnSua`, `btnNhapKho` nghỉ khi chưa chọn sản phẩm.
+     - [FrmLopTap.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmLopTap.cs): `btnSua`, `btnDongLop` nghỉ khi chưa chọn lớp.
+     - [FrmKhuyenMai.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmKhuyenMai.cs): `btnSua` nghỉ khi chưa chọn chương trình.
+     - [FrmThietBi.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmThietBi.cs): `btnSua` nghỉ khi chưa chọn thiết bị.
+     - [FrmPhongTap.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Forms/FrmPhongTap.cs): `btnSua` nghỉ khi chưa chọn phòng.
+- **Kết quả kiểm thử:**
+  - `dotnet build He_Thong_GYM.slnx`: **PASS 0 warning, 0 error**.
+  - `UiInspector`: **PASS 21/21 Form**.
+  - `24_final_regression_test.sql`: **PASS 100% (12/12 luồng)**.
+
+
 
 

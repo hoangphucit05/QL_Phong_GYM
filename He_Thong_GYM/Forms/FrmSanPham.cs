@@ -135,14 +135,14 @@ public partial class FrmSanPham : Form
         if (dgvSanPham.CurrentRow?.DataBoundItem is not SanPham sp)
         {
             _maSPDangChon = null;
-            btnSua.Enabled = false;
-            btnNhapKho.Enabled = false;
+            UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+            UiButtonHelper.SetTrangThai(btnNhapKho, false, UiButtonHelper.MauChucNangPhu);
             return;
         }
 
         _maSPDangChon = sp.MaSP;
-        btnSua.Enabled = true;
-        btnNhapKho.Enabled = true;
+        UiButtonHelper.SetTrangThai(btnSua, true, UiButtonHelper.MauChinhSua);
+        UiButtonHelper.SetTrangThai(btnNhapKho, true, UiButtonHelper.MauChucNangPhu);
         txtTenSP.Text = sp.TenSP;
         nudDonGia.Value = Math.Clamp(sp.DonGia, nudDonGia.Minimum, nudDonGia.Maximum);
         nudGiaNhap.Value = Math.Clamp(sp.GiaNhap, nudGiaNhap.Minimum, nudGiaNhap.Maximum);
@@ -156,8 +156,8 @@ public partial class FrmSanPham : Form
         nudDonGia.Value = 0;
         nudGiaNhap.Value = 0;
         if (cboTrangThaiSP.Items.Count > 0) cboTrangThaiSP.SelectedIndex = 0;
-        btnSua.Enabled = false;
-        btnNhapKho.Enabled = false;
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        UiButtonHelper.SetTrangThai(btnNhapKho, false, UiButtonHelper.MauChucNangPhu);
         dgvSanPham.ClearSelection();
         txtTenSP.Focus();
     }

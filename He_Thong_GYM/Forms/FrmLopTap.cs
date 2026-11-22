@@ -279,14 +279,14 @@ public partial class FrmLopTap : Form
         if (dgvLop.CurrentRow?.DataBoundItem is not LopTap lop)
         {
             _maLopDangChon = null;
-            btnSua.Enabled = false;
-            btnDongLop.Enabled = false;
+            UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+            UiButtonHelper.SetTrangThai(btnDongLop, false, UiButtonHelper.MauXoa);
             return;
         }
 
         _maLopDangChon = lop.MaLop;
-        btnSua.Enabled = true;
-        btnDongLop.Enabled = !string.Equals(lop.TrangThai, "Đã đóng", StringComparison.OrdinalIgnoreCase);
+        UiButtonHelper.SetTrangThai(btnSua, true, UiButtonHelper.MauChinhSua);
+        UiButtonHelper.SetTrangThai(btnDongLop, !string.Equals(lop.TrangThai, "Đã đóng", StringComparison.OrdinalIgnoreCase), UiButtonHelper.MauXoa);
 
         txtTenLop.Text = lop.TenLop;
         if (cboLoai.DataSource != null) cboLoai.SelectedValue = lop.MaLoaiLop;
@@ -307,8 +307,8 @@ public partial class FrmLopTap : Form
         dtpBatDau.Value = DateTime.Today.AddHours(7);
         dtpKetThuc.Value = DateTime.Today.AddHours(8);
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
-        btnSua.Enabled = false;
-        btnDongLop.Enabled = false;
+        UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
+        UiButtonHelper.SetTrangThai(btnDongLop, false, UiButtonHelper.MauXoa);
         dgvLop.ClearSelection();
         txtTenLop.Focus();
     }
