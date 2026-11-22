@@ -1051,3 +1051,54 @@ Thực hiện theo lộ trình đã chốt:
 - Giữ nguyên lọc tức thời, tự mở danh sách kết quả và phím Enter; chỉ điều chỉnh kiểu trình bày để đồng bộ UX toàn hệ thống.
 - Build kiểm tra lại: PASS, 0 warning, 0 error.
 
+## Phiên đánh giá mức độ sẵn sàng so với hệ thống gym thực tế (23/11/2026)
+
+- Đã chạy lại `database/24_final_regression_test.sql`: **12/12 luồng lõi PASS**, rollback sạch.
+- `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS`: PASS; build sau khi đóng tiến trình demo: **0 warning, 0 error**.
+- Trạng thái dữ liệu hiện tại: có 1 phiên Check-in đang mở của `TV000001 - Nguyễn Minh Anh` tại `PHG000001`; có 11 hóa đơn ở trạng thái còn công nợ/chưa thanh toán. Đây là dữ liệu vận hành hợp lệ, không phải lỗi database, nhưng cần Check-out hoặc ghi chú trước khi trình diễn dữ liệu sạch.
+- Đánh giá: hệ thống đã phù hợp để demo và vận hành có kiểm soát tại một cơ sở với các luồng hội viên, gói, thanh toán, Check-in/Check-out, chuyển phòng, bảo lưu, PT/lớp, bán hàng, kho, thiết bị và phân quyền.
+- Chưa nên kết luận là sản phẩm thương mại hoàn chỉnh: cấu hình hiện phụ thuộc SQL Server `localhost` + Windows Authentication; chưa có quy trình cài đặt/migration/backup-restore/giám sát production; tự động hết hạn phụ thuộc SQL Server Agent hoặc fallback khi mở Dashboard.
+- Khoảng cách nghiệp vụ thực tế còn lại: chưa tích hợp QR/RFID/biometric hoặc app hội viên; chưa có thông báo tự động nhắc hạn/công nợ; quản lý nhiều chi nhánh chưa thể hiện; luồng lịch/hoàn thành buổi PT và các báo cáo/xuất dữ liệu nâng cao còn hạn chế.
+- Kết luận: **Demo: đạt. Vận hành nội bộ một cơ sở: gần đạt, cần chuẩn hóa triển khai. Sản phẩm thương mại nhiều cơ sở: chưa đạt nếu chưa bổ sung các mục trên.**
+
+## Phiên hiện tại — Liên kết lại luồng Thiết bị và Bảo trì thiết bị (23/11/2026)
+
+- Đã xác định điểm bất tiện: `FrmThietBi` và `FrmBaoTri` đứng tách rời, người dùng phải nhớ thiết bị rồi chọn lại thủ công ở form bảo trì.
+- Thêm nút **Lập phiếu bảo trì** trên `FrmThietBi`; nút chỉ hoạt động khi đã chọn một thiết bị.
+- Khi mở từ thiết bị đang chọn, `FrmBaoTri` tự chọn đúng thiết bị và tự chọn nhân viên đang đăng nhập làm người phụ trách.
+- Bổ sung ngày dự kiến hoàn tất (có thể bỏ chọn nếu chưa xác định), hiển thị ngày dự kiến/ngày hoàn tất trong danh sách phiếu; nội dung hướng dẫn làm rõ thiết bị sẽ chuyển sang `Bảo trì` khi tạo phiếu.
+- Cập nhật model/DAL/BLL để truyền `NgayDuKien` xuống procedure hiện có, không thay đổi schema database.
+- Kiểm thử: build `0 warning, 0 error`; UI Inspector `21/21 form` không overlap/tràn chữ; regression database `12/12 PASS`, rollback sạch.
+
+## Phiên kiểm thử lại luồng database — Thiết bị và nghiệp vụ lõi (23/11/2026)
+
+- Chạy tuần tự `database/24_final_regression_test.sql` (không chạy song song): **12/12 PASS**, rollback sạch. Lần chạy song song trước đó tạo deadlock test ở trigger hóa đơn; không dùng kết quả song song để kết luận.
+- `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS`: PASS.
+- Kiểm tra semantic data phát hiện 4 thiết bị có `TinhTrang=N'Bảo trì'`, nhưng chỉ `TB000012 - Bóng tập core` có 1 phiếu `Đang bảo trì`; `TB000004`, `TB000010`, `TB000015` chỉ còn phiếu cũ `Hoàn thành` nhưng trạng thái thiết bị vẫn là `Bảo trì`.
+- Kết luận: procedure bảo trì mới đã được kiểm thử PASS, nhưng dữ liệu lịch sử còn 3 trạng thái thiết bị cần đối soát/khôi phục theo quyết định nghiệp vụ; không tự ý sửa dữ liệu hiện tại.
+- Dữ liệu vận hành hiện có 1 phiên Check-in mở của `TV000001`; test phiên 13 không chạy độc lập được với hội viên mặc định này vì procedure chặn đúng lỗi `50010` khi đã có phiên mở.
+
+## Phiên sửa dữ liệu thiết bị và cô lập test (23/11/2026)
+
+- Thêm migration `database/28_dong_bo_trang_thai_thiet_bi.sql`; migration chỉ chuyển thiết bị `Bảo trì` về `Hoạt động` khi không còn phiếu `Đang bảo trì/Chờ bảo trì`.
+- Đã áp dụng migration local: sửa đúng 3 thiết bị stale; thiết bị `TB000012 - Bóng tập core` vẫn giữ `Bảo trì` vì còn 1 phiếu mở.
+- Cập nhật `database/21_test_phien_13.sql` để đóng tạm phiên Check-in của hội viên test trong transaction; script luôn rollback nên không ảnh hưởng dữ liệu thật.
+- Kiểm thử lại: test phiên 13 PASS; regression cuối PASS 12/12; DBCC PASS; sau kiểm tra chỉ còn 1 thiết bị Bảo trì có phiếu mở và 1 phiên Check-in vận hành hiện tại.
+
+## Phiên triển khai Dashboard tổng quan nâng cao (23/11/2026)
+
+- Mở rộng `TongQuanDashboard`, `DashboardBLL` và `DashboardDAL` để lấy dữ liệu thực từ SQL Server theo khoảng ngày tham số hóa.
+- Dashboard mới có bộ lọc: hôm nay, hôm qua, 7 ngày qua, tháng này, tháng trước, quý này, năm nay và tùy chọn.
+- Bổ sung KPI hội viên, gói tập, doanh thu, công nợ, Check-in/đang có mặt và buổi PT; thêm biểu đồ doanh thu theo ngày và trạng thái hội viên.
+- Bổ sung các bảng gói sắp hết hạn, công nợ, hoạt động gần đây và gói bán chạy; màu cảnh báo gói hết hạn/sắp hết hạn được lấy từ số ngày thực tế.
+- Dashboard ẩn số liệu tài chính chi tiết với tài khoản HLV/Huấn luyện viên; các form nghiệp vụ hiện có không bị thay đổi.
+- Thêm `Helpers/DashboardBarPanel.cs` để vẽ biểu đồ cột nhẹ, không thêm package ngoài.
+- Kiểm thử: build `0 warning, 0 error`; UI Inspector `21/21 form` PASS; truy vấn Dashboard chạy trực tiếp trên SQL Server local thành công; regression nghiệp vụ `12/12 PASS` và `DBCC CHECKCONSTRAINTS` PASS.
+
+
+
+## Phiên nâng cấp trực quan Dashboard & Luồng vận hành (23/11/2026)
+
+- Đã thêm `Helpers/DashboardDonutPanel.cs` phục vụ vẽ biểu đồ donut trạng thái hội viên bằng GDI+ thuần.
+- Đã nâng cấp `Form1.cs`: Dải 8 thẻ KPI có icon nhận diện và chỉ số phụ chi tiết; bổ sung hàng 3 biểu đồ trực quan (Doanh thu theo ngày, Donut trạng thái hội viên, Phân bổ trạng thái); nâng cấp giao diện lưới dữ liệu với hàng xen kẽ và cảnh báo màu sắc rõ ràng.
+- Kiểm thử: Build giải pháp đạt 0 warning, 0 error; UI Inspector đạt 21/21 form không có lỗi đè/tràn/cắt chữ/tiếng Việt.

@@ -8,16 +8,20 @@ public partial class FrmBaoTri : Form
 {
     private readonly TaiSanBLL _bll = new();
     private readonly NhanVienBLL _nv = new();
+    private readonly int? _maThietBiCanChon;
     private List<ThietBi> _tb = new();
     private List<BaoTri> _danhSachGoc = new();
     private bool _dangKhoiTao = true;
 
-    public FrmBaoTri()
+    public FrmBaoTri(int? maThietBiCanChon = null)
     {
         InitializeComponent();
+        _maThietBiCanChon = maThietBiCanChon;
         txtNoiDung.TextChanged += (s, e) => CapNhatTrangThaiNut();
         cboThietBi.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
         cboNhanVien.SelectedIndexChanged += (s, e) => CapNhatTrangThaiNut();
+        dtpNgayDuKien.MinDate = DateTime.Today;
+        dtpNgayDuKien.Value = DateTime.Today.AddDays(7);
     }
 
     private async void FrmBaoTri_Load(object? sender, EventArgs e)
@@ -30,10 +34,16 @@ public partial class FrmBaoTri : Form
             cboThietBi.DataSource = _tb;
             cboThietBi.DisplayMember = nameof(ThietBi.HienThi);
             cboThietBi.SelectedIndex = -1;
+            if (_maThietBiCanChon.HasValue)
+                cboThietBi.SelectedItem = _tb.FirstOrDefault(x => x.MaTB == _maThietBiCanChon.Value);
 
-            cboNhanVien.DataSource = await _nv.LayNhanVienDangLamAsync();
+            var nhanVienDangLam = await _nv.LayNhanVienDangLamAsync();
+            cboNhanVien.DataSource = nhanVienDangLam;
             cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
             cboNhanVien.SelectedIndex = -1;
+            var maNVHienTai = SessionManager.NguoiDungHienTai?.MaNV;
+            if (maNVHienTai.HasValue)
+                cboNhanVien.SelectedItem = nhanVienDangLam.FirstOrDefault(x => x.MaNV == maNVHienTai.Value);
 
             if (cboLocTrangThai.Items.Count > 0) cboLocTrangThai.SelectedIndex = 0;
 
@@ -126,6 +136,13 @@ public partial class FrmBaoTri : Form
             dgv.Columns[nameof(BaoTri.MaBaoTri)]!.HeaderText = "Mã BT";
             dgv.Columns[nameof(BaoTri.MaBaoTri)]!.Width = 75;
         }
+        if (dgv.Columns.Contains(nameof(BaoTri.MaTB)))
+            dgv.Columns[nameof(BaoTri.MaTB)]!.Visible = false;
+        if (dgv.Columns.Contains(nameof(BaoTri.MaThietBi)))
+        {
+            dgv.Columns[nameof(BaoTri.MaThietBi)]!.HeaderText = "Mã thiết bị";
+            dgv.Columns[nameof(BaoTri.MaThietBi)]!.Width = 105;
+        }
         if (dgv.Columns.Contains(nameof(BaoTri.ThietBi)))
         {
             dgv.Columns[nameof(BaoTri.ThietBi)]!.HeaderText = "Thiết bị";
@@ -159,6 +176,18 @@ public partial class FrmBaoTri : Form
             dgv.Columns[nameof(BaoTri.TrangThai)]!.HeaderText = "Trạng thái";
             dgv.Columns[nameof(BaoTri.TrangThai)]!.Width = 120;
         }
+        if (dgv.Columns.Contains(nameof(BaoTri.NgayDuKien)))
+        {
+            dgv.Columns[nameof(BaoTri.NgayDuKien)]!.HeaderText = "Dự kiến xong";
+            dgv.Columns[nameof(BaoTri.NgayDuKien)]!.DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgv.Columns[nameof(BaoTri.NgayDuKien)]!.Width = 110;
+        }
+        if (dgv.Columns.Contains(nameof(BaoTri.NgayHoanThanh)))
+        {
+            dgv.Columns[nameof(BaoTri.NgayHoanThanh)]!.HeaderText = "Ngày hoàn tất";
+            dgv.Columns[nameof(BaoTri.NgayHoanThanh)]!.DefaultCellStyle.Format = "dd/MM/yyyy";
+            dgv.Columns[nameof(BaoTri.NgayHoanThanh)]!.Width = 110;
+        }
     }
 
     private async void btnTao_Click(object? sender, EventArgs e)
@@ -170,10 +199,13 @@ public partial class FrmBaoTri : Form
                 throw new InvalidOperationException("Hãy chọn thiết bị và nhân viên.");
             }
 
-            await _bll.TaoBaoTriAsync(t.MaTB, n.MaNV, txtNoiDung.Text, nudChiPhi.Value);
+            DateTime? ngayDuKien = dtpNgayDuKien.Checked ? dtpNgayDuKien.Value.Date : null;
+            await _bll.TaoBaoTriAsync(t.MaTB, n.MaNV, txtNoiDung.Text, nudChiPhi.Value, ngayDuKien);
             MessageBox.Show("Đã tạo phiếu bảo trì thành công.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             txtNoiDung.Clear();
             nudChiPhi.Value = 0;
+            dtpNgayDuKien.Checked = false;
+            dtpNgayDuKien.Value = DateTime.Today.AddDays(7);
             await TaiDanhSachAsync();
         }
         catch (Exception ex)

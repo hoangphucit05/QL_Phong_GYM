@@ -95,11 +95,13 @@ public partial class FrmThietBi : Form
             DinhDangLuoi();
             _thietBiDangChon = null;
             UiGridHelper.BoChon(dgv);
+            UiButtonHelper.SetTrangThai(btnBaoTri, false, UiButtonHelper.MauChinhSua);
             UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
             BeginInvoke(new Action(() =>
             {
                 _thietBiDangChon = null;
                 UiGridHelper.BoChon(dgv);
+                UiButtonHelper.SetTrangThai(btnBaoTri, false, UiButtonHelper.MauChinhSua);
                 UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
             }));
         }
@@ -229,7 +231,21 @@ public partial class FrmThietBi : Form
     {
         if (_dangKhoiTao) return;
         _thietBiDangChon = dgv.CurrentRow?.DataBoundItem as ThietBi;
+        UiButtonHelper.SetTrangThai(btnBaoTri, _thietBiDangChon != null, Color.FromArgb(217, 119, 6));
         UiButtonHelper.SetTrangThai(btnSua, _thietBiDangChon != null, UiButtonHelper.MauChinhSua);
+    }
+
+    private async void btnBaoTri_Click(object? sender, EventArgs e)
+    {
+        if (_thietBiDangChon is null)
+        {
+            MessageBox.Show("Vui lòng chọn thiết bị cần lập phiếu bảo trì.", "Chưa chọn thiết bị", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        using var frmBaoTri = new FrmBaoTri(_thietBiDangChon.MaTB);
+        frmBaoTri.ShowDialog(this);
+        await TaiDuLieuAsync();
     }
 
     private async void btnSua_Click(object? sender, EventArgs e)

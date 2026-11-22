@@ -64,5 +64,11 @@
     <Compile Update="Forms\FrmVanHanhGoi.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Helpers\DashboardBarPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Helpers\DashboardDonutPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

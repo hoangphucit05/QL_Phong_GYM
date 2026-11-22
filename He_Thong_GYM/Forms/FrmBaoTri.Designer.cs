@@ -28,6 +28,9 @@ partial class FrmBaoTri
         txtNoiDung = new TextBox();
         lblChiPhi = new Label();
         nudChiPhi = new NumericUpDown();
+        lblNgayDuKien = new Label();
+        dtpNgayDuKien = new DateTimePicker();
+        lblHuongDan = new Label();
         flowThaoTac = new FlowLayoutPanel();
         btnTao = new Button();
         btnHoanTat = new Button();
@@ -89,7 +92,7 @@ partial class FrmBaoTri
         groupThongTin.Location = new Point(24, 96);
         groupThongTin.Name = "groupThongTin";
         groupThongTin.Padding = new Padding(16, 12, 16, 12);
-        groupThongTin.Size = new Size(952, 105);
+        groupThongTin.Size = new Size(952, 140);
         groupThongTin.TabIndex = 1;
         groupThongTin.TabStop = false;
         groupThongTin.Text = "Thông tin phiếu bảo trì";
@@ -109,14 +112,19 @@ partial class FrmBaoTri
         tableThongTin.Controls.Add(txtNoiDung, 1, 1);
         tableThongTin.Controls.Add(lblChiPhi, 2, 1);
         tableThongTin.Controls.Add(nudChiPhi, 3, 1);
+        tableThongTin.Controls.Add(lblNgayDuKien, 0, 2);
+        tableThongTin.Controls.Add(dtpNgayDuKien, 1, 2);
+        tableThongTin.Controls.Add(lblHuongDan, 2, 2);
+        tableThongTin.SetColumnSpan(lblHuongDan, 2);
         tableThongTin.Dock = DockStyle.Fill;
         tableThongTin.Font = new Font("Segoe UI", 9F);
         tableThongTin.Location = new Point(16, 30);
         tableThongTin.Name = "tableThongTin";
-        tableThongTin.RowCount = 2;
-        tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-        tableThongTin.Size = new Size(920, 63);
+        tableThongTin.RowCount = 3;
+        tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+        tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+        tableThongTin.RowStyles.Add(new RowStyle(SizeType.Percent, 33.33333F));
+        tableThongTin.Size = new Size(920, 98);
         tableThongTin.TabIndex = 0;
         // 
         // lblThietBi
@@ -206,6 +214,40 @@ partial class FrmBaoTri
         nudChiPhi.TabIndex = 7;
         nudChiPhi.ThousandsSeparator = true;
         // 
+        // lblNgayDuKien
+        // 
+        lblNgayDuKien.AutoSize = true;
+        lblNgayDuKien.Dock = DockStyle.Fill;
+        lblNgayDuKien.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        lblNgayDuKien.Location = new Point(3, 62);
+        lblNgayDuKien.Name = "lblNgayDuKien";
+        lblNgayDuKien.Size = new Size(104, 36);
+        lblNgayDuKien.TabIndex = 8;
+        lblNgayDuKien.Text = "Dự kiến xong:";
+        lblNgayDuKien.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // dtpNgayDuKien
+        // 
+        dtpNgayDuKien.Dock = DockStyle.Fill;
+        dtpNgayDuKien.Format = DateTimePickerFormat.Short;
+        dtpNgayDuKien.Location = new Point(113, 65);
+        dtpNgayDuKien.Name = "dtpNgayDuKien";
+        dtpNgayDuKien.ShowCheckBox = true;
+        dtpNgayDuKien.Size = new Size(339, 23);
+        dtpNgayDuKien.TabIndex = 9;
+        // 
+        // lblHuongDan
+        // 
+        lblHuongDan.Dock = DockStyle.Fill;
+        lblHuongDan.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+        lblHuongDan.ForeColor = Color.FromArgb(100, 116, 139);
+        lblHuongDan.Location = new Point(458, 62);
+        lblHuongDan.Name = "lblHuongDan";
+        lblHuongDan.Size = new Size(459, 36);
+        lblHuongDan.TabIndex = 10;
+        lblHuongDan.Text = "Thiết bị sẽ chuyển sang Bảo trì khi tạo phiếu.";
+        lblHuongDan.TextAlign = ContentAlignment.MiddleLeft;
+        // 
         // flowThaoTac
         // 
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -217,7 +259,7 @@ partial class FrmBaoTri
         flowThaoTac.Controls.Add(lblTrangThai);
         flowThaoTac.Controls.Add(cboLocTrangThai);
         flowThaoTac.Controls.Add(lblThongKe);
-        flowThaoTac.Location = new Point(24, 212);
+        flowThaoTac.Location = new Point(24, 247);
         flowThaoTac.Name = "flowThaoTac";
         flowThaoTac.Size = new Size(952, 42);
         flowThaoTac.TabIndex = 2;
@@ -337,7 +379,7 @@ partial class FrmBaoTri
         dgv.BackgroundColor = Color.White;
         dgv.BorderStyle = BorderStyle.None;
         dgv.ColumnHeadersHeight = 36;
-        dgv.Location = new Point(24, 260);
+        dgv.Location = new Point(24, 295);
         dgv.MultiSelect = false;
         dgv.Name = "dgv";
         dgv.ReadOnly = true;
@@ -388,6 +430,9 @@ partial class FrmBaoTri
     private TextBox txtNoiDung;
     private Label lblChiPhi;
     private NumericUpDown nudChiPhi;
+    private Label lblNgayDuKien;
+    private DateTimePicker dtpNgayDuKien;
+    private Label lblHuongDan;
     private FlowLayoutPanel flowThaoTac;
     private Button btnTao;
     private Button btnHoanTat;

@@ -16,8 +16,8 @@ partial class FrmSanPham
     private void InitializeComponent()
     {
         panelTieuDe = new Panel();
-        lblTieuDe = new Label();
         lblMoTa = new Label();
+        lblTieuDe = new Label();
         groupThongTin = new GroupBox();
         tableThongTin = new TableLayoutPanel();
         lblTenSP = new Label();
@@ -61,6 +61,16 @@ partial class FrmSanPham
         panelTieuDe.Size = new Size(1050, 80);
         panelTieuDe.TabIndex = 0;
         // 
+        // lblMoTa
+        // 
+        lblMoTa.AutoSize = true;
+        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
+        lblMoTa.Location = new Point(26, 48);
+        lblMoTa.Name = "lblMoTa";
+        lblMoTa.Size = new Size(359, 15);
+        lblMoTa.TabIndex = 1;
+        lblMoTa.Text = "Danh mục nước uống, whey protein, phụ kiện và theo dõi tồn kho.";
+        // 
         // lblTieuDe
         // 
         lblTieuDe.AutoSize = true;
@@ -68,19 +78,9 @@ partial class FrmSanPham
         lblTieuDe.ForeColor = Color.FromArgb(15, 23, 42);
         lblTieuDe.Location = new Point(24, 14);
         lblTieuDe.Name = "lblTieuDe";
-        lblTieuDe.Size = new Size(390, 30);
+        lblTieuDe.Size = new Size(372, 30);
         lblTieuDe.TabIndex = 0;
         lblTieuDe.Text = "QUẢN LÝ SẢN PHẨM VÀ TỒN KHO";
-        // 
-        // lblMoTa
-        // 
-        lblMoTa.AutoSize = true;
-        lblMoTa.ForeColor = Color.FromArgb(100, 116, 139);
-        lblMoTa.Location = new Point(26, 48);
-        lblMoTa.Name = "lblMoTa";
-        lblMoTa.Size = new Size(360, 15);
-        lblMoTa.TabIndex = 1;
-        lblMoTa.Text = "Danh mục nước uống, whey protein, phụ kiện và theo dõi tồn kho.";
         // 
         // groupThongTin
         // 
@@ -129,7 +129,7 @@ partial class FrmSanPham
         lblTenSP.ForeColor = Color.FromArgb(71, 85, 105);
         lblTenSP.Location = new Point(3, 0);
         lblTenSP.Name = "lblTenSP";
-        lblTenSP.Size = new Size(86, 15);
+        lblTenSP.Size = new Size(85, 15);
         lblTenSP.TabIndex = 0;
         lblTenSP.Text = "Tên sản phẩm:";
         // 
@@ -149,7 +149,7 @@ partial class FrmSanPham
         lblDonGia.ForeColor = Color.FromArgb(71, 85, 105);
         lblDonGia.Location = new Point(345, 0);
         lblDonGia.Name = "lblDonGia";
-        lblDonGia.Size = new Size(74, 15);
+        lblDonGia.Size = new Size(76, 15);
         lblDonGia.TabIndex = 2;
         lblDonGia.Text = "Đơn giá bán:";
         // 
@@ -315,7 +315,7 @@ partial class FrmSanPham
         // 
         lblTimKiem.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblTimKiem.ForeColor = Color.FromArgb(30, 41, 59);
-        lblTimKiem.Location = new Point(544, 0);
+        lblTimKiem.Location = new Point(547, 0);
         lblTimKiem.Name = "lblTimKiem";
         lblTimKiem.Size = new Size(65, 36);
         lblTimKiem.TabIndex = 5;
@@ -324,7 +324,7 @@ partial class FrmSanPham
         // 
         // txtTimKiem
         // 
-        txtTimKiem.Location = new Point(612, 6);
+        txtTimKiem.Location = new Point(618, 6);
         txtTimKiem.Margin = new Padding(3, 6, 8, 3);
         txtTimKiem.Name = "txtTimKiem";
         txtTimKiem.PlaceholderText = "Tên, mã sản phẩm...";
@@ -336,7 +336,7 @@ partial class FrmSanPham
         // 
         lblTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
-        lblTrangThai.Location = new Point(760, 0);
+        lblTrangThai.Location = new Point(769, 0);
         lblTrangThai.Name = "lblTrangThai";
         lblTrangThai.Size = new Size(68, 36);
         lblTrangThai.TabIndex = 7;
@@ -348,7 +348,7 @@ partial class FrmSanPham
         cboTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboTrangThai.FormattingEnabled = true;
         cboTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Còn bán", "Ngừng bán" });
-        cboTrangThai.Location = new Point(831, 6);
+        cboTrangThai.Location = new Point(843, 6);
         cboTrangThai.Margin = new Padding(3, 6, 8, 3);
         cboTrangThai.Name = "cboTrangThai";
         cboTrangThai.Size = new Size(110, 23);
@@ -359,7 +359,7 @@ partial class FrmSanPham
         // 
         lblThongKe.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
         lblThongKe.ForeColor = Color.FromArgb(100, 116, 139);
-        lblThongKe.Location = new Point(949, 0);
+        lblThongKe.Location = new Point(3, 36);
         lblThongKe.Name = "lblThongKe";
         lblThongKe.Size = new Size(40, 36);
         lblThongKe.TabIndex = 9;

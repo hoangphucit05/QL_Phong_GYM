@@ -21,6 +21,7 @@ partial class FrmThietBi
         groupThongTin = new GroupBox();
         panelThaoTac = new Panel();
         lblThongKe = new Label();
+        btnBaoTri = new Button();
         btnSua = new Button();
         btnLamMoi = new Button();
         tableThongTin = new TableLayoutPanel();
@@ -93,6 +94,7 @@ partial class FrmThietBi
         // 
         panelThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         panelThaoTac.Controls.Add(lblThongKe);
+        panelThaoTac.Controls.Add(btnBaoTri);
         panelThaoTac.Controls.Add(btnSua);
         panelThaoTac.Controls.Add(btnLamMoi);
         panelThaoTac.Location = new Point(16, 90);
@@ -114,6 +116,24 @@ partial class FrmThietBi
         lblThongKe.Text = "Đang tải dữ liệu...";
         lblThongKe.TextAlign = ContentAlignment.MiddleLeft;
         // 
+        // btnBaoTri
+        // 
+        btnBaoTri.BackColor = Color.FromArgb(217, 119, 6);
+        btnBaoTri.Cursor = Cursors.Hand;
+        btnBaoTri.Dock = DockStyle.Right;
+        btnBaoTri.FlatAppearance.BorderSize = 0;
+        btnBaoTri.FlatStyle = FlatStyle.Flat;
+        btnBaoTri.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnBaoTri.ForeColor = Color.White;
+        btnBaoTri.Location = new Point(480, 0);
+        btnBaoTri.Margin = new Padding(0, 0, 10, 0);
+        btnBaoTri.Name = "btnBaoTri";
+        btnBaoTri.Size = new Size(140, 34);
+        btnBaoTri.TabIndex = 1;
+        btnBaoTri.Text = "Lập phiếu bảo trì";
+        btnBaoTri.UseVisualStyleBackColor = false;
+        btnBaoTri.Click += btnBaoTri_Click;
+        // 
         // btnSua
         // 
         btnSua.BackColor = Color.FromArgb(16, 185, 129);
@@ -127,7 +147,7 @@ partial class FrmThietBi
         btnSua.Margin = new Padding(0, 0, 10, 0);
         btnSua.Name = "btnSua";
         btnSua.Size = new Size(140, 34);
-        btnSua.TabIndex = 1;
+        btnSua.TabIndex = 2;
         btnSua.Text = "Cập nhật thiết bị";
         btnSua.UseVisualStyleBackColor = false;
         btnSua.Click += btnSua_Click;
@@ -144,7 +164,7 @@ partial class FrmThietBi
         btnLamMoi.Location = new Point(780, 0);
         btnLamMoi.Name = "btnLamMoi";
         btnLamMoi.Size = new Size(140, 34);
-        btnLamMoi.TabIndex = 2;
+        btnLamMoi.TabIndex = 3;
         btnLamMoi.Text = "Làm mới / Bỏ lọc";
         btnLamMoi.UseVisualStyleBackColor = false;
         btnLamMoi.Click += btnLamMoi_Click;
@@ -317,6 +337,7 @@ partial class FrmThietBi
     private GroupBox groupThongTin;
     private Panel panelThaoTac;
     private Label lblThongKe;
+    private Button btnBaoTri;
     private Button btnSua;
     private Button btnLamMoi;
     private TableLayoutPanel tableThongTin;

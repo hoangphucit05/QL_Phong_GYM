@@ -1327,3 +1327,60 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Đã sửa:** đối chiếu `FrmHoaDon`, `FrmThanhVien`, `FrmGoiTap`, `FrmBaoTri`; đặt ô tìm kiếm về `Segoe UI 9F` thường, cao 23px, viền `Fixed3D`, nhãn `Tìm kiếm:` và nút `Xóa lọc` cao 30px.
 - Không thay đổi nghiệp vụ lọc tức thời, tự mở danh sách kết quả hoặc phím Enter.
 - **Kiểm thử:** build với `GenerateResource=false` PASS, 0 warning, 0 error.
+
+## Phiên đánh giá readiness — So sánh với hệ thống gym thực tế
+
+- **Ngày:** 23/11/2026.
+- **Kiểm tra lại:** `database/24_final_regression_test.sql` đạt **12/12 luồng lõi**; `DBCC CHECKCONSTRAINTS` PASS; build đạt **0 warning, 0 error** sau khi đóng tiến trình demo đang khóa file.
+- **Dữ liệu hiện tại:** 1 phiên Check-in đang mở (`TV000001 - Nguyễn Minh Anh`, `PHG000001`) và 11 hóa đơn còn công nợ/chưa thanh toán. Đây là trạng thái hợp lệ; cần xử lý nếu muốn demo với dữ liệu sạch.
+- **Đã đạt:** quản lý hội viên/gói, phân quyền phòng theo gói, thanh toán một phần/hoàn tiền, Check-in/Check-out/chuyển phòng, gia hạn/bảo lưu/mở lại, PT/lớp, bán hàng/khách vãng lai/kho, bảo trì thiết bị, phân quyền tài khoản và kiểm thử hồi quy.
+- **Còn thiếu so với sản phẩm thương mại:** triển khai hiện gắn với SQL Server local và Windows Authentication; thiếu quy trình production cho installer, migration, backup/restore, monitoring; tự động hết hạn còn phụ thuộc SQL Agent/fallback Dashboard; chưa có tích hợp QR/RFID/biometric, app/thông báo hội viên, multi-branch và lịch/hoàn thành buổi PT đầy đủ.
+- **Kết luận:** hệ thống **đủ tốt để demo báo cáo và vận hành nội bộ có kiểm soát**, nhưng chưa nên tuyên bố là hệ thống thương mại hoàn chỉnh cho nhiều cơ sở.
+
+## Phiên UX — Liên kết form Thiết bị và Bảo trì thiết bị
+
+- **Ngày:** 23/11/2026.
+- **Vấn đề:** hai form liên quan nhưng chưa có luồng chuyển thiết bị trực tiếp; nhân viên phải chọn lại thiết bị bằng tay.
+- **Đã sửa:** thêm nút `Lập phiếu bảo trì` trên `FrmThietBi`; mở `FrmBaoTri` với đúng thiết bị đang chọn và tự chọn nhân viên đăng nhập.
+- **Bổ sung:** ngày dự kiến hoàn tất có thể chọn/bỏ chọn; bảng phiếu hiển thị mã thiết bị, ngày dự kiến và ngày hoàn tất; thêm hướng dẫn trạng thái khi tạo phiếu.
+- **Kiểm thử:** build PASS `0 warning, 0 error`; UI Inspector PASS `21/21`; regression `database/24_final_regression_test.sql` PASS `12/12` và rollback sạch.
+
+## Phiên kiểm thử database — Luồng thiết bị/bảo trì và dữ liệu semantic
+
+- **Ngày:** 23/11/2026.
+- Chạy tuần tự `database/24_final_regression_test.sql`: **12/12 PASS**, rollback sạch. Deadlock ở lần chạy song song trước được xác định là do chạy đồng thời nhiều script test, không phải kết quả nghiệp vụ.
+- `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS`: PASS.
+- Phát hiện semantic inconsistency: `TB000004`, `TB000010`, `TB000015` đang ghi `Bảo trì` dù phiếu liên quan đã `Hoàn thành` và không còn phiếu mở; `TB000012` là trường hợp đúng vì đang có phiếu `Đang bảo trì`.
+- Procedure tạo/hoàn tất bảo trì mới vẫn PASS trong luồng 11 của regression. Cần có bước đối soát dữ liệu lịch sử trước khi tuyên bố dữ liệu thiết bị hoàn toàn sạch.
+
+## Phiên sửa lỗi semantic dữ liệu thiết bị
+
+- **Ngày:** 23/11/2026.
+- Thêm `database/28_dong_bo_trang_thai_thiet_bi.sql` để khôi phục có điều kiện các thiết bị đang ghi `Bảo trì` nhưng không còn phiếu bảo trì mở; không đụng tới thiết bị còn phiếu mở.
+- Migration đã sửa 3 thiết bị stale. `TB000012 - Bóng tập core` vẫn đúng trạng thái `Bảo trì` với 1 phiếu đang mở.
+- Sửa `database/21_test_phien_13.sql` để cô lập phiên Check-in demo trong transaction rollback, tránh test thất bại vì dữ liệu vận hành đang mở.
+- **Kết quả:** test phiên 13 PASS; regression cuối PASS `12/12`; DBCC PASS; không còn thiết bị stale theo quy tắc kiểm tra.
+
+## Phiên triển khai Dashboard tổng quan nâng cao
+
+- **Ngày:** 23/11/2026.
+- **Thực hiện:** mở rộng model/BLL/DAL Dashboard và dựng lại vùng Dashboard bằng control động để giữ nguyên các form hiện có.
+- **Bộ lọc:** hôm nay, hôm qua, 7 ngày qua, tháng này, tháng trước, quý này, năm nay và khoảng tùy chọn; các mốc ngày được truyền bằng `SqlParameter`.
+- **KPI:** tổng/hội viên hoạt động/mới, gói đang sử dụng/sắp hết hạn, doanh thu kỳ, công nợ, số người đang có mặt và buổi PT.
+- **Chi tiết:** biểu đồ doanh thu theo ngày, trạng thái hội viên, bảng gói sắp hết hạn, công nợ, hoạt động gần đây và gói bán chạy.
+- **Phân quyền:** tài khoản HLV/Huấn luyện viên không thấy doanh thu và công nợ chi tiết trên Dashboard.
+- **Kiểm thử:** build `He_Thong_GYM.csproj --no-restore -p:GenerateResource=false` PASS với `0 warning, 0 error`; `--check-ui` PASS `21/21`; truy vấn SQL Dashboard chạy thành công trên `QL_PhongGym`; regression nghiệp vụ `12/12 PASS`; `DBCC CHECKCONSTRAINTS WITH NO_INFOMSGS` PASS.
+
+
+## Phiên nâng cấp trực quan Dashboard & Luồng vận hành (23/11/2026)
+
+- **Mục tiêu:** Nâng cấp toàn diện giao diện Tổng quan Dashboard trên `Form1`, đảm bảo các luồng thông tin hiển thị trực quan, sinh động và chính xác.
+- **Thực hiện:**
+  - Thêm `Helpers/DashboardDonutPanel.cs`: Panel vẽ biểu đồ tròn/donut bằng GDI+ thuần (không phụ thuộc thư viện ngoài), hỗ trợ tỷ lệ phần trăm trực quan, tổng số lượng ở tâm và chú thích màu sắc rõ ràng cho cơ cấu hội viên.
+  - Tái cấu trúc dải thẻ KPI trên Dashboard: bổ sung biểu tượng trực quan (👥, ✅, ⏰, 📦, 💰, 📋, 🏃, 🏋️) và chỉ số phụ chi tiết (hội viên mới/hết hạn, doanh thu hôm nay/tháng, số ca check-in/giờ cao điểm, buổi PT hoàn thành/chờ xử lý).
+  - Bố cục biểu đồ 3 cột cân đối: Biểu đồ doanh thu theo ngày (cột) + Biểu đồ donut trạng thái hội viên + Biểu đồ thanh phân bổ hội viên.
+  - Chuẩn hóa hiển thị lưới dữ liệu qua `TaoBangNangCao()`: màu nền xen kẽ (`#F8FAFC`), viền phân cách ngang mỏng, căn lề số liệu và màu sắc cảnh báo theo mức độ khẩn cấp (đỏ cho quá hạn/công nợ, vàng/cam cho sắp hết hạn).
+  - Tinh chỉnh thanh bộ lọc và tóm tắt vận hành (Check-in, Check-out, giờ cao điểm, gia hạn, bảo lưu).
+- **Kiểm thử:**
+  - Build .NET: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
+  - UI Inspector: `21/21 forms` đạt chuẩn 100% (0 overlap, 0 tràn biên, 0 mất chữ, 0 lỗi UTF-8).

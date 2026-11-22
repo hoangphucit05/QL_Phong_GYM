@@ -21,6 +21,11 @@ BEGIN TRY
     -- 2. Test BUG-021: Check-in ưu tiên gói hết hạn sớm nhất (FIFO)
     -- Tạo gói B có thời hạn xa hơn gói 1
     DECLARE @MaDKG_Xa INT, @MaHD_Tam INT, @MaCheckIn BIGINT;
+    -- Cô lập test với dữ liệu demo: nếu hội viên mặc định đang có phiên mở,
+    -- chỉ đóng phiên đó trong transaction test; cuối script luôn rollback.
+    UPDATE dbo.LichSuCheckIn
+    SET ThoiGianRa = SYSDATETIME()
+    WHERE MaTV = 1 AND ThoiGianRa IS NULL;
     EXEC dbo.sp_DangKyGoiTap @MaTV = 1, @MaGoi = 1, @MaKM = NULL, @NgayBatDau = '2026-11-20', @MaNV = 1, @MaDKG = @MaDKG_Xa OUTPUT, @MaHD = @MaHD_Tam OUTPUT;
     -- Kích hoạt cả hai gói
     UPDATE dbo.DangKyGoi SET TrangThai = N'Còn hạn', NgayKetThuc = '2026-11-25' WHERE MaDKG = 1;
