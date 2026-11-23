@@ -52,6 +52,7 @@ public partial class FrmGoiTap : Form
         _lblPhong.Text = "Phòng tập (chỉ áp dụng khi chọn dịch vụ Phòng tập):";
 
         _clbDichVu.CheckOnClick = true;
+        _clbDichVu.DisplayMember = nameof(GoiTapDichVuOption.TenDichVu);
         _clbDichVu.Font = new Font("Segoe UI", 9F);
         _clbDichVu.FormattingEnabled = true;
         _clbDichVu.IntegralHeight = false;
@@ -61,6 +62,7 @@ public partial class FrmGoiTap : Form
 
         _clbPhong.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         _clbPhong.CheckOnClick = true;
+        _clbPhong.DisplayMember = nameof(PhongTapModel.HienThi);
         _clbPhong.Font = new Font("Segoe UI", 9F);
         _clbPhong.FormattingEnabled = true;
         _clbPhong.IntegralHeight = false;
