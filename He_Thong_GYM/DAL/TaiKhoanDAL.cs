@@ -34,6 +34,41 @@ public sealed class TaiKhoanDAL
     {
         await using var cn=DbConnectionFactory.CreateConnection();await using var cmd=new SqlCommand("UPDATE dbo.TaiKhoan SET TrangThai=@TrangThai,SoLanDangNhapSai=CASE WHEN @TrangThai=N'Hoạt động' THEN 0 ELSE SoLanDangNhapSai END,KhoaDen=CASE WHEN @TrangThai=N'Hoạt động' THEN NULL ELSE KhoaDen END WHERE MaTK=@MaTK;",cn);cmd.Parameters.Add("@MaTK",System.Data.SqlDbType.Int).Value=maTK;cmd.Parameters.Add("@TrangThai",System.Data.SqlDbType.NVarChar,30).Value=trangThai;await cn.OpenAsync();await cmd.ExecuteNonQueryAsync();
     }
+
+    public async Task CapNhatVaiTroAsync(int maTK, string vaiTroMoi)
+    {
+        const string sqlTaiKhoan = "UPDATE dbo.TaiKhoan SET VaiTro=@VaiTro WHERE MaTK=@MaTK;";
+        const string sqlXoaVaiTro = "DELETE FROM dbo.TaiKhoanVaiTro WHERE MaTK=@MaTK;";
+        const string sqlThemVaiTro = "INSERT dbo.TaiKhoanVaiTro(MaTK,MaVaiTro) SELECT @MaTK,MaVaiTro FROM dbo.VaiTro WHERE TenVaiTro=@VaiTro;";
+
+        await using var cn = DbConnectionFactory.CreateConnection();
+        await cn.OpenAsync();
+        await using var transaction = await cn.BeginTransactionAsync();
+        try
+        {
+            await using var cmdTK = new SqlCommand(sqlTaiKhoan, cn, (SqlTransaction)transaction);
+            cmdTK.Parameters.Add("@MaTK", System.Data.SqlDbType.Int).Value = maTK;
+            cmdTK.Parameters.Add("@VaiTro", System.Data.SqlDbType.NVarChar, 50).Value = vaiTroMoi;
+            if (await cmdTK.ExecuteNonQueryAsync() == 0)
+                throw new InvalidOperationException("Không tìm thấy tài khoản.");
+
+            await using var cmdDel = new SqlCommand(sqlXoaVaiTro, cn, (SqlTransaction)transaction);
+            cmdDel.Parameters.Add("@MaTK", System.Data.SqlDbType.Int).Value = maTK;
+            await cmdDel.ExecuteNonQueryAsync();
+
+            await using var cmdAdd = new SqlCommand(sqlThemVaiTro, cn, (SqlTransaction)transaction);
+            cmdAdd.Parameters.Add("@MaTK", System.Data.SqlDbType.Int).Value = maTK;
+            cmdAdd.Parameters.Add("@VaiTro", System.Data.SqlDbType.NVarChar, 50).Value = vaiTroMoi;
+            await cmdAdd.ExecuteNonQueryAsync();
+
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
     public async Task<NguoiDung?> LayTheoTenDangNhapAsync(string tenDangNhap)
     {
         const string sql = """

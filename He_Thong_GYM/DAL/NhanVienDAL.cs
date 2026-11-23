@@ -12,13 +12,39 @@ public sealed class NhanVienDAL
         while(await rd.ReadAsync())danhSach.Add(new NhanVien{MaNV=rd.GetInt32(0),MaNhanVien=rd.GetString(1),HoTen=rd.GetString(2),NgaySinh=rd.GetDateTime(3),GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),SDT=rd.GetString(5),Email=rd.IsDBNull(6)?null:rd.GetString(6),DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),ChucVu=rd.GetString(8),Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),TrangThai=rd.GetString(10)});
         return danhSach;
     }
+
+    public async Task<List<NhanVien>> LayNhanVienChuaCoTaiKhoanAsync()
+    {
+        const string sql = """
+            SELECT nv.MaNV, nv.MaNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.SDT, nv.Email, nv.DiaChi, nv.ChucVu, nv.Luong, nv.TrangThai
+            FROM dbo.NhanVien nv
+            WHERE nv.TrangThai = N'Đang làm'
+              AND NOT EXISTS (SELECT 1 FROM dbo.TaiKhoan tk WHERE tk.MaNV = nv.MaNV)
+            ORDER BY nv.HoTen;
+            """;
+        var danhSach = new List<NhanVien>();
+        await using var cn = DbConnectionFactory.CreateConnection();
+        await using var cmd = new SqlCommand(sql, cn);
+        await cn.OpenAsync();
+        await using var rd = await cmd.ExecuteReaderAsync();
+        while (await rd.ReadAsync())
+            danhSach.Add(new NhanVien { MaNV=rd.GetInt32(0),MaNhanVien=rd.GetString(1),HoTen=rd.GetString(2),NgaySinh=rd.GetDateTime(3),GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),SDT=rd.GetString(5),Email=rd.IsDBNull(6)?null:rd.GetString(6),DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),ChucVu=rd.GetString(8),Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),TrangThai=rd.GetString(10) });
+        return danhSach;
+    }
+
     public async Task<List<NhanVien>> LayDanhSachAsync(string? tuKhoa = null)
     {
         const string sql = """
-            SELECT MaNV,MaNhanVien,HoTen,NgaySinh,GioiTinh,SDT,Email,DiaChi,ChucVu,Luong,TrangThai
-            FROM dbo.NhanVien
-            WHERE @TuKhoa IS NULL OR MaNhanVien LIKE '%' + @TuKhoa + '%' OR HoTen LIKE N'%' + @TuKhoa + N'%' OR SDT LIKE '%' + @TuKhoa + '%'
-            ORDER BY MaNV DESC;
+            SELECT nv.MaNV, nv.MaNhanVien, nv.HoTen, nv.NgaySinh, nv.GioiTinh, nv.SDT, nv.Email, nv.DiaChi, nv.ChucVu, nv.Luong, nv.TrangThai,
+                   tk.TenDangNhap, tk.VaiTro
+            FROM dbo.NhanVien nv
+            LEFT JOIN dbo.TaiKhoan tk ON tk.MaNV = nv.MaNV
+            WHERE @TuKhoa IS NULL 
+               OR nv.MaNhanVien LIKE '%' + @TuKhoa + '%' 
+               OR nv.HoTen LIKE N'%' + @TuKhoa + N'%' 
+               OR nv.SDT LIKE '%' + @TuKhoa + '%'
+               OR tk.TenDangNhap LIKE '%' + @TuKhoa + '%'
+            ORDER BY nv.MaNV DESC;
             """;
         var danhSach = new List<NhanVien>();
         await using var cn = DbConnectionFactory.CreateConnection();
@@ -26,7 +52,22 @@ public sealed class NhanVienDAL
         cmd.Parameters.Add("@TuKhoa", System.Data.SqlDbType.NVarChar, 100).Value = string.IsNullOrWhiteSpace(tuKhoa) ? DBNull.Value : tuKhoa.Trim();
         await cn.OpenAsync(); await using var rd = await cmd.ExecuteReaderAsync();
         while (await rd.ReadAsync())
-            danhSach.Add(new NhanVien { MaNV=rd.GetInt32(0),MaNhanVien=rd.GetString(1),HoTen=rd.GetString(2),NgaySinh=rd.GetDateTime(3),GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),SDT=rd.GetString(5),Email=rd.IsDBNull(6)?null:rd.GetString(6),DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),ChucVu=rd.GetString(8),Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),TrangThai=rd.GetString(10) });
+            danhSach.Add(new NhanVien 
+            { 
+                MaNV=rd.GetInt32(0),
+                MaNhanVien=rd.GetString(1),
+                HoTen=rd.GetString(2),
+                NgaySinh=rd.GetDateTime(3),
+                GioiTinh=rd.IsDBNull(4)?null:rd.GetString(4),
+                SDT=rd.GetString(5),
+                Email=rd.IsDBNull(6)?null:rd.GetString(6),
+                DiaChi=rd.IsDBNull(7)?null:rd.GetString(7),
+                ChucVu=rd.GetString(8),
+                Luong=rd.IsDBNull(9)?null:rd.GetDecimal(9),
+                TrangThai=rd.GetString(10),
+                TenDangNhap=rd.IsDBNull(11)?null:rd.GetString(11),
+                VaiTro=rd.IsDBNull(12)?null:rd.GetString(12)
+            });
         return danhSach;
     }
 

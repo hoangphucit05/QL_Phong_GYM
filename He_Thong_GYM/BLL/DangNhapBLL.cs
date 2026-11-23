@@ -57,4 +57,11 @@ public sealed class DangNhapBLL
     public Task<List<TaiKhoan>> LayDanhSachTaiKhoanAsync()=>_taiKhoanDAL.LayDanhSachAsync();
     public Task<List<string>> LayVaiTroAsync()=>_taiKhoanDAL.LayVaiTroAsync();
     public Task CapNhatTrangThaiTaiKhoanAsync(int maTK,string trangThai){AuthorizationPolicy.Require("Admin");return _taiKhoanDAL.CapNhatTrangThaiAsync(maTK,trangThai);}
+    public async Task CapNhatVaiTroAsync(int maTK, string vaiTroMoi)
+    {
+        AuthorizationPolicy.Require("Admin");
+        if (maTK <= 0) throw new ArgumentException("Mã tài khoản không hợp lệ.");
+        if (string.IsNullOrWhiteSpace(vaiTroMoi)) throw new ArgumentException("Hãy chọn vai trò mới.");
+        await _taiKhoanDAL.CapNhatVaiTroAsync(maTK, vaiTroMoi.Trim());
+    }
 }

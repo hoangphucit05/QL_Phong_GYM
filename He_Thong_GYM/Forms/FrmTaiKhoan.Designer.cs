@@ -30,6 +30,7 @@ partial class FrmTaiKhoan
         flowThaoTac = new FlowLayoutPanel();
         btnTaoMoi = new Button();
         btnLuu = new Button();
+        btnCapNhatVaiTro = new Button();
         btnDatLaiMatKhau = new Button();
         btnKhoaMo = new Button();
         panelTimKiem = new Panel();
@@ -213,6 +214,7 @@ partial class FrmTaiKhoan
         flowThaoTac.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         flowThaoTac.Controls.Add(btnTaoMoi);
         flowThaoTac.Controls.Add(btnLuu);
+        flowThaoTac.Controls.Add(btnCapNhatVaiTro);
         flowThaoTac.Controls.Add(btnDatLaiMatKhau);
         flowThaoTac.Controls.Add(btnKhoaMo);
         flowThaoTac.Location = new Point(24, 230);
@@ -254,6 +256,23 @@ partial class FrmTaiKhoan
         btnLuu.UseVisualStyleBackColor = false;
         btnLuu.Click += btnLuu_Click;
         // 
+        // btnCapNhatVaiTro
+        // 
+        btnCapNhatVaiTro.BackColor = Color.FromArgb(79, 70, 229);
+        btnCapNhatVaiTro.Cursor = Cursors.Hand;
+        btnCapNhatVaiTro.FlatAppearance.BorderSize = 0;
+        btnCapNhatVaiTro.FlatStyle = FlatStyle.Flat;
+        btnCapNhatVaiTro.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnCapNhatVaiTro.ForeColor = Color.White;
+        btnCapNhatVaiTro.Location = new Point(300, 0);
+        btnCapNhatVaiTro.Margin = new Padding(0, 0, 8, 0);
+        btnCapNhatVaiTro.Name = "btnCapNhatVaiTro";
+        btnCapNhatVaiTro.Size = new Size(142, 36);
+        btnCapNhatVaiTro.TabIndex = 2;
+        btnCapNhatVaiTro.Text = "Cập nhật vai trò";
+        btnCapNhatVaiTro.UseVisualStyleBackColor = false;
+        btnCapNhatVaiTro.Click += btnCapNhatVaiTro_Click;
+        // 
         // btnDatLaiMatKhau
         // 
         btnDatLaiMatKhau.BackColor = Color.FromArgb(217, 119, 6);
@@ -262,11 +281,11 @@ partial class FrmTaiKhoan
         btnDatLaiMatKhau.FlatStyle = FlatStyle.Flat;
         btnDatLaiMatKhau.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnDatLaiMatKhau.ForeColor = Color.White;
-        btnDatLaiMatKhau.Location = new Point(300, 0);
+        btnDatLaiMatKhau.Location = new Point(450, 0);
         btnDatLaiMatKhau.Margin = new Padding(0, 0, 8, 0);
         btnDatLaiMatKhau.Name = "btnDatLaiMatKhau";
         btnDatLaiMatKhau.Size = new Size(142, 36);
-        btnDatLaiMatKhau.TabIndex = 2;
+        btnDatLaiMatKhau.TabIndex = 3;
         btnDatLaiMatKhau.Text = "Đặt lại mật khẩu";
         btnDatLaiMatKhau.UseVisualStyleBackColor = false;
         btnDatLaiMatKhau.Click += btnDatLaiMatKhau_Click;
@@ -279,11 +298,11 @@ partial class FrmTaiKhoan
         btnKhoaMo.FlatStyle = FlatStyle.Flat;
         btnKhoaMo.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnKhoaMo.ForeColor = Color.White;
-        btnKhoaMo.Location = new Point(450, 0);
+        btnKhoaMo.Location = new Point(600, 0);
         btnKhoaMo.Margin = new Padding(0, 0, 8, 0);
         btnKhoaMo.Name = "btnKhoaMo";
         btnKhoaMo.Size = new Size(142, 36);
-        btnKhoaMo.TabIndex = 3;
+        btnKhoaMo.TabIndex = 4;
         btnKhoaMo.Text = "Khóa / mở khóa";
         btnKhoaMo.UseVisualStyleBackColor = false;
         btnKhoaMo.Click += btnKhoaMo_Click;
@@ -471,6 +490,7 @@ partial class FrmTaiKhoan
     private FlowLayoutPanel flowThaoTac;
     private Button btnTaoMoi;
     private Button btnLuu;
+    private Button btnCapNhatVaiTro;
     private Button btnDatLaiMatKhau;
     private Button btnKhoaMo;
     private Panel panelTimKiem;

@@ -1477,3 +1477,33 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **UI Inspector**: 22/22 Form đạt chuẩn (0 overlap, 0 out-of-bounds, 0 text truncation, 0 encoding error).
 - **Kiểm thử hồi quy**: Chạy `database/02_kiem_thu_hoi_quy.sql` đạt 12/12 luồng PASS 100%.
 - **Kiểm thử ràng buộc mới**: Chặn thành công các trường hợp dữ liệu vi phạm với thông báo tiếng Việt chuẩn xác.
+
+
+---
+
+## Phiên 019 — Hoàn thiện liên kết Form Nhân viên, Quản lý Tài khoản & Phân quyền
+
+- Thời điểm: 23/11/2026
+- Mục tiêu: Khắc phục các bất cập về nghiệp vụ và trải nghiệm người dùng giữa `FrmNhanVien` và `FrmTaiKhoan`.
+
+### Công việc đã thực hiện
+1. **Nâng cấp Quản lý Tài khoản & Phân quyền (`FrmTaiKhoan`)**:
+   - Thêm nút và chức năng **"Cập nhật vai trò"** (`btnCapNhatVaiTro`) với màu `Indigo-600` nhận diện rõ ràng.
+   - Khi chọn một tài khoản trên lưới, Admin có thể đổi vai trò (phân quyền lại) trong `cboVaiTro` và bấm nút để cập nhật trực tiếp; đồng bộ cập nhật cả bảng `dbo.TaiKhoan(VaiTro)` và `dbo.TaiKhoanVaiTro`.
+   - Khóa trường `txtTenDangNhap` và `cboNhanVien` khi xem tài khoản cũ để bảo vệ tính toàn vẹn (không cho phép gán đổi tài khoản sang nhân viên khác hay đổi username tùy tiện).
+   - Lọc dropdown `cboNhanVien` khi tạo mới: chỉ hiển thị danh sách các nhân viên đang làm việc **chưa có tài khoản** qua hàm `LayNhanVienChuaCoTaiKhoanAsync()`, triệt tiêu hoàn toàn nguy cơ bấm nhầm gây lỗi trùng khóa `UNIQUE KEY`.
+
+2. **Nâng cấp Danh sách Nhân viên (`FrmNhanVien`)**:
+   - Mở rộng model `NhanVien.cs` thêm `TenDangNhap`, `VaiTro` và thuộc tính hiển thị `TaiKhoanHienThi`.
+   - Cập nhật `LayDanhSachAsync` trong `NhanVienDAL.cs` thực hiện `LEFT JOIN dbo.TaiKhoan` để lấy thông tin tài khoản tương ứng.
+   - Thêm cột hiển thị `"Tài khoản (Vai trò)"` trực tiếp trên DataGridView của `FrmNhanVien`, cho phép người quản trị nhìn thấy ngay nhân viên nào đã có tài khoản (và vai trò gì), nhân viên nào `"Chưa cấp"`.
+
+3. **Chuẩn hóa Menu Điều hướng Sidebar (`Form1`)**:
+   - Đổi tên hiển thị nút menu `btnNhanVien`: từ `"Nhân viên và tài khoản"` thành `"Quản lý nhân viên"`, thể hiện đúng bản chất của form hồ sơ nhân sự.
+   - Giữ nút menu `btnTaiKhoan`: `"Tài khoản và phân quyền"`, thể hiện chuẩn xác chức năng cấp phát tài khoản và điều chỉnh phân quyền của Admin.
+   - Cập nhật [AuthorizationPolicy.cs](file:///d:/BTL%20PTTKYC/He_Thong_GYM/He_Thong_GYM/Helpers/AuthorizationPolicy.cs) tương thích cả tag mới và tag cũ.
+
+### Kết quả kiểm thử
+- **dotnet build**: 0 cảnh báo, 0 lỗi.
+- **UI Inspector**: 22/22 Form đạt chuẩn (0 overlap, 0 out-of-bounds, 0 text truncation, 0 encoding error).
+- **Kiểm thử hồi quy**: Chạy `database/02_kiem_thu_hoi_quy.sql` đạt 12/12 luồng PASS 100%.

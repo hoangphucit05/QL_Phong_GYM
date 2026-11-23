@@ -193,7 +193,7 @@ namespace He_Thong_GYM
             if (chucNang == "Phòng tập") { HienThiFormCon(new FrmPhongTap()); return; }
             if (chucNang == "Báo cáo thống kê") { HienThiFormCon(new FrmThongKe()); return; }
 
-            if (chucNang == "Nhân viên và tài khoản")
+            if (chucNang == "Nhân viên và tài khoản" || chucNang == "Quản lý nhân viên")
             {
                 HienThiFormCon(new FrmNhanVien());
                 return;

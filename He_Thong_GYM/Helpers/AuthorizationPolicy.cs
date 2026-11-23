@@ -20,6 +20,7 @@ new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)
 ["Thiết bị"] = ["Admin", "Quản lý", "Nhân viên"],
 ["Bảo trì thiết bị"] = ["Admin", "Quản lý", "Nhân viên"],
 ["Phòng tập"] = ["Admin", "Quản lý"],
+["Quản lý nhân viên"] = ["Admin", "Quản lý"],
 ["Nhân viên và tài khoản"] = ["Admin", "Quản lý"],
 ["Tài khoản và phân quyền"] = ["Admin"],
 ["Báo cáo thống kê"] = ["Admin", "Quản lý", "Kế toán"]

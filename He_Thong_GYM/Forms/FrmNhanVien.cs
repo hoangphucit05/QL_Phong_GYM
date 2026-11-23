@@ -100,10 +100,17 @@ public partial class FrmNhanVien : Form
     {
         if (dgvNhanVien.Columns.Contains(nameof(NhanVien.MaNV))) dgvNhanVien.Columns[nameof(NhanVien.MaNV)]!.Visible = false;
         if (dgvNhanVien.Columns.Contains(nameof(NhanVien.HienThi))) dgvNhanVien.Columns[nameof(NhanVien.HienThi)]!.Visible = false;
+        if (dgvNhanVien.Columns.Contains(nameof(NhanVien.TenDangNhap))) dgvNhanVien.Columns[nameof(NhanVien.TenDangNhap)]!.Visible = false;
+        if (dgvNhanVien.Columns.Contains(nameof(NhanVien.VaiTro))) dgvNhanVien.Columns[nameof(NhanVien.VaiTro)]!.Visible = false;
         if (dgvNhanVien.Columns.Contains(nameof(NhanVien.MaNhanVien)))
         {
             dgvNhanVien.Columns[nameof(NhanVien.MaNhanVien)]!.HeaderText = "Mã nhân viên";
             dgvNhanVien.Columns[nameof(NhanVien.MaNhanVien)]!.Width = 105;
+        }
+        if (dgvNhanVien.Columns.Contains(nameof(NhanVien.TaiKhoanHienThi)))
+        {
+            dgvNhanVien.Columns[nameof(NhanVien.TaiKhoanHienThi)]!.HeaderText = "Tài khoản (Vai trò)";
+            dgvNhanVien.Columns[nameof(NhanVien.TaiKhoanHienThi)]!.Width = 160;
         }
     }
 

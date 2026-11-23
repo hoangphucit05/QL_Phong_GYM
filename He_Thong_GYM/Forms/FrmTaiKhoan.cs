@@ -23,14 +23,10 @@ public partial class FrmTaiKhoan : Form
     {
         try
         {
-            cboNhanVien.DataSource = await _nhanVienBLL.LayNhanVienDangLamAsync();
-            cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
-            cboNhanVien.ValueMember = nameof(NhanVien.MaNV);
             cboVaiTro.DataSource = await _bll.LayVaiTroAsync();
             CapNhatTrangThaiNut();
             await TaiAsync();
-            DatTrangThaiTaoMoi();
-            BeginInvoke(new Action(DatTrangThaiTaoMoi));
+            await DatTrangThaiTaoMoiAsync();
         }
         catch (Exception ex)
         {
@@ -44,19 +40,34 @@ public partial class FrmTaiKhoan : Form
 
         UiButtonHelper.SetTrangThai(btnTaoMoi, true, UiButtonHelper.MauThemMoi);
         UiButtonHelper.SetTrangThai(btnLuu, !coChon, UiButtonHelper.MauLuu); // Chỉ kích hoạt khi đang ở chế độ tạo mới
+        UiButtonHelper.SetTrangThai(btnCapNhatVaiTro, coChon, UiButtonHelper.MauChucNangPhu); // Kích hoạt khi đã chọn tài khoản
         UiButtonHelper.SetTrangThai(btnDatLaiMatKhau, coChon, UiButtonHelper.MauChinhSua);
         UiButtonHelper.SetTrangThai(btnKhoaMo, coChon, UiButtonHelper.MauXoa);
     }
 
-    private void DatTrangThaiTaoMoi()
+    private async Task DatTrangThaiTaoMoiAsync()
     {
         _chon = null;
         txtTenDangNhap.Clear();
+        txtTenDangNhap.ReadOnly = false;
         txtMatKhau.Clear();
-        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = -1;
-        if (cboVaiTro.Items.Count > 0) cboVaiTro.SelectedIndex = -1;
+        txtMatKhau.Enabled = true;
+
+        var dsChuaCoTK = await _nhanVienBLL.LayNhanVienChuaCoTaiKhoanAsync();
+        cboNhanVien.DataSource = dsChuaCoTK;
+        cboNhanVien.DisplayMember = nameof(NhanVien.HienThi);
+        cboNhanVien.ValueMember = nameof(NhanVien.MaNV);
+        cboNhanVien.Enabled = true;
+        if (cboNhanVien.Items.Count > 0) cboNhanVien.SelectedIndex = 0;
+        else cboNhanVien.SelectedIndex = -1;
+
+        if (cboVaiTro.Items.Count > 0) cboVaiTro.SelectedIndex = 0;
+        cboVaiTro.Enabled = true;
+
         UiGridHelper.BoChon(dgvTaiKhoan);
-        lblTrangThai.Text = "Nhập thông tin để tạo tài khoản mới.";
+        lblTrangThai.Text = dsChuaCoTK.Count > 0
+            ? $"Có {dsChuaCoTK.Count} nhân viên chưa có tài khoản. Nhập thông tin để tạo mới."
+            : "Tất cả nhân viên đang làm đều đã có tài khoản.";
         CapNhatTrangThaiNut();
         txtTenDangNhap.Focus();
     }
@@ -113,22 +124,34 @@ public partial class FrmTaiKhoan : Form
 
         _chon = t;
         txtTenDangNhap.Text = t.TenDangNhap;
-        cboNhanVien.SelectedValue = t.MaNV;
+        txtTenDangNhap.ReadOnly = true;
+        txtMatKhau.Clear();
+        txtMatKhau.Enabled = false;
+
+        // Hiển thị nhân viên sở hữu tài khoản (khóa không cho chuyển sang nhân viên khác)
+        cboNhanVien.DataSource = null;
+        cboNhanVien.Items.Clear();
+        cboNhanVien.Items.Add(t.HoTenNhanVien);
+        cboNhanVien.SelectedIndex = 0;
+        cboNhanVien.Enabled = false;
+
         cboVaiTro.SelectedItem = t.VaiTro;
-        lblTrangThai.Text = $"Tài khoản đang chọn: {t.TenDangNhap} - {t.TrangThai}";
+        cboVaiTro.Enabled = true;
+
+        lblTrangThai.Text = $"Tài khoản: {t.TenDangNhap} | Nhân viên: {t.HoTenNhanVien} | Vai trò: {t.VaiTro} ({t.TrangThai})";
         CapNhatTrangThaiNut();
     }
 
-    private void btnTaoMoi_Click(object? s, EventArgs e)
+    private async void btnTaoMoi_Click(object? s, EventArgs e)
     {
-        DatTrangThaiTaoMoi();
+        await DatTrangThaiTaoMoiAsync();
     }
 
     private async void btnLuu_Click(object? s, EventArgs e)
     {
         if (_chon is not null)
         {
-            MessageBox.Show("Chỉ tạo mới tài khoản tại màn hình này. Dùng nút 'Đặt lại mật khẩu' hoặc 'Khóa / mở khóa' cho tài khoản đã có.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Chỉ tạo mới tài khoản tại nút này. Hãy dùng nút 'Cập nhật vai trò' để phân quyền lại cho tài khoản đã có.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
 
@@ -142,21 +165,63 @@ public partial class FrmTaiKhoan : Form
             {
                 throw new InvalidOperationException("Mật khẩu khởi tạo phải có tối thiểu 8 ký tự.");
             }
+            if (cboNhanVien.SelectedValue is not int maNV || maNV <= 0)
+            {
+                throw new InvalidOperationException("Vui lòng chọn nhân viên chưa có tài khoản.");
+            }
+            if (string.IsNullOrWhiteSpace(cboVaiTro.Text))
+            {
+                throw new InvalidOperationException("Vui lòng chọn vai trò cho tài khoản.");
+            }
 
             await _bll.TaoTaiKhoanAsync(new TaiKhoan
             {
                 TenDangNhap = txtTenDangNhap.Text.Trim(),
-                MaNV = cboNhanVien.SelectedValue is int maNV ? maNV : 0,
-                VaiTro = cboVaiTro.Text
+                MaNV = maNV,
+                VaiTro = cboVaiTro.Text.Trim()
             }, txtMatKhau.Text);
 
             await TaiAsync();
-            DatTrangThaiTaoMoi();
+            await DatTrangThaiTaoMoiAsync();
             MessageBox.Show("Đã tạo tài khoản với mật khẩu hash bảo mật thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
             MessageBox.Show(UiErrorMessage.Get(ex), "Không thể lưu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+    }
+
+    private async void btnCapNhatVaiTro_Click(object? s, EventArgs e)
+    {
+        if (_chon is null)
+        {
+            MessageBox.Show("Vui lòng chọn tài khoản cần cập nhật vai trò từ danh sách.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        var vaiTroMoi = cboVaiTro.Text.Trim();
+        if (string.IsNullOrWhiteSpace(vaiTroMoi))
+        {
+            MessageBox.Show("Vui lòng chọn vai trò mới.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        if (string.Equals(vaiTroMoi, _chon.VaiTro, StringComparison.OrdinalIgnoreCase))
+        {
+            MessageBox.Show($"Tài khoản này hiện đã có vai trò là '{vaiTroMoi}'. Hãy chọn vai trò khác để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        try
+        {
+            await _bll.CapNhatVaiTroAsync(_chon.MaTK, vaiTroMoi);
+            MessageBox.Show($"Đã cập nhật vai trò tài khoản '{_chon.TenDangNhap}' thành '{vaiTroMoi}' thành công.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            await TaiAsync();
+            await DatTrangThaiTaoMoiAsync();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(UiErrorMessage.Get(ex), "Lỗi cập nhật vai trò", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

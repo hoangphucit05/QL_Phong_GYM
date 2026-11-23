@@ -462,8 +462,8 @@ namespace He_Thong_GYM
             btnNhanVien.Name = "btnNhanVien";
             btnNhanVien.Size = new Size(216, 38);
             btnNhanVien.TabIndex = 15;
-            btnNhanVien.Tag = "Nhân viên và tài khoản";
-            btnNhanVien.Text = "Nhân viên và tài khoản";
+            btnNhanVien.Tag = "Quản lý nhân viên";
+            btnNhanVien.Text = "Quản lý nhân viên";
             btnNhanVien.TextAlign = ContentAlignment.MiddleLeft;
             btnNhanVien.UseVisualStyleBackColor = false;
             btnNhanVien.Click += MenuButton_Click;

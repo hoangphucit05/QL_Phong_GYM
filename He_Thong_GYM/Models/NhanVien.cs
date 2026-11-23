@@ -13,5 +13,8 @@ public sealed class NhanVien
     public string ChucVu { get; set; } = string.Empty;
     public decimal? Luong { get; set; }
     public string TrangThai { get; set; } = string.Empty;
+    public string? TenDangNhap { get; set; }
+    public string? VaiTro { get; set; }
+    public string TaiKhoanHienThi => string.IsNullOrWhiteSpace(TenDangNhap) ? "Chưa cấp" : $"{TenDangNhap} ({VaiTro})";
     public string HienThi => string.IsNullOrWhiteSpace(MaNhanVien) ? HoTen : $"{MaNhanVien} - {HoTen}";
 }
