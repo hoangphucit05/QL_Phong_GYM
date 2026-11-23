@@ -1424,3 +1424,56 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
   - Build .NET: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
   - UI Inspector: Quét toàn diện **22/22 forms** đạt chuẩn 100% (0 overlap, 0 out of bounds, 0 text truncated, 0 UTF-8 issues).
 
+
+
+---
+
+## Phiên 018 — Bổ sung ràng buộc dữ liệu & validation Stored Procedure (Migration 29)
+
+- Thời điểm: 23/11/2026
+- Mục tiêu: Khắc phục các lỗ hổng ràng buộc dữ liệu và ngoại lệ theo Báo cáo Phân tích Ràng Buộc Dữ Liệu & Xử Lý Ngoại Lệ (`bao-cao-rang-buoc-du-lieu.md`).
+
+### Công việc đã thực hiện
+1. **Bổ sung ràng buộc NOT NULL & DEFAULT**:
+   - `ThanhVien.GioiTinh`: `NOT NULL` (gán mặc định `Khác` cho dữ liệu cũ nếu có).
+   - `NhanVien.GioiTinh`: `NOT NULL`.
+   - `NhanVien.Luong`: `NOT NULL DEFAULT 0`.
+   - `HuanLuyenVien.KinhNghiem`: `NOT NULL DEFAULT 0`.
+   - `HuanLuyenVien.PhiThue`: `NOT NULL DEFAULT 0`.
+
+2. **Bổ sung CHECK constraints**:
+   - `CK_ThanhVien_HoTen_v4`: Độ dài họ tên $\ge 2$ ký tự sau khi trim.
+   - `CK_NhanVien_HoTen_v4`: Độ dài họ tên $\ge 2$ ký tự sau khi trim.
+   - `CK_BaoTriThietBi_TrangThai_v4`: Trạng thái thuộc `{'Đang bảo trì', 'Chờ bảo trì', 'Hoàn thành'}`.
+   - `CK_GoiTap_TenGoi_v4`: Tên gói không được để trống.
+   - `CK_SanPham_TenSP_v4`: Tên sản phẩm không được để trống.
+   - `CK_PhongTap_Tang_v4`: Tầng $\ge 1$.
+   - `CK_TaiKhoan_TenDangNhap_v4`: Tên đăng nhập $\ge 3$ ký tự.
+   - `CK_ThanhVien_GioiTinh_v4`, `CK_NhanVien_GioiTinh_v4`: Giới tính thuộc `{'Nam', 'Nữ', 'Khác'}`.
+
+3. **Nâng cấp Stored Procedure với validation chi tiết & TRANSACTION**:
+   - `sp_ThemThanhVien`: Bọc TRANSACTION, validate họ tên $\ge 2$ ký tự, ngày sinh quá khứ, giới tính hợp lệ, định dạng SĐT (10-11 số, đầu 0), email và loại thành viên tồn tại.
+   - `sp_SuaThanhVien`: Bọc TRANSACTION, validate thông tin và chống trùng SĐT với thành viên khác.
+   - `sp_KhoaThanhVien`: Bọc TRANSACTION, validate lý do khóa không rỗng.
+   - `sp_DangKyGoiTap`: Chặn đăng ký trùng gói cùng loại khi gói cũ còn hạn hoặc chờ thanh toán.
+   - `sp_GiaHanGoiTap`: Giới hạn thời gian gia hạn tối đa 365 ngày/lần.
+   - `sp_BanSanPham`: Kiểm tra nhân viên thực hiện đang hoạt động (`Đang làm`).
+   - `sp_HuyDangKyLop`: Chặn hủy đăng ký nếu học viên đã có buổi điểm danh có mặt.
+   - `sp_HoanTatBaoTri`: Chỉ cho phép hoàn tất từ trạng thái `Đang bảo trì`.
+   - `sp_NhapKho`: Kiểm tra nhà cung cấp tồn tại.
+
+4. **Đồng bộ tầng BLL ứng dụng**:
+   - `ThanhVienBLL`: Thêm kiểm tra giới tính (`Nam`, `Nữ`, `Khác`) và độ dài họ tên $\ge 2$.
+   - `NhanVienBLL`: Thêm kiểm tra độ dài họ tên $\ge 2$.
+   - `VanHanhBLL`: Thêm giới hạn gia hạn tối đa 365 ngày.
+
+5. **Cập nhật Master Script & Migration**:
+   - Tạo file `database/migrations_history/29_rang_buoc_va_validation.sql`.
+   - Cập nhật đồng bộ vào `database/01_khoi_tao_database_full.sql`.
+   - Chạy migration 29 trên SQL Server cục bộ thành công với encoding UTF-8 (`-f 65001`).
+
+### Kết quả kiểm thử
+- **dotnet build**: 0 cảnh báo, 0 lỗi.
+- **UI Inspector**: 22/22 Form đạt chuẩn (0 overlap, 0 out-of-bounds, 0 text truncation, 0 encoding error).
+- **Kiểm thử hồi quy**: Chạy `database/02_kiem_thu_hoi_quy.sql` đạt 12/12 luồng PASS 100%.
+- **Kiểm thử ràng buộc mới**: Chặn thành công các trường hợp dữ liệu vi phạm với thông báo tiếng Việt chuẩn xác.

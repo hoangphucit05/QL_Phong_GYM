@@ -507,7 +507,7 @@ BEGIN
 
         -- [MỚI] Chỉ cho phép hoàn tất từ trạng thái 'Đang bảo trì' (không phải 'Chờ bảo trì')
         IF @TrangThaiHienTai <> N'Đang bảo trì'
-            THROW 51113, N'Chỉ có thể hoàn tất phiếu bảo trì đang ở trạng thái "Đang bảo trì". Phiếu hiện đang "' + @TrangThaiHienTai + N'".', 1;
+            THROW 51113, N'Chỉ có thể hoàn tất phiếu bảo trì đang ở trạng thái "Đang bảo trì".', 1;
 
         UPDATE dbo.BaoTriThietBi
         SET TrangThai=N'Hoàn thành', NgayHoanThanh=CAST(SYSDATETIME() AS DATE), GhiChu=ISNULL(@GhiChu, GhiChu)

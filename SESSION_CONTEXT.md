@@ -35,7 +35,7 @@ Database chính: `QL_PhongGym`. Thư mục `database/` đã được tổ chức
 - Audit/phân quyền: `NhatKyHeThong`, `LichSuDangNhap`, `VaiTro`, `TaiKhoanVaiTro`.
 - Ràng buộc quan trọng: khóa ngoại giữa thành viên–đăng ký–hóa đơn, hóa đơn–chi tiết–thanh toán; chống nhiều lượt check-in mở; kiểm tra sức chứa phòng/lớp; chống trùng lịch PT/phòng/HLV; kiểm soát tồn kho; mapping chi tiết hóa đơn theo từng loại dịch vụ.
 - Stored procedure nghiệp vụ chính gồm `sp_DangKyGoiTap`, `sp_DangKyPT`, `sp_DangKyLop`, `sp_DiemDanhLop`, `sp_TaoLichHoc`, `sp_ThanhToanHoaDon`, `sp_HoanTien`, `sp_BanSanPham`, `sp_BaoTriThietBi`, `sp_CapNhatGoiHetHan`.
-- Migration gần nhất: `database/25_bo_sung_mo_lai_bao_luu.sql`; các migration 14–25 xử lý check-in/kho, điểm danh legacy, mã khuyến mãi, nghiệp vụ Phiên 11–16, bảo mật/validation/audit và mở lại bảo lưu. `database/11_kiem_tra_san_sang_van_hanh.sql` là script đối soát chỉ đọc.
+- Migration gần nhất: `database/migrations_history/29_rang_buoc_va_validation.sql` (bổ sung NOT NULL, CHECK constraints, TRANSACTION và validation chi tiết cho các stored procedure cốt lõi). Toàn bộ các migration cũ đã được lưu trữ trong `database/migrations_history/` và tích hợp trọn gói vào Master Script `database/01_khoi_tao_database_full.sql`.
 
 ## 4. Business Rules
 

@@ -1,0 +1,6 @@
+docs: cap nhat nhat ky phien 018 va dong bo database constraints
+
+- Ghi nhan phien 018 trong NHAT_KY_PHIEN_LAM_VIEC_AI.md va SESSION_CONTEXT.md
+- Chuan hoa syntax sp_HoanTatBaoTri va chay migration 29 thanh cong tren SQL Server
+- Kiem thu hoi quy 12 luong nghiep vu dat PASS 100%
+- UI Inspector 22/22 Form dat chuan

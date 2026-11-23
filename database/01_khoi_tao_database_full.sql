@@ -1,4 +1,4 @@
-﻿/*
+/*
 ========================================================================================
    HỆ THỐNG QUẢN LÝ PHÒNG GYM (GYM PRO) - MASTER DATABASE SCRIPT
    Tạo toàn bộ CSDL QL_PhongGym, Bảng, Ràng buộc, Triggers, Procedures, Views & Dữ liệu mẫu.
