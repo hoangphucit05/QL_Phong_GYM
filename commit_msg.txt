@@ -1,7 +1,0 @@
-feat: hoan thien lien ket Form Nhan vien, Tai khoan va Phan quyen
-
-- FrmTaiKhoan: them chuc nang Cap nhat vai tro (phan quyen lai) dong bo TaiKhoan va TaiKhoanVaiTro
-- FrmTaiKhoan: chi load nhan vien chua co tai khoan khi tao moi, khoa form hop ly khi chon tai khoan co san
-- FrmNhanVien: hien thi cot 'Tai khoan (Vai tro)' tren luoi nhan vien
-- Sidebar: doi ten menu 'Nhan vien va tai khoan' thanh 'Quan ly nhan vien' chuan nghiep vu
-- Cap nhat nhat ky phien 019
