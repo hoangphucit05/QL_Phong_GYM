@@ -1,4 +1,4 @@
-﻿namespace He_Thong_GYM.Models;
+namespace He_Thong_GYM.Models;
 
 public sealed class NhanVien
 {

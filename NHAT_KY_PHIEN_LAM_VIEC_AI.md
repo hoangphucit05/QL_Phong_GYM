@@ -1507,3 +1507,35 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **dotnet build**: 0 cảnh báo, 0 lỗi.
 - **UI Inspector**: 22/22 Form đạt chuẩn (0 overlap, 0 out-of-bounds, 0 text truncation, 0 encoding error).
 - **Kiểm thử hồi quy**: Chạy `database/02_kiem_thu_hoi_quy.sql` đạt 12/12 luồng PASS 100%.
+
+
+---
+
+## Phiên 020 — Kiểm thử toàn diện các luồng UI/UX, nghiệp vụ chức năng và cơ sở dữ liệu SQL
+
+- Thời điểm: 23/11/2026
+- Mục tiêu: Kiểm thử toàn diện tất cả các màn hình giao diện (UI/UX), các luồng nghiệp vụ chức năng (BLL/DAL) và toàn bộ ràng buộc, thủ tục lưu trữ SQL Server.
+
+### Công việc và phát hiện đã xử lý
+1. **Kiểm tra và đồng bộ Migrations 30, 31 & 32**:
+   - Xác minh Migration 30 (`30_cap_quyen_goi_tap_moi.sql` - cấp quyền mặc định `PHONG_TAP` và các phòng hoạt động cho các gói tập) và Migration 31 (`31_mo_rong_danh_muc_phong_thiet_bi.sql` - mở rộng 10 loại phòng và thiết bị chuyên sâu) đã nạp chuẩn xác vào cơ sở dữ liệu.
+   - Đồng bộ bổ sung Migration 30, 31 vào file kịch bản khởi tạo gốc `database/01_khoi_tao_database_full.sql`.
+   - **Phát hiện lỗi SQL tiềm ẩn (Email Nullable Unique)**: Trong SQL Server, ràng buộc UNIQUE mặc định trên cột `Email` của bảng `ThanhVien` và `NhanVien` chỉ cho phép tối đa 1 dòng có giá trị NULL. Khi thêm hội viên thứ 2 không nhập email (trường không bắt buộc), hệ thống sẽ bị lỗi vi phạm ràng buộc Unique key `<NULL>`.
+   - **Xử lý dứt điểm qua Migration 32 (`32_xu_ly_unique_email_nullable.sql`)**: Gỡ bỏ ràng buộc UNIQUE cũ và thay bằng `UNIQUE FILTERED INDEX` (`WHERE Email IS NOT NULL`) cho cả `ThanhVien` và `NhanVien`, cho phép nhiều hội viên/nhân viên không có email nhưng nếu có thì vẫn đảm bảo duy nhất. Đã tích hợp vào `01_khoi_tao_database_full.sql`.
+
+2. **Kiểm tra và khắc phục hiển thị UI/UX (UI Inspector)**:
+   - Phát hiện control `_clbPhong` trong `FrmGoiTap` bị tràn biên ngang (Right=1105 > Width=1042) khi form được nhúng vào `panelNoiDung` (1090x660).
+   - Đã cấu hình lại tọa độ và thiết lập `Anchor = Top | Left | Right` cho `_clbPhong`, tự động co dãn theo kích thước màn hình mà không bao giờ bị tràn biên.
+   - Chạy lại UI Inspector: **22/22 Form đạt chuẩn 100%** (0 overlap, 0 out-of-bounds, 0 text truncation, 0 encoding error).
+
+3. **Kiểm tra bảo mật và toàn vẹn SQL (DAL & Stored Procedures)**:
+   - Toàn bộ các câu truy vấn và thủ tục lưu trữ trong DAL đều sử dụng `SqlCommand.Parameters` (100% parameterized), không có nguy cơ SQL Injection.
+   - Kiểm tra 12 Views hệ thống (`vw_CongNoHoaDon`, `vw_DoanhThuTheoNgay`, `vw_ThanhVienGoiHieuLuc`,...): 100% hoạt động chính xác không lỗi.
+   - Kiểm tra kiểm soát quyền phòng gói tập: `sp_CheckIn` và `sp_ChuyenPhongCheckIn` chặn đúng 100% khi hội viên cố tình check-in vào phòng ngoài quyền gói.
+
+### Kết quả kiểm thử nghiệm thu
+- **dotnet build**: 0 cảnh báo, 0 lỗi.
+- **UI Inspector**: 22/22 Form PASS (0 lỗi hiển thị).
+- **Kiểm thử hồi quy `02_kiem_thu_hoi_quy.sql`**: 12/12 luồng lõi PASS 100%.
+- **Kiểm thử biên & ngoại lệ `scratch_edge_case_tests.sql`**: 9/9 kịch bản PASS 100%.
+- **DBCC CHECKCONSTRAINTS WITH ALL_CONSTRAINTS**: Không có bất kỳ vi phạm ràng buộc dữ liệu nào.

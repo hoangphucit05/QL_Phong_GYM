@@ -49,6 +49,10 @@ NhaCungCap ─< ThietBi ─< BaoTriThietBi
 11. Migration `27_phan_quyen_dich_vu_theo_goi.sql` tạo `GoiTapDichVu` và `GoiTapPhong`, seed quyền cho các gói demo và cập nhật `sp_CheckIn`/`sp_ChuyenPhongCheckIn`.
    - Màn hình `FrmVanHanhGoi` hiển thị dịch vụ của từng gói, chỉ nạp các phòng được cấp quyền và truyền đúng `MaDKG` đã chọn vào Check-in.
    - Database vẫn kiểm tra lại gói, thanh toán, thời hạn, lượt, quyền phòng và quyền nhân viên; không thể bypass bằng cách gọi procedure với phòng ngoài quyền.
+12. Migration `30_cap_quyen_goi_tap_moi.sql` bù quyền `PHONG_TAP` và các phòng đang hoạt động cho các gói đã tạo trước khi màn hình tạo gói tự động cấp quyền. Gói tạo mới từ ứng dụng được cấp hai loại quyền này trong cùng giao dịch với bản ghi gói.
+   - Màn hình quản lý gói tập hiện cho phép chọn từng dịch vụ và từng phòng; khi sửa gói, các mapping quyền cũ được thay thế bằng lựa chọn mới trong cùng giao dịch.
+13. Migration `31_mo_rong_danh_muc_phong_thiet_bi.sql` mở rộng loại phòng (functional, spinning, Pilates, dance, phục hồi) và bổ sung nhóm thiết bị tương ứng. Bộ lọc phòng trên giao diện lấy danh mục động từ database nên không làm hỏng các luồng phân quyền gói, check-in hoặc bảo trì.
+14. Migration `32_xu_ly_unique_email_nullable.sql` thay thế ràng buộc UNIQUE mặc định (chặn >1 giá trị NULL trong SQL Server) trên `ThanhVien.Email` và `NhanVien.Email` bằng Unique Filtered Index (`WHERE Email IS NOT NULL`). Giúp hỗ trợ đúng thực tế: email là thông tin không bắt buộc khi đăng ký hội viên/nhân viên, nhưng nếu nhập thì vẫn đảm bảo tính duy nhất.
 
 ## Bảo mật và vận hành
 

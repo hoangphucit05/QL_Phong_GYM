@@ -22,6 +22,7 @@ public partial class FrmPhongTap : Form
         if (cboLoai.Items.Count > 0) cboLoai.SelectedIndex = 0;
         if (cboTrangThai.Items.Count > 0) cboTrangThai.SelectedIndex = 0;
         await TaiDanhSachAsync();
+        NapDanhMucLoaiPhong();
         _phongDangChon = null;
         UiGridHelper.BoChon(dgv);
         UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
@@ -32,6 +33,21 @@ public partial class FrmPhongTap : Form
             UiButtonHelper.SetTrangThai(btnSua, false, UiButtonHelper.MauChinhSua);
         }));
         _dangKhoiTao = false;
+    }
+
+    private void NapDanhMucLoaiPhong()
+    {
+        var loaiPhong = _danhSachGoc
+            .Select(x => x.LoaiPhong)
+            .Where(x => !string.IsNullOrWhiteSpace(x))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(x => x)
+            .ToList();
+
+        cboLoai.Items.Clear();
+        cboLoai.Items.Add("-- Tất cả loại --");
+        foreach (var loai in loaiPhong) cboLoai.Items.Add(loai);
+        cboLoai.SelectedIndex = 0;
     }
 
     private async Task TaiDanhSachAsync()

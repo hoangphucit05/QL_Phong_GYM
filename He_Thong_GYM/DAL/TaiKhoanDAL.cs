@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using He_Thong_GYM.Models;
 
 namespace He_Thong_GYM.DAL;
