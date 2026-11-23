@@ -1,2 +1,18 @@
 ﻿namespace He_Thong_GYM.Models;
-public sealed class LichSuDangKy { public int MaDangKy { get; set; } public string MaDangKyHienThi { get; set; }=string.Empty; public string ThanhVien { get; set; }=string.Empty; public string DichVu { get; set; }=string.Empty; public DateTime NgayBatDau { get; set; } public DateTime NgayKetThuc { get; set; } public decimal TongTien { get; set; } public string TrangThai { get; set; }=string.Empty; public string HienThi=>string.IsNullOrWhiteSpace(MaDangKyHienThi)?$"ĐK {MaDangKy}":$"{MaDangKyHienThi} - {DichVu}"; }
+
+public sealed class LichSuDangKy
+{
+    public int MaDangKy { get; set; }
+    public string MaDangKyHienThi { get; set; } = string.Empty;
+    public string ThanhVien { get; set; } = string.Empty;
+    public string DichVu { get; set; } = string.Empty;
+    public int SoBuoi { get; set; }
+    public int SoBuoiDaTap { get; set; }
+    public int SoBuoiConLai => Math.Max(0, SoBuoi - SoBuoiDaTap);
+    public string TienDo => SoBuoi > 0 ? $"{SoBuoiDaTap}/{SoBuoi} buổi" : "--";
+    public DateTime NgayBatDau { get; set; }
+    public DateTime NgayKetThuc { get; set; }
+    public decimal TongTien { get; set; }
+    public string TrangThai { get; set; } = string.Empty;
+    public string HienThi => string.IsNullOrWhiteSpace(MaDangKyHienThi) ? $"ĐK {MaDangKy}" : $"{MaDangKyHienThi} - {DichVu}";
+}

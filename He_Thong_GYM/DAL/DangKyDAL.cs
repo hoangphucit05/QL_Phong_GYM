@@ -1,14 +1,201 @@
-using Microsoft.Data.SqlClient;using System.Data;using He_Thong_GYM.Models;
+using System.Data;
+using He_Thong_GYM.Models;
+using Microsoft.Data.SqlClient;
+
 namespace He_Thong_GYM.DAL;
+
 public sealed class DangKyDAL
 {
- public async Task<List<ThanhVien>> LayThanhVienAsync(){const string q="SELECT tv.MaTV,tv.MaThanhVien,tv.HoTen,tv.NgaySinh,tv.GioiTinh,tv.SDT,tv.Email,tv.DiaChi,tv.NgayDangKy,tv.MaLoaiTV,lt.TenLoai,tv.TrangThai FROM dbo.ThanhVien tv JOIN dbo.LoaiThanhVien lt ON lt.MaLoaiTV=tv.MaLoaiTV WHERE tv.TrangThai=N'Hoạt động' ORDER BY tv.HoTen;";var k=new List<ThanhVien>();await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand(q,c);await c.OpenAsync();await using var r=await m.ExecuteReaderAsync();while(await r.ReadAsync())k.Add(new ThanhVien{MaTV=r.GetInt32(0),MaThanhVien=r.GetString(1),HoTen=r.GetString(2),NgaySinh=r.GetDateTime(3),GioiTinh=r.IsDBNull(4)?null:r.GetString(4),SDT=r.GetString(5),Email=r.IsDBNull(6)?null:r.GetString(6),DiaChi=r.IsDBNull(7)?null:r.GetString(7),NgayDangKy=r.GetDateTime(8),MaLoaiTV=r.GetInt32(9),TenLoai=r.GetString(10),TrangThai=r.GetString(11)});return k;}
- public async Task<List<GoiTap>> LayGoiTapAsync(){const string q="SELECT MaGoi,MaGoiTap,TenGoi,ThoiHanNgay,Gia,MoTa,TrangThai FROM dbo.GoiTap WHERE TrangThai=N'Đang áp dụng' ORDER BY TenGoi;";var k=new List<GoiTap>();await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand(q,c);await c.OpenAsync();await using var r=await m.ExecuteReaderAsync();while(await r.ReadAsync())k.Add(new GoiTap{MaGoi=r.GetInt32(0),MaGoiTap=r.GetString(1),TenGoi=r.GetString(2),ThoiHanNgay=r.GetInt32(3),Gia=r.GetDecimal(4),MoTa=r.IsDBNull(5)?null:r.GetString(5),TrangThai=r.GetString(6)});return k;}
- public async Task<List<KhuyenMai>> LayKhuyenMaiAsync(){const string q="SELECT * FROM dbo.KhuyenMai WHERE TrangThai=N'Hoạt động' AND CAST(GETDATE() AS date) BETWEEN NgayBatDau AND NgayKetThuc ORDER BY TenKM;";var k=new List<KhuyenMai>{new(){MaKM=null,TenKM="Không áp dụng",PhanTramGiam=0}};await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand(q,c);await c.OpenAsync();await using var r=await m.ExecuteReaderAsync();var colCode=-1;for(int i=0;i<r.FieldCount;i++){if(string.Equals(r.GetName(i),"MaCode",StringComparison.OrdinalIgnoreCase)){colCode=i;break;}}var colMa=r.GetOrdinal("MaKM");var colTen=r.GetOrdinal("TenKM");var colGiam=r.GetOrdinal("PhanTramGiam");while(await r.ReadAsync()){var ma=r.GetInt32(colMa);var ten=r.GetString(colTen);var giam=r.GetDecimal(colGiam);var code=colCode>=0&&!r.IsDBNull(colCode)?r.GetString(colCode):KhuyenMai.TaoMaCodeThucTe(ten,giam,ma);k.Add(new KhuyenMai{MaKM=ma,MaCode=code,TenKM=ten,PhanTramGiam=giam});}return k;}
- public async Task<List<HuanLuyenVien>> LayHLVAsync(){const string q="SELECT h.MaHLV,h.MaNV,n.HoTen,h.ChuyenMon,h.KinhNghiem,h.PhiThue,n.TrangThai FROM dbo.HuanLuyenVien h JOIN dbo.NhanVien n ON n.MaNV=h.MaNV WHERE n.TrangThai=N'Đang làm' ORDER BY n.HoTen;";var k=new List<HuanLuyenVien>();await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand(q,c);await c.OpenAsync();await using var r=await m.ExecuteReaderAsync();while(await r.ReadAsync())k.Add(new HuanLuyenVien{MaHLV=r.GetInt32(0),MaNV=r.GetInt32(1),HoTen=r.GetString(2),ChuyenMon=r.IsDBNull(3)?null:r.GetString(3),KinhNghiem=r.IsDBNull(4)?null:r.GetInt32(4),PhiThue=r.IsDBNull(5)?null:r.GetDecimal(5),TrangThaiNhanVien=r.GetString(6)});return k;}
- public async Task<List<LichSuDangKy>> LayLichSuGoiAsync(){const string q="SELECT d.MaDKG,d.MaDangKyGoi,t.HoTen,g.TenGoi,d.NgayBatDau,d.NgayKetThuc,d.GiaSauGiam,d.TrangThai FROM dbo.DangKyGoi d JOIN dbo.ThanhVien t ON t.MaTV=d.MaTV JOIN dbo.GoiTap g ON g.MaGoi=d.MaGoi ORDER BY d.MaDKG DESC;";return await LayLichSuAsync(q);}
- public async Task<List<LichSuDangKy>> LayLichSuPTAsync(){const string q="SELECT d.MaDKPT,d.MaDangKyPT,t.HoTen,n.HoTen,d.NgayBatDau,d.NgayKetThuc,d.TongTien,d.TrangThai FROM dbo.DangKyPT d JOIN dbo.ThanhVien t ON t.MaTV=d.MaTV JOIN dbo.HuanLuyenVien h ON h.MaHLV=d.MaHLV JOIN dbo.NhanVien n ON n.MaNV=h.MaNV ORDER BY d.MaDKPT DESC;";return await LayLichSuAsync(q);}
- private static async Task<List<LichSuDangKy>> LayLichSuAsync(string q){var k=new List<LichSuDangKy>();await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand(q,c);await c.OpenAsync();await using var r=await m.ExecuteReaderAsync();while(await r.ReadAsync())k.Add(new LichSuDangKy{MaDangKy=r.GetInt32(0),MaDangKyHienThi=r.GetString(1),ThanhVien=r.GetString(2),DichVu=r.GetString(3),NgayBatDau=r.GetDateTime(4),NgayKetThuc=r.GetDateTime(5),TongTien=r.GetDecimal(6),TrangThai=r.GetString(7)});return k;}
- public async Task<(int MaDangKy,int MaHD)> DangKyGoiAsync(int tv,int goi,int? km,DateTime ngay,int nv){await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand("dbo.sp_DangKyGoiTap",c){CommandType=CommandType.StoredProcedure};m.Parameters.AddWithValue("@MaTV",tv);m.Parameters.AddWithValue("@MaGoi",goi);m.Parameters.AddWithValue("@MaKM",(object?)km??DBNull.Value);m.Parameters.AddWithValue("@NgayBatDau",ngay.Date);m.Parameters.AddWithValue("@MaNV",nv);var dk=m.Parameters.Add("@MaDKG",SqlDbType.Int);dk.Direction=ParameterDirection.Output;var hd=m.Parameters.Add("@MaHD",SqlDbType.Int);hd.Direction=ParameterDirection.Output;await c.OpenAsync();await m.ExecuteNonQueryAsync();return((int)dk.Value,(int)hd.Value);}
- public async Task<(int MaDangKy,int MaHD)> DangKyPTAsync(int tv,int hlv,int buoi,int? km,DateTime ngay,DateTime ketThuc,int nv){await using var c=DbConnectionFactory.CreateConnection();await using var m=new SqlCommand("dbo.sp_DangKyPT",c){CommandType=CommandType.StoredProcedure};m.Parameters.AddWithValue("@MaTV",tv);m.Parameters.AddWithValue("@MaHLV",hlv);m.Parameters.AddWithValue("@SoBuoi",buoi);m.Parameters.AddWithValue("@MaKM",(object?)km??DBNull.Value);m.Parameters.AddWithValue("@NgayBatDau",ngay.Date);m.Parameters.AddWithValue("@NgayKetThuc",ketThuc.Date);m.Parameters.AddWithValue("@MaNV",nv);var dk=m.Parameters.Add("@MaDKPT",SqlDbType.Int);dk.Direction=ParameterDirection.Output;var hd=m.Parameters.Add("@MaHD",SqlDbType.Int);hd.Direction=ParameterDirection.Output;await c.OpenAsync();await m.ExecuteNonQueryAsync();return((int)dk.Value,(int)hd.Value);}
+    public async Task<List<ThanhVien>> LayThanhVienAsync()
+    {
+        const string q = "SELECT tv.MaTV,tv.MaThanhVien,tv.HoTen,tv.NgaySinh,tv.GioiTinh,tv.SDT,tv.Email,tv.DiaChi,tv.NgayDangKy,tv.MaLoaiTV,lt.TenLoai,tv.TrangThai FROM dbo.ThanhVien tv JOIN dbo.LoaiThanhVien lt ON lt.MaLoaiTV=tv.MaLoaiTV WHERE tv.TrangThai=N'Hoạt động' ORDER BY tv.HoTen;";
+        var k = new List<ThanhVien>();
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        while (await r.ReadAsync())
+            k.Add(new ThanhVien { MaTV = r.GetInt32(0), MaThanhVien = r.GetString(1), HoTen = r.GetString(2), NgaySinh = r.GetDateTime(3), GioiTinh = r.IsDBNull(4) ? null : r.GetString(4), SDT = r.GetString(5), Email = r.IsDBNull(6) ? null : r.GetString(6), DiaChi = r.IsDBNull(7) ? null : r.GetString(7), NgayDangKy = r.GetDateTime(8), MaLoaiTV = r.GetInt32(9), TenLoai = r.GetString(10), TrangThai = r.GetString(11) });
+        return k;
+    }
+
+    public async Task<List<GoiTap>> LayGoiTapAsync()
+    {
+        const string q = "SELECT MaGoi,MaGoiTap,TenGoi,ThoiHanNgay,Gia,MoTa,TrangThai FROM dbo.GoiTap WHERE TrangThai=N'Đang áp dụng' ORDER BY TenGoi;";
+        var k = new List<GoiTap>();
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        while (await r.ReadAsync())
+            k.Add(new GoiTap { MaGoi = r.GetInt32(0), MaGoiTap = r.GetString(1), TenGoi = r.GetString(2), ThoiHanNgay = r.GetInt32(3), Gia = r.GetDecimal(4), MoTa = r.IsDBNull(5) ? null : r.GetString(5), TrangThai = r.GetString(6) });
+        return k;
+    }
+
+    public async Task<List<KhuyenMai>> LayKhuyenMaiAsync()
+    {
+        const string q = "SELECT * FROM dbo.KhuyenMai WHERE TrangThai=N'Hoạt động' AND CAST(GETDATE() AS date) BETWEEN NgayBatDau AND NgayKetThuc ORDER BY TenKM;";
+        var k = new List<KhuyenMai> { new() { MaKM = null, TenKM = "Không áp dụng", PhanTramGiam = 0 } };
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        var colCode = -1;
+        for (int i = 0; i < r.FieldCount; i++)
+        {
+            if (string.Equals(r.GetName(i), "MaCode", StringComparison.OrdinalIgnoreCase)) { colCode = i; break; }
+        }
+        var colMa = r.GetOrdinal("MaKM");
+        var colTen = r.GetOrdinal("TenKM");
+        var colGiam = r.GetOrdinal("PhanTramGiam");
+        while (await r.ReadAsync())
+        {
+            var ma = r.GetInt32(colMa);
+            var ten = r.GetString(colTen);
+            var giam = r.GetDecimal(colGiam);
+            var code = colCode >= 0 && !r.IsDBNull(colCode) ? r.GetString(colCode) : KhuyenMai.TaoMaCodeThucTe(ten, giam, ma);
+            k.Add(new KhuyenMai { MaKM = ma, MaCode = code, TenKM = ten, PhanTramGiam = giam });
+        }
+        return k;
+    }
+
+    public async Task<List<HuanLuyenVien>> LayHLVAsync()
+    {
+        const string q = "SELECT h.MaHLV,h.MaNV,n.HoTen,h.ChuyenMon,h.KinhNghiem,h.PhiThue,n.TrangThai FROM dbo.HuanLuyenVien h JOIN dbo.NhanVien n ON n.MaNV=h.MaNV WHERE n.TrangThai=N'Đang làm' ORDER BY n.HoTen;";
+        var k = new List<HuanLuyenVien>();
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        while (await r.ReadAsync())
+            k.Add(new HuanLuyenVien { MaHLV = r.GetInt32(0), MaNV = r.GetInt32(1), HoTen = r.GetString(2), ChuyenMon = r.IsDBNull(3) ? null : r.GetString(3), KinhNghiem = r.IsDBNull(4) ? null : r.GetInt32(4), PhiThue = r.IsDBNull(5) ? null : r.GetDecimal(5), TrangThaiNhanVien = r.GetString(6) });
+        return k;
+    }
+
+    public async Task<List<LichSuDangKy>> LayLichSuGoiAsync()
+    {
+        const string q = "SELECT d.MaDKG,d.MaDangKyGoi,t.HoTen,g.TenGoi,d.NgayBatDau,d.NgayKetThuc,d.GiaSauGiam,d.TrangThai,0,0 FROM dbo.DangKyGoi d JOIN dbo.ThanhVien t ON t.MaTV=d.MaTV JOIN dbo.GoiTap g ON g.MaGoi=d.MaGoi ORDER BY d.MaDKG DESC;";
+        return await LayLichSuAsync(q);
+    }
+
+    public async Task<List<LichSuDangKy>> LayLichSuPTAsync()
+    {
+        const string q = """
+            SELECT d.MaDKPT, d.MaDangKyPT, t.HoTen, n.HoTen, d.NgayBatDau, d.NgayKetThuc, d.TongTien, d.TrangThai,
+                   d.SoBuoi,
+                   ISNULL((SELECT COUNT(*) FROM dbo.LichTapPT lt WHERE lt.MaDKPT = d.MaDKPT AND lt.TrangThai = N'Hoàn thành'), 0) AS SoBuoiDaTap
+            FROM dbo.DangKyPT d
+            JOIN dbo.ThanhVien t ON t.MaTV = d.MaTV
+            JOIN dbo.HuanLuyenVien h ON h.MaHLV = d.MaHLV
+            JOIN dbo.NhanVien n ON n.MaNV = h.MaNV
+            ORDER BY d.MaDKPT DESC;
+            """;
+        return await LayLichSuAsync(q);
+    }
+
+    private static async Task<List<LichSuDangKy>> LayLichSuAsync(string q)
+    {
+        var k = new List<LichSuDangKy>();
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand(q, c);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        while (await r.ReadAsync())
+        {
+            k.Add(new LichSuDangKy
+            {
+                MaDangKy = r.GetInt32(0),
+                MaDangKyHienThi = r.GetString(1),
+                ThanhVien = r.GetString(2),
+                DichVu = r.GetString(3),
+                NgayBatDau = r.GetDateTime(4),
+                NgayKetThuc = r.GetDateTime(5),
+                TongTien = r.GetDecimal(6),
+                TrangThai = r.GetString(7),
+                SoBuoi = r.FieldCount > 8 ? r.GetInt32(8) : 0,
+                SoBuoiDaTap = r.FieldCount > 9 ? r.GetInt32(9) : 0
+            });
+        }
+        return k;
+    }
+
+    public async Task<(int MaDangKy, int MaHD)> DangKyGoiAsync(int tv, int goi, int? km, DateTime ngay, int nv)
+    {
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand("dbo.sp_DangKyGoiTap", c) { CommandType = CommandType.StoredProcedure };
+        m.Parameters.AddWithValue("@MaTV", tv);
+        m.Parameters.AddWithValue("@MaGoi", goi);
+        m.Parameters.AddWithValue("@MaKM", (object?)km ?? DBNull.Value);
+        m.Parameters.AddWithValue("@NgayBatDau", ngay.Date);
+        m.Parameters.AddWithValue("@MaNV", nv);
+        var dk = m.Parameters.Add("@MaDKG", SqlDbType.Int);
+        dk.Direction = ParameterDirection.Output;
+        var hd = m.Parameters.Add("@MaHD", SqlDbType.Int);
+        hd.Direction = ParameterDirection.Output;
+        await c.OpenAsync();
+        await m.ExecuteNonQueryAsync();
+        return ((int)dk.Value, (int)hd.Value);
+    }
+
+    public async Task<(int MaDangKy, int MaHD)> DangKyPTAsync(int tv, int hlv, int buoi, int? km, DateTime ngay, DateTime ketThuc, int nv)
+    {
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand("dbo.sp_DangKyPT", c) { CommandType = CommandType.StoredProcedure };
+        m.Parameters.AddWithValue("@MaTV", tv);
+        m.Parameters.AddWithValue("@MaHLV", hlv);
+        m.Parameters.AddWithValue("@SoBuoi", buoi);
+        m.Parameters.AddWithValue("@MaKM", (object?)km ?? DBNull.Value);
+        m.Parameters.AddWithValue("@NgayBatDau", ngay.Date);
+        m.Parameters.AddWithValue("@NgayKetThuc", ketThuc.Date);
+        m.Parameters.AddWithValue("@MaNV", nv);
+        var dk = m.Parameters.Add("@MaDKPT", SqlDbType.Int);
+        dk.Direction = ParameterDirection.Output;
+        var hd = m.Parameters.Add("@MaHD", SqlDbType.Int);
+        hd.Direction = ParameterDirection.Output;
+        await c.OpenAsync();
+        await m.ExecuteNonQueryAsync();
+        return ((int)dk.Value, (int)hd.Value);
+    }
+
+    public async Task<(int SoBuoiDaTap, int SoBuoiConLai, string TrangThaiMoi)> HoanThanhBuoiPTAsync(int maDKPT, string? nhanXet, int maNV)
+    {
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand("dbo.sp_XacNhanBuoiTapPT", c) { CommandType = CommandType.StoredProcedure };
+        m.Parameters.AddWithValue("@MaDKPT", maDKPT);
+        m.Parameters.AddWithValue("@MaNV", maNV);
+        m.Parameters.AddWithValue("@NhanXet", (object?)nhanXet ?? DBNull.Value);
+        var pDaTap = m.Parameters.Add("@SoBuoiDaTap", SqlDbType.Int);
+        pDaTap.Direction = ParameterDirection.Output;
+        var pConLai = m.Parameters.Add("@SoBuoiConLai", SqlDbType.Int);
+        pConLai.Direction = ParameterDirection.Output;
+        var pTrangThai = m.Parameters.Add("@TrangThaiMoi", SqlDbType.NVarChar, 30);
+        pTrangThai.Direction = ParameterDirection.Output;
+
+        await c.OpenAsync();
+        await m.ExecuteNonQueryAsync();
+        return ((int)pDaTap.Value, (int)pConLai.Value, Convert.ToString(pTrangThai.Value) ?? "Đang học");
+    }
+
+    public async Task<List<BuoiTapPTModel>> LayLichSuBuoiTapPTAsync(int maDKPT)
+    {
+        var list = new List<BuoiTapPTModel>();
+        await using var c = DbConnectionFactory.CreateConnection();
+        await using var m = new SqlCommand("dbo.sp_LayLichSuBuoiTapPT", c) { CommandType = CommandType.StoredProcedure };
+        m.Parameters.AddWithValue("@MaDKPT", maDKPT);
+        await c.OpenAsync();
+        await using var r = await m.ExecuteReaderAsync();
+        while (await r.ReadAsync())
+        {
+            list.Add(new BuoiTapPTModel
+            {
+                MaLichPT = r.GetInt32(0),
+                ThoiGianBatDau = r.GetDateTime(1),
+                ThoiGianKetThuc = r.GetDateTime(2),
+                TrangThai = r.GetString(3),
+                NhanXet = r.IsDBNull(4) ? null : r.GetString(4),
+                NgayTao = r.GetDateTime(5)
+            });
+        }
+        return list;
+    }
 }

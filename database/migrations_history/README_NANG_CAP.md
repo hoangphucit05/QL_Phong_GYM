@@ -53,6 +53,7 @@ NhaCungCap ─< ThietBi ─< BaoTriThietBi
    - Màn hình quản lý gói tập hiện cho phép chọn từng dịch vụ và từng phòng; khi sửa gói, các mapping quyền cũ được thay thế bằng lựa chọn mới trong cùng giao dịch.
 13. Migration `31_mo_rong_danh_muc_phong_thiet_bi.sql` mở rộng loại phòng (functional, spinning, Pilates, dance, phục hồi) và bổ sung nhóm thiết bị tương ứng. Bộ lọc phòng trên giao diện lấy danh mục động từ database nên không làm hỏng các luồng phân quyền gói, check-in hoặc bảo trì.
 14. Migration `32_xu_ly_unique_email_nullable.sql` thay thế ràng buộc UNIQUE mặc định (chặn >1 giá trị NULL trong SQL Server) trên `ThanhVien.Email` và `NhanVien.Email` bằng Unique Filtered Index (`WHERE Email IS NOT NULL`). Giúp hỗ trợ đúng thực tế: email là thông tin không bắt buộc khi đăng ký hội viên/nhân viên, nhưng nếu nhập thì vẫn đảm bảo tính duy nhất.
+15. Migration `33_diem_danh_buoi_pt.sql` tạo hai thủ tục `sp_XacNhanBuoiTapPT` và `sp_LayLichSuBuoiTapPT`. Cho phép xác nhận hoàn thành từng buổi tập PT, tự động ghi nhận vào `LichTapPT`, trừ số buổi còn lại và tự động chuyển hợp đồng sang trạng thái `Hoàn thành` khi học viên hoàn thành buổi tập cuối cùng. Tích hợp trực tiếp lên giao diện `FrmDangKyPT` với các nút "Điểm danh buổi PT" và "Lịch sử buổi tập".
 
 ## Bảo mật và vận hành
 

@@ -33,6 +33,8 @@ partial class FrmDangKyPT
         l7 = new Label();
         lblTongTien = new Label();
         btnDangKy = new Button();
+        btnDiemDanhPT = new Button();
+        btnXemLichSuBuoi = new Button();
         panelLocLichSu = new FlowLayoutPanel();
         lblTimKiemLichSu = new Label();
         txtTimKiemLichSu = new TextBox();
@@ -297,6 +299,8 @@ partial class FrmDangKyPT
         panelLocLichSu.Controls.Add(lblLocTrangThai);
         panelLocLichSu.Controls.Add(cboLocTrangThai);
         panelLocLichSu.Controls.Add(btnLamMoiLichSu);
+        panelLocLichSu.Controls.Add(btnDiemDanhPT);
+        panelLocLichSu.Controls.Add(btnXemLichSuBuoi);
         panelLocLichSu.Controls.Add(lblThongKeLichSu);
         panelLocLichSu.Location = new Point(200, 324);
         panelLocLichSu.Name = "panelLocLichSu";
@@ -309,18 +313,18 @@ partial class FrmDangKyPT
         lblTimKiemLichSu.ForeColor = Color.FromArgb(30, 41, 59);
         lblTimKiemLichSu.Location = new Point(3, 0);
         lblTimKiemLichSu.Name = "lblTimKiemLichSu";
-        lblTimKiemLichSu.Size = new Size(70, 36);
+        lblTimKiemLichSu.Size = new Size(65, 36);
         lblTimKiemLichSu.TabIndex = 0;
         lblTimKiemLichSu.Text = "Tìm kiếm:";
         lblTimKiemLichSu.TextAlign = ContentAlignment.MiddleRight;
         // 
         // txtTimKiemLichSu
         // 
-        txtTimKiemLichSu.Location = new Point(79, 6);
-        txtTimKiemLichSu.Margin = new Padding(3, 6, 12, 3);
+        txtTimKiemLichSu.Location = new Point(74, 6);
+        txtTimKiemLichSu.Margin = new Padding(3, 6, 8, 3);
         txtTimKiemLichSu.Name = "txtTimKiemLichSu";
-        txtTimKiemLichSu.PlaceholderText = "Tên hội viên, huấn luyện viên...";
-        txtTimKiemLichSu.Size = new Size(220, 23);
+        txtTimKiemLichSu.PlaceholderText = "Tên HV, HLV...";
+        txtTimKiemLichSu.Size = new Size(140, 23);
         txtTimKiemLichSu.TabIndex = 1;
         txtTimKiemLichSu.TextChanged += LocLichSuThayDoi;
         // 
@@ -328,9 +332,9 @@ partial class FrmDangKyPT
         // 
         lblLocTrangThai.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         lblLocTrangThai.ForeColor = Color.FromArgb(30, 41, 59);
-        lblLocTrangThai.Location = new Point(314, 0);
+        lblLocTrangThai.Location = new Point(225, 0);
         lblLocTrangThai.Name = "lblLocTrangThai";
-        lblLocTrangThai.Size = new Size(72, 36);
+        lblLocTrangThai.Size = new Size(68, 36);
         lblLocTrangThai.TabIndex = 2;
         lblLocTrangThai.Text = "Trạng thái:";
         lblLocTrangThai.TextAlign = ContentAlignment.MiddleRight;
@@ -340,10 +344,10 @@ partial class FrmDangKyPT
         cboLocTrangThai.DropDownStyle = ComboBoxStyle.DropDownList;
         cboLocTrangThai.FormattingEnabled = true;
         cboLocTrangThai.Items.AddRange(new object[] { "-- Tất cả --", "Chờ thanh toán", "Đang học", "Hoàn thành", "Hủy" });
-        cboLocTrangThai.Location = new Point(392, 6);
-        cboLocTrangThai.Margin = new Padding(3, 6, 12, 3);
+        cboLocTrangThai.Location = new Point(299, 6);
+        cboLocTrangThai.Margin = new Padding(3, 6, 8, 3);
         cboLocTrangThai.Name = "cboLocTrangThai";
-        cboLocTrangThai.Size = new Size(150, 23);
+        cboLocTrangThai.Size = new Size(115, 23);
         cboLocTrangThai.TabIndex = 3;
         cboLocTrangThai.SelectedIndexChanged += LocLichSuThayDoi;
         // 
@@ -355,23 +359,57 @@ partial class FrmDangKyPT
         btnLamMoiLichSu.FlatStyle = FlatStyle.Flat;
         btnLamMoiLichSu.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
         btnLamMoiLichSu.ForeColor = Color.White;
-        btnLamMoiLichSu.Location = new Point(557, 4);
-        btnLamMoiLichSu.Margin = new Padding(3, 4, 12, 3);
+        btnLamMoiLichSu.Location = new Point(425, 4);
+        btnLamMoiLichSu.Margin = new Padding(3, 4, 8, 3);
         btnLamMoiLichSu.Name = "btnLamMoiLichSu";
-        btnLamMoiLichSu.Size = new Size(100, 28);
+        btnLamMoiLichSu.Size = new Size(80, 28);
         btnLamMoiLichSu.TabIndex = 4;
         btnLamMoiLichSu.Text = "Làm mới";
         btnLamMoiLichSu.UseVisualStyleBackColor = false;
         btnLamMoiLichSu.Click += btnLamMoiLichSu_Click;
         // 
+        // btnDiemDanhPT
+        // 
+        btnDiemDanhPT.BackColor = Color.FromArgb(5, 150, 105);
+        btnDiemDanhPT.Cursor = Cursors.Hand;
+        btnDiemDanhPT.FlatAppearance.BorderSize = 0;
+        btnDiemDanhPT.FlatStyle = FlatStyle.Flat;
+        btnDiemDanhPT.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnDiemDanhPT.ForeColor = Color.White;
+        btnDiemDanhPT.Location = new Point(516, 4);
+        btnDiemDanhPT.Margin = new Padding(3, 4, 8, 3);
+        btnDiemDanhPT.Name = "btnDiemDanhPT";
+        btnDiemDanhPT.Size = new Size(145, 28);
+        btnDiemDanhPT.TabIndex = 5;
+        btnDiemDanhPT.Text = "Điểm danh buổi PT";
+        btnDiemDanhPT.UseVisualStyleBackColor = false;
+        btnDiemDanhPT.Click += btnDiemDanhPT_Click;
+        // 
+        // btnXemLichSuBuoi
+        // 
+        btnXemLichSuBuoi.BackColor = Color.FromArgb(79, 70, 229);
+        btnXemLichSuBuoi.Cursor = Cursors.Hand;
+        btnXemLichSuBuoi.FlatAppearance.BorderSize = 0;
+        btnXemLichSuBuoi.FlatStyle = FlatStyle.Flat;
+        btnXemLichSuBuoi.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+        btnXemLichSuBuoi.ForeColor = Color.White;
+        btnXemLichSuBuoi.Location = new Point(672, 4);
+        btnXemLichSuBuoi.Margin = new Padding(3, 4, 8, 3);
+        btnXemLichSuBuoi.Name = "btnXemLichSuBuoi";
+        btnXemLichSuBuoi.Size = new Size(120, 28);
+        btnXemLichSuBuoi.TabIndex = 6;
+        btnXemLichSuBuoi.Text = "Lịch sử buổi tập";
+        btnXemLichSuBuoi.UseVisualStyleBackColor = false;
+        btnXemLichSuBuoi.Click += btnXemLichSuBuoi_Click;
+        // 
         // lblThongKeLichSu
         // 
         lblThongKeLichSu.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
         lblThongKeLichSu.ForeColor = Color.FromArgb(100, 116, 139);
-        lblThongKeLichSu.Location = new Point(672, 0);
+        lblThongKeLichSu.Location = new Point(803, 0);
         lblThongKeLichSu.Name = "lblThongKeLichSu";
-        lblThongKeLichSu.Size = new Size(200, 36);
-        lblThongKeLichSu.TabIndex = 5;
+        lblThongKeLichSu.Size = new Size(140, 36);
+        lblThongKeLichSu.TabIndex = 7;
         lblThongKeLichSu.Text = "Hiển thị: 0 lượt";
         lblThongKeLichSu.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -393,6 +431,7 @@ partial class FrmDangKyPT
         dgvLichSu.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         dgvLichSu.Size = new Size(1152, 327);
         dgvLichSu.TabIndex = 3;
+        dgvLichSu.SelectionChanged += dgvLichSu_SelectionChanged;
         // 
         // FrmDangKyPT
         // 
@@ -449,6 +488,8 @@ partial class FrmDangKyPT
     private Label lblLocTrangThai;
     private ComboBox cboLocTrangThai;
     private Button btnLamMoiLichSu;
+    private Button btnDiemDanhPT;
+    private Button btnXemLichSuBuoi;
     private Label lblThongKeLichSu;
     private DataGridView dgvLichSu;
 }

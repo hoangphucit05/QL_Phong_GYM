@@ -1539,3 +1539,33 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Kiểm thử hồi quy `02_kiem_thu_hoi_quy.sql`**: 12/12 luồng lõi PASS 100%.
 - **Kiểm thử biên & ngoại lệ `scratch_edge_case_tests.sql`**: 9/9 kịch bản PASS 100%.
 - **DBCC CHECKCONSTRAINTS WITH ALL_CONSTRAINTS**: Không có bất kỳ vi phạm ràng buộc dữ liệu nào.
+
+
+---
+
+## Phiên 021 — Tích hợp chức năng Điểm danh & Hoàn tất buổi tập PT trên giao diện FrmDangKyPT
+
+- Thời điểm: 23/11/2026
+- Mục tiêu: Bổ sung luồng nghiệp vụ thực tế cho hợp đồng Huấn luyện viên cá nhân (PT): cho phép xác nhận hoàn thành từng buổi tập, trừ buổi còn lại, xem lịch sử các buổi đã tập và tự động chuyển trạng thái hợp đồng thành 'Hoàn thành' khi đủ số buổi.
+
+### Công việc đã thực hiện
+1. **Cơ sở dữ liệu (Migration 33 - `33_diem_danh_buoi_pt.sql`)**:
+   - Viết thủ tục `sp_XacNhanBuoiTapPT`: Kiểm tra hợp đồng ở trạng thái `Đang học`, kiểm tra số buổi đã tập so với tổng số buổi đăng ký, ghi nhận buổi tập vào `LichTapPT` (thời gian, HLV, hội viên, nhận xét), tăng số buổi đã tập và tự động cập nhật `DangKyPT.TrangThai = 'Hoàn thành'` nếu đã hoàn thành buổi cuối cùng. Ghi nhật ký vào `NhatKyHeThong`.
+   - Viết thủ tục `sp_LayLichSuBuoiTapPT`: Truy vấn chi tiết danh sách các buổi tập đã hoàn thành của hợp đồng.
+   - Đồng bộ migration 33 vào file gốc `database/01_khoi_tao_database_full.sql`.
+
+2. **Cập nhật Model & Tầng dữ liệu (DAL/BLL)**:
+   - Mở rộng model `LichSuDangKy.cs`: Thêm thuộc tính `SoBuoi`, `SoBuoiDaTap`, `SoBuoiConLai` và `TienDo` ("X/Y buổi").
+   - Tạo model mới `BuoiTapPTModel.cs`: Quản lý thông tin chi tiết từng buổi tập (`MaLichPT`, `ThoiGianBatDau`, `ThoiGianKetThuc`, `TrangThai`, `NhanXet`, `NgayTao`).
+   - Cập nhật `DangKyDAL.cs` & `DangKyBLL.cs`: Thêm các hàm `HoanThanhBuoiPTAsync()` và `LayLichSuBuoiTapPTAsync()`.
+
+3. **Giao diện người dùng (`FrmDangKyPT`)**:
+   - Thêm nút **"Điểm danh buổi PT"** (`btnDiemDanhPT`, màu xanh ngọc lục bảo Emerald-600) trên thanh công cụ: Mở hộp thoại xác nhận buổi tập, cho phép nhập đánh giá/nhận xét của HLV và xác nhận trừ buổi.
+   - Thêm nút **"Lịch sử buổi tập"** (`btnXemLichSuBuoi`, màu chàm Indigo-600): Mở cửa sổ xem bảng lịch sử toàn bộ các buổi tập đã hoàn thành của hợp đồng.
+   - Thêm cột **"Tiến độ (Đã tập/Tổng)"** trực tiếp trên lưới danh sách hợp đồng PT (`1/10 buổi`, `10/10 buổi`,...), tự động cập nhật trạng thái các nút thao tác khi click chọn từng dòng.
+
+### Kết quả kiểm thử
+- **dotnet build**: 0 cảnh báo, 0 lỗi.
+- **UI Inspector**: 22/22 Form PASS 100% (0 lỗi tràn biên, 0 overlap).
+- **Kiểm thử SQL thủ tục mới**: `sp_XacNhanBuoiTapPT` trừ buổi tập và chuyển trạng thái chính xác.
+- **Kiểm thử hồi quy `02_kiem_thu_hoi_quy.sql`**: 12/12 luồng PASS 100%.
