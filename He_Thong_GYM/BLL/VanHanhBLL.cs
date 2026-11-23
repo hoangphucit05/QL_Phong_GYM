@@ -36,7 +36,9 @@ public sealed class VanHanhBLL
     public Task<int> GiaHanAsync(int maDKG, int soNgay, int? maNV)
     {
         AuthorizationPolicy.Require("Admin", "Quản lý", "Lễ tân", "Nhân viên");
-        return soNgay <= 0 ? throw new ArgumentException("Số ngày gia hạn phải lớn hơn 0.") : _dal.GiaHanAsync(maDKG, soNgay, maNV);
+        if (soNgay <= 0) throw new ArgumentException("Số ngày gia hạn phải lớn hơn 0.");
+        if (soNgay > 365) throw new ArgumentException("Số ngày gia hạn không được vượt quá 365 ngày.");
+        return _dal.GiaHanAsync(maDKG, soNgay, maNV);
     }
 
     public Task BaoLuuAsync(int maDKG, DateTime tu, DateTime den, string lyDo, int? maNV)

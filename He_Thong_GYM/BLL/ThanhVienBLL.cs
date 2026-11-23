@@ -23,10 +23,13 @@ public sealed class ThanhVienBLL
         AuthorizationPolicy.Require("Admin", "Quản lý", "Lễ tân", "Nhân viên");
         return _thanhVienDAL.NgungSuDungAsync(maTV);
     }
+    private static readonly string[] _gioiTinhHopLe = ["Nam", "Nữ", "Khác"];
     private static void KiemTra(ThanhVien thanhVien)
     {
-        if (string.IsNullOrWhiteSpace(thanhVien.HoTen)) throw new ArgumentException("Họ tên không được để trống.");
+        if (string.IsNullOrWhiteSpace(thanhVien.HoTen) || thanhVien.HoTen.Trim().Length < 2) throw new ArgumentException("Họ tên phải có ít nhất 2 ký tự.");
         if (thanhVien.NgaySinh.Date >= DateTime.Today) throw new ArgumentException("Ngày sinh phải nhỏ hơn ngày hiện tại.");
+        if (string.IsNullOrWhiteSpace(thanhVien.GioiTinh) || !_gioiTinhHopLe.Contains(thanhVien.GioiTinh))
+            throw new ArgumentException("Giới tính phải là Nam, Nữ hoặc Khác.");
         InputValidator.ValidatePhone(thanhVien.SDT);
         InputValidator.ValidateOptionalEmail(thanhVien.Email);
         if (thanhVien.MaLoaiTV <= 0) throw new ArgumentException("Hãy chọn loại thành viên.");
