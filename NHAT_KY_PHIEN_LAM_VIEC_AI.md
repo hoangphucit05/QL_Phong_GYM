@@ -1409,3 +1409,18 @@ Theo yêu cầu đây là sản phẩm demo, đã áp dụng `database/17_bo_sun
 - **Kiểm thử:**
   - Build: `0 warning, 0 error`.
   - UI Inspector: `22/22 forms` PASS 100% (0 overlap, 0 out of bounds, 0 text truncated, 0 UTF-8 issues).
+
+
+## Phiên tái cấu trúc thư mục Database & Chuẩn hóa Master Script (23/11/2026)
+
+- **Mục tiêu:** Tinh gọn và cấu trúc lại thư mục `database/` theo mô hình chuẩn nghiệp vụ (Cách 1) nhằm tăng tính trực quan, loại bỏ tình trạng rải rác hơn 30 file patch/test mà vẫn bảo toàn 100% lịch sử và không ảnh hưởng đến mã nguồn dự án.
+- **Thực hiện:**
+  - **Tạo File Master duy nhất:** `database/01_khoi_tao_database_full.sql` (198,936 bytes, UTF-8), tổng hợp trọn vẹn toàn bộ 25 migration patch từ `htql_gym_v2.sql` đến `28_dong_bo_trang_thai_thiet_bi.sql`. Script tạo mới toàn bộ DB `QL_PhongGym`, 18 bảng, đầy đủ Primary Key, Foreign Key, Check Constraint, 13 Trigger tự động hóa, Stored Procedure, View và bộ dữ liệu mẫu ban đầu.
+  - **Tạo File kiểm thử tự động:** `database/02_kiem_thu_hoi_quy.sql` (11,625 bytes, UTF-8) kiểm tra hồi quy tự động 12 luồng nghiệp vụ lõi (hội viên, đăng ký gói, thanh toán, check-in/out, gia hạn, bảo lưu, hợp đồng PT, bán lẻ khách vãng lai, nhập kho, bảo trì máy móc, hoàn tiền/hủy gói) kèm cơ chế tự động ROLLBACK sạch sẽ.
+  - **Biên soạn tài liệu hướng dẫn:** `database/README.md` (4,658 bytes) hướng dẫn chi tiết quy trình cài đặt CSDL trong 1 bước bằng SSMS/Azure Data Studio hoặc dòng lệnh PowerShell `sqlcmd -f 65001`.
+  - **Di chuyển toàn bộ 38 file cũ vào kho lưu trữ:** Tạo thư mục `database/migrations_history/` và di chuyển toàn bộ các bản vá lịch sử cùng các script test con vào trong. Thư mục gốc `database/` hiện tại chỉ còn đúng 3 tệp master và 1 thư mục con `migrations_history/`.
+- **Kiểm thử:**
+  - Chạy `database/02_kiem_thu_hoi_quy.sql` bằng `sqlcmd -S localhost -d QL_PhongGym -E -f 65001`: **PASS 12/12 luồng nghiệp vụ**, dữ liệu kiểm thử được rollback an toàn 100%.
+  - Build .NET: `dotnet build He_Thong_GYM.slnx --no-restore` đạt **0 warning, 0 error**.
+  - UI Inspector: Quét toàn diện **22/22 forms** đạt chuẩn 100% (0 overlap, 0 out of bounds, 0 text truncated, 0 UTF-8 issues).
+

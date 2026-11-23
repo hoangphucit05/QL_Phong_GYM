@@ -21,7 +21,11 @@ Thư mục solution: `He_Thong_GYM.slnx`. Ứng dụng desktop Windows Forms, m�
 
 ## 3. Database
 
-Database chính: `QL_PhongGym`, khởi tạo từ `database/htql_gym_v2.sql`, sau đó áp dụng các migration theo thứ tự.
+Database chính: `QL_PhongGym`. Thư mục `database/` đã được tổ chức lại theo mô hình Master Script & Migrations History:
+- `database/01_khoi_tao_database_full.sql`: Master Script duy nhất để khởi tạo trọn gói database (Schema, Tables, FK, Constraints, 13 Trigger, Stored Procedures, Views và Seed Data ban đầu).
+- `database/02_kiem_thu_hoi_quy.sql`: Script tự động kiểm thử hồi quy 12 luồng nghiệp vụ lõi (có ROLLBACK an toàn).
+- `database/README.md`: Tài liệu hướng dẫn cài đặt DB trong 1 bước bằng SSMS hoặc CLI (`sqlcmd -f 65001`).
+- `database/migrations_history/`: Thư mục lưu trữ lịch sử toàn bộ 38 tệp patch và test cũ từ phiên bản v2 đến phiên 16.
 
 - Bảng lõi: `LoaiThanhVien`, `ThanhVien`, `HoSoSucKhoe`, `ChiSoCoThe`, `GoiTap`, `KhuyenMai`, `DangKyGoi`, `NhanVien`, `TaiKhoan`, `HuanLuyenVien`.
 - Lớp/PT: `DangKyPT`, `LoaiLopTap`, `LopTap`, `DangKyLop`, `DiemDanhLop`, `LichLamViecHLV`, `LichTapPT`, `LichHoc`, `DanhSachCho`.
